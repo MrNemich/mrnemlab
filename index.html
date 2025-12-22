@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GiftLab</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="app-title">
+                <i class="fas fa-gift"></i> GiftLab
+            </h1>
+            <p class="app-subtitle">Добро пожаловать в GiftLab</p>
+        </header>
+
+        <main class="main-content">
+            <div class="content-card">
+                <h2><i class="fas fa-sparkles"></i> Лаборатория подарков</h2>
+                <p>Выберите раздел в нижней панели навигации</p>
+                <div class="gradient-box" id="content-display">
+                    <i class="fas fa-home content-icon"></i>
+                    <h3>Главная страница</h3>
+                    <p>Добро пожаловать в GiftLab! Здесь вы найдете идеальные подарки, игры и возможности для улучшения.</p>
+                </div>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <div class="nav-container">
+                <button class="nav-button active" data-page="home">
+                    <div class="button-content">
+                        <i class="fas fa-home nav-icon"></i>
+                        <span class="nav-text">Главная</span>
+                    </div>
+                </button>
+                
+                <button class="nav-button" data-page="games">
+                    <div class="button-content">
+                        <i class="fas fa-gamepad nav-icon"></i>
+                        <span class="nav-text">Игры</span>
+                    </div>
+                </button>
+                
+                <button class="nav-button" data-page="upgrade">
+                    <div class="button-content">
+                        <i class="fas fa-rocket nav-icon"></i>
+                        <span class="nav-text">Апгрейд</span>
+                    </div>
+                </button>
+                
+                <button class="nav-button" data-page="profile">
+                    <div class="button-content">
+                        <i class="fas fa-user-astronaut nav-icon"></i>
+                        <span class="nav-text">Профиль</span>
+                    </div>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
