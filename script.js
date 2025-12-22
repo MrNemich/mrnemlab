@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Получаем все элементы
+    // Получаем элементы
     const navButtons = document.querySelectorAll('.nav-button');
     const contentDisplay = document.getElementById('content-display');
     
-    // Контент для каждой страницы
+    // Контент для страниц
     const pageContent = {
         home: {
             icon: 'fas fa-home',
@@ -27,46 +27,42 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
-    // Функция для смены активной кнопки
+    // Устанавливаем активную кнопку
     function setActiveButton(button) {
-        navButtons.forEach(btn => {
-            btn.classList.remove('active');
-        });
-        
+        navButtons.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
     }
     
-    // Функция для обновления контента
+    // Обновляем контент
     function updateContent(page) {
         const content = pageContent[page];
         
+        if (!content) return;
+        
         // Анимация исчезновения
         contentDisplay.style.opacity = '0';
-        contentDisplay.style.transform = 'translateY(20px)';
+        contentDisplay.style.transform = 'translateY(10px)';
         
         setTimeout(() => {
             // Обновляем контент
             const iconElement = contentDisplay.querySelector('.content-icon');
-            iconElement.className = content.icon + ' content-icon';
-            
             const titleElement = contentDisplay.querySelector('h3');
-            titleElement.textContent = content.title;
-            
             const descElement = contentDisplay.querySelector('p');
+            
+            iconElement.className = content.icon + ' content-icon';
+            titleElement.textContent = content.title;
             descElement.textContent = content.description;
             
             // Анимация появления
             contentDisplay.style.opacity = '1';
             contentDisplay.style.transform = 'translateY(0)';
-            contentDisplay.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
         }, 200);
     }
     
-    // Обработчики для кнопок навигации
+    // Добавляем обработчики для кнопок
     navButtons.forEach(button => {
         button.addEventListener('click', function() {
             const page = this.getAttribute('data-page');
-            
             setActiveButton(this);
             updateContent(page);
             
@@ -78,27 +74,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Инициализация анимации
-    setTimeout(() => {
-        document.body.style.opacity = '1';
-        document.body.style.transform = 'translateY(0)';
-    }, 100);
-    
-    document.body.style.opacity = '0';
-    document.body.style.transform = 'translateY(20px)';
-    document.body.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    
-    // Инициализация начального состояния
+    // Инициализация
     updateContent('home');
     
-    // Интерактивность для заголовка
-    const titleElement = document.querySelector('.app-title');
-    titleElement.addEventListener('mouseenter', function() {
-        this.style.transform = 'scale(1.05)';
-        this.style.transition = 'transform 0.3s ease';
-    });
+    // Анимация загрузки
+    setTimeout(() => {
+        document.body.style.opacity = '1';
+    }, 50);
     
-    titleElement.addEventListener('mouseleave', function() {
-        this.style.transform = 'scale(1)';
-    });
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.3s ease';
 });
