@@ -1,7 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Получаем все кнопки навигации
+    // Получаем все элементы
     const navButtons = document.querySelectorAll('.nav-button');
     const contentDisplay = document.getElementById('content-display');
+    const bottomNav = document.querySelector('.bottom-nav');
+    
+    // Переменные для управления скроллом
+    let lastScrollTop = 0;
+    let scrollTimeout;
     
     // Контент для каждой страницы
     const pageContent = {
@@ -29,67 +34,116 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Функция для смены активной кнопки
     function setActiveButton(button) {
-        // Убираем активный класс со всех кнопок
         navButtons.forEach(btn => {
             btn.classList.remove('active');
         });
         
-        // Добавляем активный класс к нажатой кнопке
         button.classList.add('active');
+        
+        // Показываем навигацию при нажатии
+        showNavigation();
     }
     
     // Функция для обновления контента
     function updateContent(page) {
         const content = pageContent[page];
         
-        // Обновляем иконку
-        const iconElement = contentDisplay.querySelector('.content-icon');
-        iconElement.className = content.icon + ' content-icon';
-        
-        // Обновляем заголовок
-        const titleElement = contentDisplay.querySelector('h3');
-        titleElement.textContent = content.title;
-        
-        // Обновляем описание
-        const descElement = contentDisplay.querySelector('p');
-        descElement.textContent = content.description;
-        
-        // Добавляем анимацию смены контента
+        // Анимация исчезновения
         contentDisplay.style.opacity = '0';
-        contentDisplay.style.transform = 'translateY(10px)';
+        contentDisplay.style.transform = 'translateY(20px)';
         
         setTimeout(() => {
+            // Обновляем контент
+            const iconElement = contentDisplay.querySelector('.content-icon');
+            iconElement.className = content.icon + ' content-icon';
+            
+            const titleElement = contentDisplay.querySelector('h3');
+            titleElement.textContent = content.title;
+            
+            const descElement = contentDisplay.querySelector('p');
+            descElement.textContent = content.description;
+            
+            // Анимация появления
             contentDisplay.style.opacity = '1';
             contentDisplay.style.transform = 'translateY(0)';
-        }, 150);
+            contentDisplay.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        }, 200);
     }
     
-    // Добавляем обработчики событий для каждой кнопки
+    // Функция для показа навигации
+    function showNavigation() {
+        bottomNav.classList.remove('hidden');
+        bottomNav.classList.add('visible');
+        
+        // Сбрасываем таймер скрытия
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        
+        // Автоматически скрываем через 3 секунды
+        scrollTimeout = setTimeout(() => {
+            if (!isAnyButtonHovered()) {
+                hideNavigation();
+            }
+        }, 3000);
+    }
+    
+    // Функция для скрытия навигации
+    function hideNavigation() {
+        bottomNav.classList.remove('visible');
+        bottomNav.classList.add('hidden');
+    }
+    
+    // Проверка наведения на кнопки
+    function isAnyButtonHovered() {
+        return Array.from(navButtons).some(button => 
+            button.matches(':hover') || button.classList.contains('active')
+        );
+    }
+    
+    // Обработчик скролла для интеллектуального скрытия/показа навигации
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > lastScrollTop) {
+            // Прокрутка вниз - скрываем
+            hideNavigation();
+        } else {
+            // Прокрутка вверх - показываем
+            showNavigation();
+        }
+        
+        lastScrollTop = scrollTop;
+    });
+    
+    // Обработчики для кнопок навигации
     navButtons.forEach(button => {
         button.addEventListener('click', function() {
             const page = this.getAttribute('data-page');
             
-            // Устанавливаем активную кнопку
             setActiveButton(this);
-            
-            // Обновляем контент
             updateContent(page);
             
-            // Добавляем небольшой эффект нажатия
+            // Эффект нажатия
             this.style.transform = 'scale(0.95)';
             setTimeout(() => {
                 this.style.transform = 'scale(1)';
             }, 150);
         });
+        
+        // Показывать навигацию при наведении
+        button.addEventListener('mouseenter', showNavigation);
     });
     
-    // Добавляем анимацию при загрузке
+    // Показывать навигацию при касании в мобильных устройствах
+    document.addEventListener('touchstart', showNavigation);
+    
+    // Инициализация анимации
     setTimeout(() => {
         document.body.style.opacity = '1';
         document.body.style.transform = 'translateY(0)';
     }, 100);
     
-    // Инициализация стилей для анимации
     document.body.style.opacity = '0';
     document.body.style.transform = 'translateY(20px)';
     document.body.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
@@ -97,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация начального состояния
     updateContent('home');
     
-    // Добавляем интерактивность для заголовка
+    // Интерактивность для заголовка
     const titleElement = document.querySelector('.app-title');
     titleElement.addEventListener('mouseenter', function() {
         this.style.transform = 'scale(1.05)';
@@ -107,4 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
     titleElement.addEventListener('mouseleave', function() {
         this.style.transform = 'scale(1)';
     });
+    
+    // Показываем навигацию при загрузке
+    setTimeout(showNavigation, 1000);
 });
