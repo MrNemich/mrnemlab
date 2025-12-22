@@ -2,11 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Получаем все элементы
     const navButtons = document.querySelectorAll('.nav-button');
     const contentDisplay = document.getElementById('content-display');
-    const bottomNav = document.querySelector('.bottom-nav');
-    
-    // Переменные для управления скроллом
-    let lastScrollTop = 0;
-    let scrollTimeout;
     
     // Контент для каждой страницы
     const pageContent = {
@@ -39,9 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         button.classList.add('active');
-        
-        // Показываем навигацию при нажатии
-        showNavigation();
     }
     
     // Функция для обновления контента
@@ -70,52 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 200);
     }
     
-    // Функция для показа навигации
-    function showNavigation() {
-        bottomNav.classList.remove('hidden');
-        bottomNav.classList.add('visible');
-        
-        // Сбрасываем таймер скрытия
-        if (scrollTimeout) {
-            clearTimeout(scrollTimeout);
-        }
-        
-        // Автоматически скрываем через 3 секунды
-        scrollTimeout = setTimeout(() => {
-            if (!isAnyButtonHovered()) {
-                hideNavigation();
-            }
-        }, 3000);
-    }
-    
-    // Функция для скрытия навигации
-    function hideNavigation() {
-        bottomNav.classList.remove('visible');
-        bottomNav.classList.add('hidden');
-    }
-    
-    // Проверка наведения на кнопки
-    function isAnyButtonHovered() {
-        return Array.from(navButtons).some(button => 
-            button.matches(':hover') || button.classList.contains('active')
-        );
-    }
-    
-    // Обработчик скролла для интеллектуального скрытия/показа навигации
-    window.addEventListener('scroll', function() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (scrollTop > lastScrollTop) {
-            // Прокрутка вниз - скрываем
-            hideNavigation();
-        } else {
-            // Прокрутка вверх - показываем
-            showNavigation();
-        }
-        
-        lastScrollTop = scrollTop;
-    });
-    
     // Обработчики для кнопок навигации
     navButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -130,13 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.style.transform = 'scale(1)';
             }, 150);
         });
-        
-        // Показывать навигацию при наведении
-        button.addEventListener('mouseenter', showNavigation);
     });
-    
-    // Показывать навигацию при касании в мобильных устройствах
-    document.addEventListener('touchstart', showNavigation);
     
     // Инициализация анимации
     setTimeout(() => {
@@ -161,7 +101,4 @@ document.addEventListener('DOMContentLoaded', function() {
     titleElement.addEventListener('mouseleave', function() {
         this.style.transform = 'scale(1)';
     });
-    
-    // Показываем навигацию при загрузке
-    setTimeout(showNavigation, 1000);
 });
