@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentDisplay = document.getElementById('content-display');
     const balanceAmount = document.querySelector('.balance-amount');
     const addBalanceBtn = document.querySelector('.add-balance-btn');
+    const tonIcon = document.querySelector('.ton-icon');
     
     // Текущий пользователь
     let userData = {
@@ -20,6 +21,25 @@ document.addEventListener('DOMContentLoaded', function() {
         balance: 1000, // Стартовый баланс
         username: tg.initDataUnsafe?.user?.username || 'Гость'
     };
+    
+    // Проверяем загрузку иконки TON
+    function checkTonIcon() {
+        setTimeout(() => {
+            const icon = document.querySelector('.ton-icon');
+            if (icon && (icon.naturalWidth === 0 || icon.complete === false)) {
+                console.log('TON icon failed to load, using fallback');
+                // Создаем запасную иконку
+                icon.style.background = '#0088cc';
+                icon.style.color = 'white';
+                icon.style.display = 'flex';
+                icon.style.alignItems = 'center';
+                icon.style.justifyContent = 'center';
+                icon.style.fontWeight = 'bold';
+                icon.style.fontSize = '10px';
+                icon.innerHTML = 'TON';
+            }
+        }, 1000);
+    }
     
     // Обновляем баланс на экране
     function updateBalanceDisplay() {
@@ -131,7 +151,10 @@ document.addEventListener('DOMContentLoaded', function() {
             ]
         }, function(buttonId) {
             if (buttonId === 'ton') {
-                tg.showAlert('В разработке. Скоро можно будет пополнить через TON!');
+                userData.balance += 100;
+                updateBalanceDisplay();
+                tg.showAlert('Баланс пополнен на 100 TON!');
+                tg.HapticFeedback.notificationOccurred('success');
             } else if (buttonId === 'crypto') {
                 tg.showAlert('В разработке. Скоро будут доступны другие криптовалюты!');
             }
@@ -144,13 +167,13 @@ document.addEventListener('DOMContentLoaded', function() {
         userData.username = user.username || `${user.first_name} ${user.last_name || ''}`.trim();
         userData.id = user.id;
         
-        // Можно отправить данные на сервер
-        console.log('User data:', user);
+        console.log('User data loaded:', userData);
     }
     
     // Инициализация
     updateBalanceDisplay();
     updateContent('home');
+    checkTonIcon();
     
     // Анимация загрузки
     setTimeout(() => {
@@ -194,4 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
         userData.balance += Math.floor(Math.random() * 5);
         updateBalanceDisplay();
     }, 60000); // Каждую минуту добавляем немного баланса
+    
+    // Проверяем иконку TON при загрузке
+    window.addEventListener('load', checkTonIcon);
 });
