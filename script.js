@@ -13,13 +13,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentDisplay = document.getElementById('content-display');
     const balanceAmount = document.querySelector('.balance-amount');
     const addBalanceBtn = document.querySelector('.add-balance-btn');
+    const userNameElement = document.getElementById('user-name').querySelector('span');
     const tonIcon = document.querySelector('.ton-icon');
     
     // Текущий пользователь
     let userData = {
         id: tg.initDataUnsafe?.user?.id || Date.now(),
-        balance: 1250, // Стартовый баланс
-        username: tg.initDataUnsafe?.user?.username || 'Гость'
+        balance: 1250,
+        username: 'Гость'
     };
     
     // Проверяем загрузку иконки TON
@@ -30,16 +31,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('TON icon failed to load, using fallback');
                 // Создаем SVG иконку TON
                 const svg = `
-                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="14" cy="14" r="14" fill="#7B2FF7"/>
-                        <path d="M14 8L19.5 11.625L14 15.25L8.5 11.625L14 8Z" fill="white"/>
-                        <path d="M14 15.25L19.5 18.875L14 22.5L8.5 18.875L14 15.25Z" fill="white"/>
+                    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="13" cy="13" r="13" fill="#7B2FF7"/>
+                        <path d="M13 7L18.5 10.625L13 14.25L7.5 10.625L13 7Z" fill="white"/>
+                        <path d="M13 14.25L18.5 17.875L13 21.5L7.5 17.875L13 14.25Z" fill="white"/>
                     </svg>
                 `;
                 icon.src = 'data:image/svg+xml;base64,' + btoa(svg);
                 icon.style.background = 'transparent';
             }
         }, 1500);
+    }
+    
+    // Обновляем имя пользователя
+    function updateUserName() {
+        if (tg.initDataUnsafe?.user) {
+            const user = tg.initDataUnsafe.user;
+            let name = 'Гость';
+            
+            if (user.username) {
+                name = '@' + user.username;
+            } else if (user.first_name) {
+                name = user.first_name;
+                if (user.last_name) {
+                    name += ' ' + user.last_name;
+                }
+            }
+            
+            userData.username = name;
+            userNameElement.textContent = name;
+            
+            // Добавляем класс для анимации
+            userNameElement.parentElement.style.animation = 'none';
+            setTimeout(() => {
+                userNameElement.parentElement.style.animation = 'slideInLeft 0.5s ease-out';
+            }, 10);
+        }
     }
     
     // Обновляем баланс на экране
@@ -52,27 +79,28 @@ document.addEventListener('DOMContentLoaded', function() {
         home: {
             icon: 'fas fa-home',
             title: 'Главная страница',
-            description: 'Добро пожаловать в BEAT CLUB! Здесь музыка встречается с технологиями. Собирай TON, участвуй в лотереях, выполняй задания и стань частью музыкального комьюнити.'
+            description: 'Товаров нет, приходите позже...',
+            isEmpty: true
         },
         lottery: {
             icon: 'fas fa-dice',
             title: '🎰 Музыкальная лотерея',
-            description: 'Испытай удачу в нашей эксклюзивной лотерее! Участвуй за TON и выигрывай уникальные NFT, премиум-подписки и эксклюзивный мерч. Новый розыгрыш каждую неделю!'
+            description: 'Испытай удачу в нашей эксклюзивной лотерее! Участвуй за TON и выигрывай уникальные NFT, премиум-подписки и эксклюзивный мерч.'
         },
         tasks: {
             icon: 'fas fa-tasks',
             title: '🎯 Ежедневные задания',
-            description: 'Выполняй задания и получай TON! Подписывайся на каналы, приглашай друзей, слушай треки. Новые задания обновляются каждый день. Не пропусти свой бонус!'
+            description: 'Выполняй задания и получай TON! Подписывайся на каналы, приглашай друзей, слушай треки.'
         },
         rating: {
             icon: 'fas fa-trophy',
             title: '🏆 Топ игроков',
-            description: 'Соревнуйся с другими участниками! Зарабатывай очки активности, участвуй в событиях и поднимайся в рейтинге. Топ-10 игроков получают эксклюзивные награды.'
+            description: 'Соревнуйся с другими участниками! Зарабатывай очки активности и поднимайся в рейтинге.'
         },
         profile: {
             icon: 'fas fa-user',
             title: '👤 Твой профиль',
-            description: `Привет, ${userData.username}! Здесь ты можешь настроить профиль, посмотреть статистику, историю операций и подключить кошелек TON для вывода средств.`
+            description: `Привет, ${userData.username}! Здесь ты можешь настроить профиль, посмотреть статистику и историю операций.`
         }
     };
     
@@ -102,6 +130,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 descElement.textContent = pageContent.profile.description.replace('Гость', userData.username);
             } else {
                 descElement.textContent = content.description;
+            }
+            
+            // Добавляем класс для пустого сообщения
+            if (page === 'home') {
+                descElement.classList.add('empty-message');
+            } else {
+                descElement.classList.remove('empty-message');
             }
             
             iconElement.className = content.icon + ' content-icon';
@@ -167,16 +202,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Имитация получения данных пользователя из Telegram
-    if (tg.initDataUnsafe?.user) {
-        const user = tg.initDataUnsafe.user;
-        userData.username = user.username || `${user.first_name} ${user.last_name || ''}`.trim();
-        userData.id = user.id;
-        
-        console.log('User data loaded:', userData);
-    }
-    
     // Инициализация
+    updateUserName();
     updateBalanceDisplay();
     updateContent('home');
     checkTonIcon();
@@ -228,6 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
             action: 'close',
             balance: userData.balance,
             userId: userData.id,
+            username: userData.username,
             timestamp: Date.now()
         }));
     });
@@ -235,15 +263,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Проверяем иконку TON при загрузке
     window.addEventListener('load', checkTonIcon);
     
-    // Предзагрузка контента для быстрого переключения
-    function preloadContent() {
-        Object.values(pageContent).forEach(content => {
-            const icon = document.createElement('i');
-            icon.className = content.icon + ' content-icon';
-            icon.style.display = 'none';
-            document.body.appendChild(icon);
-        });
-    }
-    
-    preloadContent();
+    // Обновляем профиль если имя изменилось
+    setTimeout(() => {
+        if (pageContent.profile) {
+            pageContent.profile.description = `Привет, ${userData.username}! Здесь ты можешь настроить профиль, посмотреть статистику и историю операций.`;
+        }
+    }, 1000);
 });
