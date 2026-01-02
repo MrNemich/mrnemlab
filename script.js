@@ -13,14 +13,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentDisplay = document.getElementById('content-display');
     const balanceAmount = document.querySelector('.balance-amount');
     const addBalanceBtn = document.querySelector('.add-balance-btn');
-    const userNameElement = document.getElementById('user-name').querySelector('span');
-    const tonIcon = document.querySelector('.ton-icon');
+    const userAvatarElement = document.getElementById('user-avatar');
+    const userNameElement = document.getElementById('user-name');
     
     // Текущий пользователь
     let userData = {
-        id: tg.initDataUnsafe?.user?.id || Date.now(),
+        id: null,
         balance: 1250,
-        username: 'Гость'
+        username: 'Гость',
+        avatarUrl: null
     };
     
     // Проверяем загрузку иконки TON
@@ -43,12 +44,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1500);
     }
     
-    // Обновляем имя пользователя
-    function updateUserName() {
+    // Загружаем аватарку пользователя из Telegram
+    function loadUserAvatar() {
         if (tg.initDataUnsafe?.user) {
             const user = tg.initDataUnsafe.user;
-            let name = 'Гость';
+            userData.id = user.id;
             
+            // Формируем имя пользователя
+            let name = 'Гость';
             if (user.username) {
                 name = '@' + user.username;
             } else if (user.first_name) {
@@ -61,12 +64,64 @@ document.addEventListener('DOMContentLoaded', function() {
             userData.username = name;
             userNameElement.textContent = name;
             
-            // Добавляем класс для анимации
-            userNameElement.parentElement.style.animation = 'none';
-            setTimeout(() => {
-                userNameElement.parentElement.style.animation = 'slideInLeft 0.5s ease-out';
-            }, 10);
+            // Проверяем наличие фото профиля
+            if (user.photo_url) {
+                // Используем настоящую аватарку из Telegram
+                userData.avatarUrl = user.photo_url;
+                
+                // Создаем элемент изображения для аватарки
+                const avatarImg = document.createElement('img');
+                avatarImg.src = user.photo_url;
+                avatarImg.alt = name;
+                avatarImg.onload = function() {
+                    // Удаляем плейсхолдер и добавляем настоящую аватарку
+                    const placeholder = userAvatarElement.querySelector('.avatar-placeholder');
+                    if (placeholder) {
+                        placeholder.style.display = 'none';
+                    }
+                    userAvatarElement.appendChild(avatarImg);
+                    
+                    // Добавляем анимацию
+                    avatarImg.style.animation = 'avatarPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                };
+                
+                avatarImg.onerror = function() {
+                    console.log('Failed to load avatar, using placeholder');
+                    // Оставляем плейсхолдер если аватарка не загрузилась
+                };
+            } else {
+                // Если нет аватарки, создаем градиентную инициалу
+                const placeholder = userAvatarElement.querySelector('.avatar-placeholder');
+                if (placeholder) {
+                    // Создаем первую букву имени
+                    const initial = name.charAt(0).toUpperCase();
+                    placeholder.innerHTML = `<span style="font-size: 1.2rem; font-weight: bold;">${initial}</span>`;
+                    placeholder.style.background = getRandomGradient();
+                }
+            }
+            
+            console.log('User data loaded:', userData);
+        } else {
+            // Если нет данных пользователя, создаем случайный градиент для плейсхолдера
+            const placeholder = userAvatarElement.querySelector('.avatar-placeholder');
+            if (placeholder) {
+                placeholder.style.background = getRandomGradient();
+            }
         }
+    }
+    
+    // Генерирует случайный градиент для аватарки
+    function getRandomGradient() {
+        const gradients = [
+            'linear-gradient(135deg, #FF6B6B, #FF8E53)',
+            'linear-gradient(135deg, #4ECDC4, #44A08D)',
+            'linear-gradient(135deg, #FFD166, #FFB347)',
+            'linear-gradient(135deg, #7B2FF7, #5A1BD6)',
+            'linear-gradient(135deg, #06D6A0, #04A97F)',
+            'linear-gradient(135deg, #EF476F, #D43A5E)',
+            'linear-gradient(135deg, #118AB2, #0D6F8F)'
+        ];
+        return gradients[Math.floor(Math.random() * gradients.length)];
     }
     
     // Обновляем баланс на экране
@@ -127,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const descElement = contentDisplay.querySelector('p');
             
             if (page === 'profile') {
-                descElement.textContent = pageContent.profile.description.replace('Гость', userData.username);
+                descElement.textContent = `Привет, ${userData.username}! Здесь ты можешь настроить профиль, посмотреть статистику и историю операций.`;
             } else {
                 descElement.textContent = content.description;
             }
@@ -203,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Инициализация
-    updateUserName();
+    loadUserAvatar();
     updateBalanceDisplay();
     updateContent('home');
     checkTonIcon();
@@ -263,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Проверяем иконку TON при загрузке
     window.addEventListener('load', checkTonIcon);
     
-    // Обновляем профиль если имя изменилось
+    // Обновляем профиль при загрузке аватарки
     setTimeout(() => {
         if (pageContent.profile) {
             pageContent.profile.description = `Привет, ${userData.username}! Здесь ты можешь настроить профиль, посмотреть статистику и историю операций.`;
