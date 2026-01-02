@@ -37,14 +37,45 @@ body::before {
     margin: 0 auto;
 }
 
-/* Верхнее меню - компактное */
+/* Верхнее меню с именем и балансом */
 .top-menu {
     display: flex;
-    justify-content: flex-end;
-    padding: 5px 0;
-    margin-bottom: 5px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    margin-bottom: 10px;
     flex-shrink: 0;
-    height: 50px;
+    height: 55px;
+}
+
+/* Имя пользователя слева */
+.user-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 15px;
+    background: rgba(40, 40, 45, 0.8);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    max-width: 180px;
+    overflow: hidden;
+}
+
+.user-name i {
+    font-size: 1.3rem;
+    color: #7b2ff7;
+    min-width: 20px;
+}
+
+.user-name span {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .balance-container {
@@ -53,7 +84,7 @@ body::before {
     gap: 10px;
 }
 
-/* Новый цвет для баланса - фиолетовый градиент */
+/* Баланс справа */
 .balance {
     background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
     padding: 8px 15px;
@@ -70,8 +101,8 @@ body::before {
 
 /* Увеличенная иконка TON */
 .ton-icon {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     object-fit: contain;
     background: white;
@@ -113,7 +144,7 @@ body::before {
     font-size: 1.1rem;
 }
 
-/* Основной контент - занимает больше места */
+/* Основной контент */
 .main-content {
     flex: 1;
     overflow-y: auto;
@@ -130,7 +161,7 @@ body::before {
         0 8px 25px rgba(0, 0, 0, 0.5),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    min-height: calc(100vh - 180px); /* Занимает почти весь экран */
+    min-height: calc(100vh - 180px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -181,11 +212,25 @@ body::before {
 }
 
 .gradient-box p {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     line-height: 1.6;
     max-width: 500px;
-    color: #c7c7cc;
+    color: #8e8e93;
     padding: 0 10px;
+    font-style: italic;
+}
+
+/* Стиль для текста "Товаров нет" */
+.empty-message {
+    color: #8e8e93 !important;
+    font-size: 1.2rem !important;
+    font-style: italic !important;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    margin-top: 10px;
 }
 
 /* Нижняя навигация */
@@ -325,8 +370,21 @@ body::before {
     }
     
     .top-menu {
-        height: 45px;
-        padding: 3px 0;
+        height: 50px;
+        padding: 5px 0;
+    }
+    
+    .user-name {
+        padding: 6px 12px;
+        max-width: 150px;
+    }
+    
+    .user-name i {
+        font-size: 1.2rem;
+    }
+    
+    .user-name span {
+        font-size: 0.9rem;
     }
     
     .balance {
@@ -341,8 +399,8 @@ body::before {
     }
     
     .ton-icon {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
     }
     
     .add-balance-btn {
@@ -410,7 +468,21 @@ body::before {
     }
     
     .top-menu {
-        height: 40px;
+        height: 45px;
+    }
+    
+    .user-name {
+        padding: 5px 10px;
+        max-width: 130px;
+    }
+    
+    .user-name i {
+        font-size: 1.1rem;
+        min-width: 18px;
+    }
+    
+    .user-name span {
+        font-size: 0.85rem;
     }
     
     .balance {
@@ -425,8 +497,8 @@ body::before {
     }
     
     .ton-icon {
-        width: 22px;
-        height: 22px;
+        width: 20px;
+        height: 20px;
     }
     
     .add-balance-btn {
@@ -514,6 +586,22 @@ body::before {
 
 .balance {
     animation: pulse 3s infinite ease-in-out;
+}
+
+/* Анимация для имени пользователя */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.user-name {
+    animation: slideInLeft 0.5s ease-out;
 }
 
 /* Анимация для появления контента */
