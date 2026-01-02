@@ -80,13 +80,17 @@ body::before {
     gap: 8px;
     box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 120px;
+    justify-content: center;
 }
 
 .ton-icon {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    object-fit: cover;
+    object-fit: contain;
+    background: white;
+    padding: 2px;
 }
 
 .balance-amount {
@@ -94,6 +98,8 @@ body::before {
     font-size: 1.1rem;
     color: white;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    min-width: 60px;
+    text-align: center;
 }
 
 .add-balance-btn {
@@ -389,10 +395,16 @@ body::before {
     
     .balance {
         padding: 6px 12px;
+        min-width: 100px;
     }
     
     .balance-amount {
         font-size: 1rem;
+    }
+    
+    .ton-icon {
+        width: 20px;
+        height: 20px;
     }
     
     .add-balance-btn {
@@ -485,11 +497,12 @@ body::before {
     
     .balance {
         padding: 5px 10px;
+        min-width: 90px;
     }
     
     .ton-icon {
-        width: 16px;
-        height: 16px;
+        width: 18px;
+        height: 18px;
     }
 }
 
@@ -536,4 +549,25 @@ body::before {
 
 .gradient-box {
     animation: fadeInUp 0.5s ease-out;
+}
+
+/* Запасной вариант если изображение не загрузится */
+.ton-icon {
+    background-color: #0088cc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.ton-icon:before {
+    content: "TON";
+    display: none;
+}
+
+.ton-icon[src=""]:before,
+.ton-icon:not([src]):before {
+    display: block;
 }
