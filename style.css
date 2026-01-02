@@ -37,7 +37,7 @@ body::before {
     margin: 0 auto;
 }
 
-/* Верхнее меню с именем и балансом */
+/* Верхнее меню с аватаркой и балансом */
 .top-menu {
     display: flex;
     justify-content: space-between;
@@ -45,37 +45,65 @@ body::before {
     padding: 8px 0;
     margin-bottom: 10px;
     flex-shrink: 0;
-    height: 55px;
+    height: 60px;
 }
 
-/* Имя пользователя слева */
-.user-name {
+/* Информация о пользователе слева */
+.user-info {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 15px;
+    gap: 12px;
+    padding: 8px 15px 8px 10px;
     background: rgba(40, 40, 45, 0.8);
-    border-radius: 15px;
+    border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    max-width: 180px;
+    max-width: 200px;
     overflow: hidden;
 }
 
-.user-name i {
-    font-size: 1.3rem;
-    color: #7b2ff7;
-    min-width: 20px;
+/* Аватарка пользователя */
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+    border: 2px solid #7b2ff7;
+    box-shadow: 0 3px 8px rgba(123, 47, 247, 0.3);
 }
 
-.user-name span {
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.avatar-placeholder i {
+    font-size: 1.4rem;
+}
+
+.user-name {
     font-weight: 600;
     font-size: 1rem;
     color: #ffffff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 1;
 }
 
 .balance-container {
@@ -370,20 +398,26 @@ body::before {
     }
     
     .top-menu {
-        height: 50px;
+        height: 55px;
         padding: 5px 0;
     }
     
+    .user-info {
+        padding: 6px 12px 6px 8px;
+        max-width: 170px;
+        gap: 10px;
+    }
+    
+    .user-avatar {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .avatar-placeholder i {
+        font-size: 1.3rem;
+    }
+    
     .user-name {
-        padding: 6px 12px;
-        max-width: 150px;
-    }
-    
-    .user-name i {
-        font-size: 1.2rem;
-    }
-    
-    .user-name span {
         font-size: 0.9rem;
     }
     
@@ -468,20 +502,26 @@ body::before {
     }
     
     .top-menu {
-        height: 45px;
+        height: 50px;
+    }
+    
+    .user-info {
+        padding: 5px 10px 5px 8px;
+        max-width: 150px;
+        gap: 8px;
+        border-radius: 18px;
+    }
+    
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .avatar-placeholder i {
+        font-size: 1.2rem;
     }
     
     .user-name {
-        padding: 5px 10px;
-        max-width: 130px;
-    }
-    
-    .user-name i {
-        font-size: 1.1rem;
-        min-width: 18px;
-    }
-    
-    .user-name span {
         font-size: 0.85rem;
     }
     
@@ -588,20 +628,20 @@ body::before {
     animation: pulse 3s infinite ease-in-out;
 }
 
-/* Анимация для имени пользователя */
-@keyframes slideInLeft {
-    from {
+/* Анимация для аватарки */
+@keyframes avatarPop {
+    0% {
+        transform: scale(0.8);
         opacity: 0;
-        transform: translateX(-20px);
     }
-    to {
+    100% {
+        transform: scale(1);
         opacity: 1;
-        transform: translateX(0);
     }
 }
 
-.user-name {
-    animation: slideInLeft 0.5s ease-out;
+.user-avatar {
+    animation: avatarPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 /* Анимация для появления контента */
