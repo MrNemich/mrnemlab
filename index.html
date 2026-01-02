@@ -3,27 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GiftLab</title>
+    <title>BEAT CLUB</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <div class="container">
+        <!-- Верхнее меню с балансом -->
+        <div class="top-menu">
+            <div class="logo">
+                <i class="fas fa-headphones"></i> BEAT CLUB
+            </div>
+            <div class="balance-container">
+                <div class="balance">
+                    <img src="https://raw.githubusercontent.com/mrnemlab/nft/main/ton.png" alt="TON" class="ton-icon">
+                    <span class="balance-amount">0</span>
+                </div>
+                <button class="add-balance-btn">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
         <header class="header">
             <h1 class="app-title">
-                <i class="fas fa-gift"></i> GiftLab
+                <i class="fas fa-crown"></i> BEAT CLUB
             </h1>
-            <p class="app-subtitle">Добро пожаловать в GiftLab</p>
+            <p class="app-subtitle">Твой билет в мир музыки</p>
         </header>
 
         <main class="main-content">
             <div class="content-card">
-                <h2><i class="fas fa-sparkles"></i> Лаборатория подарков</h2>
+                <h2><i class="fas fa-fire"></i> Музыкальная лаборатория</h2>
                 <p>Выберите раздел в нижней панели навигации</p>
                 <div class="gradient-box" id="content-display">
                     <i class="fas fa-home content-icon"></i>
                     <h3>Главная страница</h3>
-                    <p>Добро пожаловать в GiftLab! Здесь вы найдете идеальные подарки, игры и возможности для улучшения.</p>
+                    <p>Добро пожаловать в BEAT CLUB! Здесь музыка встречается с технологиями. Собирай TON, участвуй в лотереях и стань частью музыкального комьюнити.</p>
                 </div>
             </div>
         </main>
@@ -32,28 +49,35 @@
             <div class="nav-container">
                 <button class="nav-button active" data-page="home">
                     <div class="button-content">
-                        <i class="fas fa-home nav-icon"></i>
+                        <div class="nav-emoji">🏠</div>
                         <span class="nav-text">Главная</span>
                     </div>
                 </button>
                 
-                <button class="nav-button" data-page="games">
+                <button class="nav-button" data-page="lottery">
                     <div class="button-content">
-                        <i class="fas fa-gamepad nav-icon"></i>
-                        <span class="nav-text">Игры</span>
+                        <div class="nav-emoji">🎰</div>
+                        <span class="nav-text">Лотерея</span>
                     </div>
                 </button>
                 
-                <button class="nav-button" data-page="upgrade">
+                <button class="nav-button" data-page="tasks">
                     <div class="button-content">
-                        <i class="fas fa-rocket nav-icon"></i>
-                        <span class="nav-text">Апгрейд</span>
+                        <div class="nav-emoji">🎯</div>
+                        <span class="nav-text">Задания</span>
+                    </div>
+                </button>
+                
+                <button class="nav-button" data-page="rating">
+                    <div class="button-content">
+                        <div class="nav-emoji">🏆</div>
+                        <span class="nav-text">Рейтинг</span>
                     </div>
                 </button>
                 
                 <button class="nav-button" data-page="profile">
                     <div class="button-content">
-                        <i class="fas fa-user-astronaut nav-icon"></i>
+                        <div class="nav-emoji">👤</div>
                         <span class="nav-text">Профиль</span>
                     </div>
                 </button>
