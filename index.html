@@ -58,27 +58,6 @@
                     </button>
                 </div>
                 
-                <!-- Модальное окно для ввода суммы пополнения -->
-                <div class="deposit-modal" id="deposit-modal" style="display: none;">
-                    <div class="deposit-header">
-                        <h3>💰 Введите сумму пополнения</h3>
-                        <button class="modal-close" id="close-deposit-modal">&times;</button>
-                    </div>
-                    <div class="deposit-body">
-                        <div class="deposit-input-group">
-                            <input type="number" id="deposit-amount" min="1" max="1000" placeholder="Сумма в TON" class="deposit-input">
-                            <span class="deposit-label">TON</span>
-                        </div>
-                        <div class="deposit-info">
-                            <p>Доступно на кошельке: <span id="wallet-available">0</span> TON</p>
-                        </div>
-                        <button class="wallet-btn confirm-deposit-btn" id="confirm-deposit-btn">
-                            <i class="fas fa-paper-plane"></i>
-                            <span>Отправить</span>
-                        </button>
-                    </div>
-                </div>
-                
                 <div class="wallet-connect">
                     <div class="connect-header">
                         <span>👛 Wallet</span>
@@ -92,7 +71,56 @@
                 </div>
                 
                 <div class="wallet-footer">
-                    <p>Баланс в боте</p>
+                    <p>Ваш внутренний баланс в боте</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно пополнения -->
+        <div class="modal-overlay" id="deposit-modal">
+            <div class="modal-content deposit-modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">💰 Пополнение баланса</h3>
+                    <button class="modal-close" id="close-deposit-modal">&times;</button>
+                </div>
+                
+                <div class="deposit-container">
+                    <div class="wallet-address-display" id="wallet-address-display">
+                        <!-- Адрес будет здесь -->
+                    </div>
+                    
+                    <div class="deposit-amount">
+                        <label for="deposit-amount-input">Сумма пополнения (TON):</label>
+                        <div class="amount-input-group">
+                            <input type="number" id="deposit-amount-input" min="1" max="1000" step="0.01" placeholder="10" value="10">
+                            <span class="ton-symbol">TON</span>
+                        </div>
+                        <div class="amount-presets">
+                            <button class="amount-preset" data-amount="10">10 TON</button>
+                            <button class="amount-preset" data-amount="50">50 TON</button>
+                            <button class="amount-preset" data-amount="100">100 TON</button>
+                        </div>
+                    </div>
+                    
+                    <div class="deposit-info">
+                        <div class="info-item">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Комиссия сети: ~0.02 TON</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Обычное подтверждение: до 30 сек</span>
+                        </div>
+                    </div>
+                    
+                    <button class="confirm-deposit-btn" id="confirm-deposit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Отправить транзакцию</span>
+                    </button>
+                    
+                    <div class="transaction-status" id="transaction-status">
+                        <!-- Статус транзакции будет здесь -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -145,7 +173,6 @@
     <div id="ton-connect-modal" style="display: none;"></div>
 
     <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
-    <script src="https://unpkg.com/ton@12.1.1/dist/ton.umd.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
