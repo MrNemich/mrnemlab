@@ -199,7 +199,7 @@ body::before {
 .modal-content {
     background: linear-gradient(135deg, #1a1a1f, #0f0f15);
     border-radius: 25px;
-    padding: 0;
+    padding: 25px;
     width: 90%;
     max-width: 400px;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -209,7 +209,6 @@ body::before {
     position: relative;
     transform: translateY(20px);
     transition: transform 0.3s ease;
-    overflow: hidden;
 }
 
 .modal-overlay.active .modal-content {
@@ -220,16 +219,12 @@ body::before {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 20px;
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    z-index: 2;
 }
 
 .modal-close {
-    background: rgba(0, 0, 0, 0.3);
+    background: none;
     border: none;
-    color: white;
+    color: #8e8e93;
     font-size: 1.8rem;
     cursor: pointer;
     width: 40px;
@@ -239,23 +234,22 @@ body::before {
     justify-content: center;
     border-radius: 50%;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
 }
 
 .modal-close:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
 }
 
-/* Стили для кошелька - СИНЯЯ ЗАЛИВКА ВЕСЬ БЛОК */
+/* Стили для кошелька */
 .wallet-top-circle {
     background: linear-gradient(180deg, #007aff, #0056cc);
-    padding: 50px 30px 40px;
+    border-radius: 50% 50% 0 0;
+    padding: 40px 30px 60px;
     text-align: center;
-    margin: 0;
+    margin: -25px -25px 20px;
     position: relative;
     overflow: hidden;
-    border-radius: 25px 25px 0 0;
 }
 
 .wallet-top-circle::before {
@@ -267,13 +261,13 @@ body::before {
     height: 100%;
     background: linear-gradient(180deg, 
         rgba(0, 122, 255, 1) 0%,
-        rgba(0, 86, 204, 1) 100%);
+        rgba(0, 86, 204, 0.9) 100%);
 }
 
 .wallet-title {
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 15px;
     position: relative;
     z-index: 1;
     letter-spacing: 1px;
@@ -281,28 +275,24 @@ body::before {
 }
 
 .wallet-balance {
-    font-size: 2.8rem;
-    font-weight: 800;
+    font-size: 2.5rem;
+    font-weight: 700;
     color: white;
     position: relative;
     z-index: 1;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 8px;
 }
 
 .ton-text {
-    font-size: 1.5rem;
-    color: rgba(255, 255, 255, 0.95);
-    font-weight: 600;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-left: 8px;
 }
 
 .wallet-buttons {
     display: flex;
     gap: 15px;
-    margin: 25px 25px 20px;
+    margin: 25px 0 30px;
     justify-content: center;
 }
 
@@ -323,32 +313,32 @@ body::before {
 }
 
 .deposit-btn {
-    background: linear-gradient(135deg, #34c759, #30b456);
-    color: white;
-    box-shadow: 0 5px 15px rgba(52, 199, 89, 0.3);
+    background: white;
+    color: #000;
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
 }
 
 .deposit-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(52, 199, 89, 0.4);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
 }
 
 .withdraw-btn {
-    background: linear-gradient(135deg, #ff375f, #d43a5e);
+    background: linear-gradient(135deg, #007aff, #0056cc);
     color: white;
-    box-shadow: 0 5px 15px rgba(255, 55, 95, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 122, 255, 0.3);
 }
 
 .withdraw-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(255, 55, 95, 0.4);
+    box-shadow: 0 8px 20px rgba(0, 122, 255, 0.4);
 }
 
 .wallet-connect {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 15px;
     padding: 20px;
-    margin: 0 25px 20px;
+    margin-bottom: 20px;
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -371,185 +361,33 @@ body::before {
     background: linear-gradient(135deg, #007aff, #0056cc);
     color: white;
     border: none;
-    padding: 10px 25px;
+    padding: 8px 20px;
     border-radius: 20px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 3px 10px rgba(0, 122, 255, 0.3);
 }
 
 .connect-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 122, 255, 0.4);
+    box-shadow: 0 5px 15px rgba(0, 122, 255, 0.3);
 }
 
 .connect-info {
     background: rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
-    padding: 18px;
-    text-align: center;
-}
-
-.wallet-connected-info {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.wallet-address {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    color: white;
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-.wallet-address i {
-    color: #007aff;
-    font-size: 1.2rem;
-}
-
-.wallet-balance-display {
-    background: linear-gradient(135deg, rgba(0, 122, 255, 0.2), rgba(0, 86, 204, 0.2));
-    padding: 12px;
     border-radius: 10px;
-    border: 1px solid rgba(0, 122, 255, 0.3);
-}
-
-.balance-value {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: white;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.wallet-disconnected-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    color: #8e8e93;
-    font-size: 0.9rem;
-}
-
-.wallet-disconnected-info i {
-    font-size: 1.5rem;
-    color: #8e8e93;
+    padding: 15px;
+    text-align: center;
+    min-height: 70px;
 }
 
 .wallet-footer {
     text-align: center;
     color: #8e8e93;
     font-size: 0.9rem;
-    padding: 15px 25px 25px;
+    padding-top: 15px;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    margin: 0;
-    font-style: italic;
-}
-
-/* Модальное окно для ввода суммы пополнения */
-.deposit-modal {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, #1a1a1f, #0f0f15);
-    border-radius: 25px;
-    z-index: 10;
-    padding: 25px;
-}
-
-.deposit-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.deposit-header h3 {
-    font-size: 1.3rem;
-    color: white;
-}
-
-.deposit-body {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.deposit-input-group {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    padding: 20px;
-    border: 2px solid rgba(0, 122, 255, 0.3);
-}
-
-.deposit-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    font-weight: 700;
-    outline: none;
-    text-align: center;
-}
-
-.deposit-input::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-}
-
-.deposit-label {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #007aff;
-    min-width: 60px;
-}
-
-.deposit-info {
-    text-align: center;
-    color: #8e8e93;
-    font-size: 0.95rem;
-}
-
-.deposit-info p {
-    margin: 0;
-}
-
-.deposit-info span {
-    color: #34c759;
-    font-weight: 600;
-}
-
-.confirm-deposit-btn {
-    background: linear-gradient(135deg, #007aff, #0056cc);
-    color: white;
-    border: none;
-    padding: 20px;
-    border-radius: 15px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 20px rgba(0, 122, 255, 0.4);
-    width: 100%;
-}
-
-.confirm-deposit-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.6);
 }
 
 /* Основной контент */
@@ -662,6 +500,20 @@ body::before {
     margin-top: 5px;
 }
 
+.ticket-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    color: #8e8e93;
+    font-size: 0.9rem;
+}
+
+.ticket-price img {
+    width: 20px;
+    height: 20px;
+}
+
 .ticket-btn {
     background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
     color: white;
@@ -690,20 +542,6 @@ body::before {
 .ticket-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-}
-
-.ticket-price {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-    color: #8e8e93;
-    font-size: 0.9rem;
-}
-
-.ticket-price img {
-    width: 20px;
-    height: 20px;
 }
 
 .participant-status {
@@ -838,46 +676,6 @@ body::before {
 
 .sold-stat {
     color: #06D6A0;
-}
-
-/* Карточка с информацией о кошельке в профиле */
-.wallet-info-card {
-    background: linear-gradient(135deg, rgba(0, 122, 255, 0.1), rgba(0, 86, 204, 0.1));
-    border-radius: 15px;
-    padding: 20px;
-    width: 100%;
-    max-width: 500px;
-    border: 1px solid rgba(0, 122, 255, 0.3);
-    margin-top: 20px;
-}
-
-.wallet-info-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.wallet-info-header i {
-    font-size: 1.5rem;
-    color: #007aff;
-}
-
-.wallet-info-header h3 {
-    font-size: 1.2rem;
-    color: white;
-    margin: 0;
-}
-
-.wallet-info-body p {
-    margin: 10px 0;
-    color: #8e8e93;
-    font-size: 0.95rem;
-}
-
-.wallet-info-body strong {
-    color: white;
-    font-weight: 600;
 }
 
 /* Стили для рейтинга */
@@ -1033,6 +831,399 @@ body::before {
     color: #ffffff;
 }
 
+/* Стили для модального окна пополнения */
+.deposit-modal-content {
+    max-width: 450px;
+}
+
+.modal-title {
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.deposit-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.address-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid rgba(123, 47, 247, 0.3);
+}
+
+.address-label {
+    color: #8e8e93;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.address-value-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.address-value {
+    font-family: monospace;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px 15px;
+    border-radius: 10px;
+    flex: 1;
+    word-break: break-all;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.copy-btn {
+    background: linear-gradient(135deg, #007aff, #0056cc);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 122, 255, 0.3);
+}
+
+.address-note {
+    color: #ffd166;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.address-note i {
+    font-size: 1rem;
+}
+
+.qr-code-placeholder {
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #8e8e93;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.qr-code-placeholder:hover {
+    border-color: rgba(123, 47, 247, 0.3);
+    background: rgba(123, 47, 247, 0.05);
+}
+
+.qr-code-placeholder i {
+    font-size: 2.5rem;
+    color: #7b2ff7;
+}
+
+.deposit-amount {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.deposit-amount label {
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.amount-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.amount-input-group input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(123, 47, 247, 0.5);
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    outline: none;
+}
+
+.amount-input-group input:focus {
+    border-color: #7b2ff7;
+    box-shadow: 0 0 0 2px rgba(123, 47, 247, 0.2);
+}
+
+.ton-symbol {
+    color: #7b2ff7;
+    font-weight: 700;
+    font-size: 1.2rem;
+    min-width: 40px;
+}
+
+.amount-presets {
+    display: flex;
+    gap: 10px;
+}
+
+.amount-preset {
+    flex: 1;
+    background: rgba(123, 47, 247, 0.1);
+    border: 1px solid rgba(123, 47, 247, 0.3);
+    color: #7b2ff7;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.amount-preset:hover {
+    background: rgba(123, 47, 247, 0.2);
+    transform: translateY(-2px);
+}
+
+.amount-preset.active {
+    background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
+    color: white;
+    border-color: #7b2ff7;
+}
+
+.deposit-info {
+    background: rgba(0, 122, 255, 0.1);
+    border-radius: 15px;
+    padding: 15px;
+    border: 1px solid rgba(0, 122, 255, 0.2);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #8e8e93;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.info-item:last-child {
+    margin-bottom: 0;
+}
+
+.info-item i {
+    color: #007aff;
+    min-width: 16px;
+}
+
+.confirm-deposit-btn {
+    background: linear-gradient(135deg, #06D6A0, #04A97F);
+    color: white;
+    border: none;
+    padding: 20px;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.confirm-deposit-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(6, 214, 160, 0.4);
+}
+
+.confirm-deposit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.transaction-status {
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transaction-status-pending,
+.transaction-status-success,
+.transaction-status-error,
+.transaction-status-confirmed {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    border-radius: 10px;
+    width: 100%;
+    animation: fadeIn 0.3s ease;
+}
+
+.transaction-status-pending {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    color: #ffd166;
+}
+
+.transaction-status-success {
+    background: rgba(6, 214, 160, 0.1);
+    border: 1px solid rgba(6, 214, 160, 0.3);
+    color: #06D6A0;
+}
+
+.transaction-status-confirmed {
+    background: rgba(123, 47, 247, 0.1);
+    border: 1px solid rgba(123, 47, 247, 0.3);
+    color: #7b2ff7;
+}
+
+.transaction-status-error {
+    background: rgba(239, 71, 111, 0.1);
+    border: 1px solid rgba(239, 71, 111, 0.3);
+    color: #EF476F;
+}
+
+/* Стили для информации о кошельке в профиле */
+.wallet-info-card {
+    background: linear-gradient(135deg, rgba(40, 40, 45, 0.9), rgba(25, 25, 30, 0.9));
+    border-radius: 20px;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 20px;
+}
+
+.wallet-info-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.wallet-info-header i {
+    color: #7b2ff7;
+    font-size: 1.2rem;
+}
+
+.wallet-info-content {
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.connected-wallet {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.wallet-address {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.wallet-address span:first-child {
+    color: #8e8e93;
+    font-size: 0.9rem;
+    min-width: 50px;
+}
+
+.address-value {
+    font-family: monospace;
+    font-size: 0.9rem;
+    word-break: break-all;
+    flex: 1;
+    color: white;
+}
+
+.copy-address-btn {
+    background: rgba(123, 47, 247, 0.2);
+    border: 1px solid rgba(123, 47, 247, 0.4);
+    color: #7b2ff7;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.copy-address-btn:hover {
+    background: rgba(123, 47, 247, 0.3);
+    transform: translateY(-2px);
+}
+
+.wallet-balance-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, rgba(123, 47, 247, 0.1), rgba(90, 27, 214, 0.1));
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(123, 47, 247, 0.3);
+}
+
+.wallet-balance-display span:first-child {
+    color: #8e8e93;
+    font-size: 0.9rem;
+    min-width: 60px;
+}
+
+.balance-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #7b2ff7;
+    flex: 1;
+}
+
+.not-connected {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #8e8e93;
+    padding: 20px;
+}
+
+.not-connected i {
+    font-size: 2rem;
+    color: #8e8e93;
+}
+
 /* Адаптивность */
 @media (max-width: 768px) {
     .container {
@@ -1048,6 +1239,7 @@ body::before {
         padding: 6px 12px 6px 8px;
         max-width: 170px;
         gap: 10px;
+        border-radius: 18px;
     }
     
     .user-avatar {
@@ -1099,11 +1291,11 @@ body::before {
     }
     
     .wallet-top-circle {
-        padding: 40px 20px 30px;
+        padding: 30px 20px 50px;
     }
     
     .wallet-balance {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
     }
     
     .pepe-image {
@@ -1149,6 +1341,35 @@ body::before {
     
     .nav-text {
         font-size: 0.75rem;
+    }
+    
+    .deposit-modal-content {
+        max-width: 380px;
+    }
+    
+    .address-value {
+        font-size: 0.8rem;
+    }
+    
+    .amount-input-group input {
+        padding: 12px;
+        font-size: 1.1rem;
+    }
+    
+    .amount-presets {
+        flex-direction: column;
+    }
+    
+    .wallet-address {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .wallet-balance-display {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
     }
 }
 
@@ -1212,11 +1433,11 @@ body::before {
     }
     
     .wallet-top-circle {
-        padding: 35px 15px 25px;
+        padding: 25px 15px 45px;
     }
     
     .wallet-balance {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
     
     .wallet-btn {
@@ -1260,6 +1481,26 @@ body::before {
     
     .nav-text {
         font-size: 0.7rem;
+    }
+    
+    .deposit-modal-content {
+        max-width: 320px;
+        padding: 15px;
+    }
+    
+    .address-container,
+    .deposit-amount,
+    .deposit-info {
+        padding: 15px;
+    }
+    
+    .confirm-deposit-btn {
+        padding: 15px;
+        font-size: 1rem;
+    }
+    
+    .wallet-info-card {
+        padding: 15px;
     }
 }
 
@@ -1404,3 +1645,146 @@ body::before {
     animation: fadeIn 0.5s ease-out;
 }
 
+/* Градиентный бокс для пустых страниц */
+.gradient-box {
+    background: linear-gradient(135deg, rgba(40, 40, 45, 0.8), rgba(25, 25, 30, 0.8));
+    border-radius: 20px;
+    padding: 40px 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: auto;
+    max-width: 500px;
+    width: 100%;
+}
+
+.content-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #ff375f, #7b2ff7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gradient-box h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.empty-message {
+    color: #8e8e93;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Дополнительные стили для кнопок в профиле */
+.wallet-address .address-value {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: white;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 0 10px;
+    flex: 1;
+    word-break: break-all;
+}
+
+/* Стили для спиннера при загрузке */
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Стили для уведомлений */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #06D6A0, #04A97F);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    animation: slideInRight 0.3s ease;
+    max-width: 300px;
+}
+
+.notification.error {
+    background: linear-gradient(135deg, #EF476F, #D43A5E);
+}
+
+.notification.warning {
+    background: linear-gradient(135deg, #FFD166, #FFB347);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Стили для QR кода */
+.qr-code {
+    width: 200px;
+    height: 200px;
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 0 auto;
+}
+
+.qr-code img {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+
+/* Стили для прелоадера */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #0a0a0f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+    transition: opacity 0.3s ease;
+}
+
+.preloader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.preloader-content {
+    text-align: center;
+}
+
+.preloader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(123, 47, 247, 0.3);
+    border-top-color: #7b2ff7;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+.preloader-text {
+    color: #8e8e93;
+    font-size: 1rem;
+}
