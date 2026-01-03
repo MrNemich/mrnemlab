@@ -2,14 +2,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация Telegram Web App
     const tg = window.Telegram.WebApp;
     
-    // Инициализируем приложение
+    // Инициализация TON Connect
+    const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+        manifestUrl: window.location.origin + '/tonconnect-manifest.json',
+        buttonRootId: 'connect-wallet-btn'
+    });
+    
+    // Инициализация приложения
     tg.expand();
     tg.enableClosingConfirmation();
-    tg.setHeaderColor('#0a0a0f');
-    tg.setBackgroundColor('#0a0a0f');
+    tg.setHeaderColor('#000000');
+    tg.setBackgroundColor('#000000');
     
     // Получаем элементы
-    const navButtons = document.querySelectorAll('.nav-button');
     const mainContent = document.getElementById('main-content');
     const balanceAmount = document.getElementById('balance-amount');
     const addBalanceBtn = document.getElementById('add-balance-btn');
@@ -22,40 +27,51 @@ document.addEventListener('DOMContentLoaded', function() {
     const connectWalletBtn = document.getElementById('connect-wallet-btn');
     const botBalanceElement = document.getElementById('bot-balance');
     const connectInfoElement = document.getElementById('connect-info');
+    const navButtons = document.querySelectorAll('.nav-button');
+    const depositModal = document.getElementById('deposit-modal');
+    const closeDepositModal = document.getElementById('close-deposit-modal');
+    const cancelDeposit = document.getElementById('cancel-deposit');
+    const submitDeposit = document.getElementById('submit-deposit');
+    const depositInput = document.getElementById('deposit-input');
+    const quickAmounts = document.querySelectorAll('.quick-amount');
+    const confirmDepositBtn = document.getElementById('confirm-deposit');
+    const depositAmountInput = document.getElementById('deposit-amount');
     
-    // Текущий пользователь (все начинают с 0!)
+    // Глобальная дата окончания лотереи (5 дней с момента создания)
+    const LOTTERY_END_DATE = localStorage.getItem('lottery_end_date') || 
+        new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString();
+    
+    if (!localStorage.getItem('lottery_end_date')) {
+        localStorage.setItem('lottery_end_date', LOTTERY_END_DATE);
+    }
+    
+    // Данные пользователя
     let userData = {
         id: null,
-        balance: 0,
+        balance: parseFloat(localStorage.getItem('user_balance')) || 0,
         username: 'Гость',
         avatarUrl: null,
-        walletConnected: false,
-        walletAddress: null,
-        walletBalance: 0,
-        bought: 0,
-        sold: 0,
-        totalVolume: 0,
-        lotteryParticipating: false
+        walletConnected: localStorage.getItem('wallet_connected') === 'true',
+        walletAddress: localStorage.getItem('wallet_address'),
+        walletBalance: parseFloat(localStorage.getItem('wallet_balance')) || 0,
+        bought: parseInt(localStorage.getItem('bought')) || 0,
+        sold: parseInt(localStorage.getItem('sold')) || 0,
+        totalVolume: parseFloat(localStorage.getItem('total_volume')) || 0,
+        lotteryParticipating: localStorage.getItem('lottery_participating') === 'true'
     };
     
-    // Дата окончания лотереи (5 дней с текущего момента)
-    const lotteryEndDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000);
+    // Инициализация
+    initApp();
     
-    // Инициализация TON Connect
-    let tonConnectUI = null;
+    async function initApp() {
+        await loadUserData();
+        initTonConnect();
+        updateContent('home');
+        setupEventListeners();
+        startLotteryTimer();
+    }
     
-    // Загрузка данных пользователя
-    function loadUserData() {
-        // Проверяем, есть ли сохраненные данные
-        const savedData = localStorage.getItem('beatclub_user_data');
-        if (savedData) {
-            const parsed = JSON.parse(savedData);
-            // Проверяем совпадение ID пользователя
-            if (tg.initDataUnsafe?.user && parsed.id === tg.initDataUnsafe.user.id) {
-                userData = parsed;
-            }
-        }
-        
+    async function loadUserData() {
         // Загружаем данные из Telegram
         if (tg.initDataUnsafe?.user) {
             const user = tg.initDataUnsafe.user;
@@ -76,89 +92,33 @@ document.addEventListener('DOMContentLoaded', function() {
             userNameElement.textContent = name;
             
             // Загружаем аватарку
-            loadUserAvatar(user);
-            
-            console.log('User data loaded:', userData);
+            if (user.photo_url) {
+                userData.avatarUrl = user.photo_url;
+                const avatarImg = document.createElement('img');
+                avatarImg.src = user.photo_url;
+                avatarImg.alt = name;
+                avatarImg.style.width = '100%';
+                avatarImg.style.height = '100%';
+                avatarImg.style.borderRadius = '50%';
+                userAvatarElement.querySelector('.avatar-placeholder').remove();
+                userAvatarElement.appendChild(avatarImg);
+            }
         }
         
-        // Обновляем отображение
         updateBalanceDisplay();
         updateConnectInfo();
     }
     
-    // Сохранение данных пользователя
-    function saveUserData() {
-        localStorage.setItem('beatclub_user_data', JSON.stringify(userData));
-    }
-    
-    // Загрузка аватарки пользователя
-    function loadUserAvatar(user) {
-        if (user.photo_url) {
-            userData.avatarUrl = user.photo_url;
-            
-            const avatarImg = document.createElement('img');
-            avatarImg.src = user.photo_url;
-            avatarImg.alt = userData.username;
-            avatarImg.onload = function() {
-                const placeholder = userAvatarElement.querySelector('.avatar-placeholder');
-                if (placeholder) {
-                    placeholder.style.display = 'none';
-                }
-                userAvatarElement.appendChild(avatarImg);
-                avatarImg.style.animation = 'avatarPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-            };
-            
-            avatarImg.onerror = function() {
-                console.log('Failed to load avatar, using placeholder');
-                setAvatarPlaceholder();
-            };
-        } else {
-            setAvatarPlaceholder();
-        }
-    }
-    
-    function setAvatarPlaceholder() {
-        const placeholder = userAvatarElement.querySelector('.avatar-placeholder');
-        if (placeholder) {
-            placeholder.style.background = getRandomGradient();
-            placeholder.innerHTML = `<span style="font-size: 1.2rem; font-weight: bold;">${userData.username.charAt(0).toUpperCase()}</span>`;
-        }
-    }
-    
-    function getRandomGradient() {
-        const gradients = [
-            'linear-gradient(135deg, #FF6B6B, #FF8E53)',
-            'linear-gradient(135deg, #4ECDC4, #44A08D)',
-            'linear-gradient(135deg, #FFD166, #FFB347)',
-            'linear-gradient(135deg, #7B2FF7, #5A1BD6)',
-            'linear-gradient(135deg, #06D6A0, #04A97F)',
-            'linear-gradient(135deg, #EF476F, #D43A5E)',
-            'linear-gradient(135deg, #118AB2, #0D6F8F)'
-        ];
-        return gradients[Math.floor(Math.random() * gradients.length)];
-    }
-    
-    // Обновление отображения баланса
-    function updateBalanceDisplay() {
-        balanceAmount.textContent = userData.balance.toLocaleString();
-        botBalanceElement.textContent = userData.balance.toLocaleString();
-    }
-    
-    // Инициализация TON Connect
     function initTonConnect() {
-        const manifestUrl = window.location.origin + '/tonconnect-manifest.json';
-        
-        tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-            manifestUrl: manifestUrl,
-            buttonRootId: 'ton-connect-modal'
-        });
-        
-        // Подписываемся на изменения
-        tonConnectUI.onStatusChange(walletInfo => {
+        tonConnectUI.onStatusChange(async (walletInfo) => {
             if (walletInfo) {
                 userData.walletConnected = true;
                 userData.walletAddress = walletInfo.account.address;
-                updateWalletBalance();
+                localStorage.setItem('wallet_connected', 'true');
+                localStorage.setItem('wallet_address', userData.walletAddress);
+                
+                // Получаем реальный баланс
+                await updateRealWalletBalance();
                 updateConnectInfo();
                 
                 tg.showAlert('✅ Кошелек успешно подключен!');
@@ -167,110 +127,173 @@ document.addEventListener('DOMContentLoaded', function() {
                 userData.walletConnected = false;
                 userData.walletAddress = null;
                 userData.walletBalance = 0;
+                localStorage.setItem('wallet_connected', 'false');
+                localStorage.removeItem('wallet_address');
                 updateConnectInfo();
             }
         });
-    }
-    
-    // Обновление информации о подключении
-    function updateConnectInfo() {
+        
+        // Восстанавливаем соединение если было
         if (userData.walletConnected && userData.walletAddress) {
-            const shortAddress = `${userData.walletAddress.slice(0, 4)}...${userData.walletAddress.slice(-4)}`;
-            connectInfoElement.innerHTML = `
-                <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                    <span style="color: white; font-weight: 600;">👛 Your Wallet (${shortAddress})</span>
-                    <span style="font-size: 1.1rem; color: #007aff; font-weight: 700;">${userData.walletBalance.toFixed(2)} TON ></span>
-                </div>
-            `;
-            connectWalletBtn.textContent = 'Disconnect';
-            connectWalletBtn.style.background = 'linear-gradient(135deg, #ff375f, #d43a5e)';
-        } else {
-            connectInfoElement.innerHTML = `
-                <div style="color: #8e8e93; font-size: 0.9rem;">
-                    Подключите ваш TON кошелек для вывода средств
-                </div>
-            `;
-            connectWalletBtn.textContent = 'Connect +';
-            connectWalletBtn.style.background = 'linear-gradient(135deg, #007aff, #0056cc)';
+            updateConnectInfo();
         }
     }
     
-    // Обновление баланса кошелька
-    async function updateWalletBalance() {
-        if (!userData.walletConnected) return;
+    async function updateRealWalletBalance() {
+        if (!userData.walletConnected || !userData.walletAddress) return;
         
         try {
-            // Здесь должен быть реальный запрос к TON API
-            // Для демо используем случайное значение
-            userData.walletBalance = Math.random() * 100;
-            updateConnectInfo();
+            // Используем TON Center API для получения баланса
+            const response = await fetch(
+                `https://toncenter.com/api/v2/getAddressBalance?address=${userData.walletAddress}`
+            );
+            const data = await response.json();
+            
+            if (data.ok) {
+                // Конвертируем наноТоны в TON (1 TON = 1e9 наноТон)
+                const balanceInNano = parseInt(data.result);
+                userData.walletBalance = balanceInNano / 1000000000;
+                localStorage.setItem('wallet_balance', userData.walletBalance.toString());
+            }
         } catch (error) {
-            console.error('Error updating wallet balance:', error);
+            console.error('Error fetching wallet balance:', error);
+            // Используем старый баланс
+        }
+        
+        updateConnectInfo();
+    }
+    
+    function updateConnectInfo() {
+        if (userData.walletConnected && userData.walletAddress) {
+            const shortAddress = `${userData.walletAddress.slice(0, 6)}...${userData.walletAddress.slice(-4)}`;
+            connectInfoElement.innerHTML = `
+                <div class="connected-wallet">
+                    <div class="wallet-address-display">${shortAddress}</div>
+                    <div class="wallet-balance-display-small">
+                        Баланс: <span>${userData.walletBalance.toFixed(2)} TON</span>
+                    </div>
+                </div>
+            `;
+            connectWalletBtn.textContent = 'Отключить';
+            connectWalletBtn.style.background = '#ff3b30';
+        } else {
+            connectInfoElement.innerHTML = `
+                <div class="connect-placeholder">
+                    <i class="fas fa-wallet"></i>
+                    <p>Подключите TON кошелек для вывода средств</p>
+                </div>
+            `;
+            connectWalletBtn.textContent = 'Подключить';
+            connectWalletBtn.style.background = '#007AFF';
         }
     }
     
-    // Создание содержимого для разных страниц
+    function updateBalanceDisplay() {
+        balanceAmount.textContent = userData.balance.toFixed(2);
+        botBalanceElement.textContent = userData.balance.toFixed(2);
+        localStorage.setItem('user_balance', userData.balance.toString());
+    }
+    
+    function updateContent(page) {
+        let content = '';
+        
+        switch(page) {
+            case 'home':
+                content = createHomeContent();
+                break;
+            case 'lottery':
+                content = createLotteryContent();
+                break;
+            case 'tasks':
+                content = createTasksContent();
+                break;
+            case 'rating':
+                content = createRatingContent();
+                break;
+            case 'profile':
+                content = createProfileContent();
+                break;
+        }
+        
+        mainContent.innerHTML = content;
+        
+        // Инициализация элементов страницы
+        if (page === 'lottery') {
+            initLotteryPage();
+        }
+        
+        if (page === 'profile') {
+            initProfilePage();
+        }
+    }
+    
     function createHomeContent() {
         return `
-            <div class="page-content">
-                <div class="gradient-box">
-                    <i class="fas fa-home content-icon"></i>
-                    <h3>Добро пожаловать в BEAT CLUB!</h3>
-                    <p class="empty-message">Товаров нет, приходите позже...</p>
+            <div class="home-container">
+                <div class="home-icon">
+                    <i class="fas fa-record-vinyl"></i>
                 </div>
+                <h1 class="home-title">BEAT CLUB</h1>
+                <p class="home-description">
+                    Торговая платформа для коллекционеров музыки.<br>
+                    Покупайте, продавайте и коллекционируйте уникальные треки.
+                </p>
             </div>
         `;
     }
     
     function createLotteryContent() {
         return `
-            <div class="page-content">
-                <div class="lottery-container">
-                    <img src="nft/пепе.png" alt="Pepe NFT" class="pepe-image" onerror="this.onerror=null; this.src='https://i.imgur.com/Rh5D7bF.png';">
-                    
-                    <h1 class="lottery-title">🎰 Розыгрыш Pepe NFT</h1>
-                    
-                    <p class="lottery-description">
-                        Участвуй в розыгрыше уникального NFT Pepe! Купи билет за 1 TON и получи шанс выиграть эксклюзивный NFT Pepe.
-                    </p>
-                    
-                    <div class="countdown-container">
-                        <h3 class="countdown-title">До конца розыгрыша:</h3>
-                        
-                        <div class="countdown-timer" id="countdown-timer">
-                            <div class="countdown-item">
-                                <div class="countdown-value" id="days">00</div>
-                                <div class="countdown-label">Дней</div>
-                            </div>
-                            <div class="countdown-item">
-                                <div class="countdown-value" id="hours">00</div>
-                                <div class="countdown-label">Часов</div>
-                            </div>
-                            <div class="countdown-item">
-                                <div class="countdown-value" id="minutes">00</div>
-                                <div class="countdown-label">Минут</div>
-                            </div>
-                            <div class="countdown-item">
-                                <div class="countdown-value" id="seconds">00</div>
-                                <div class="countdown-label">Секунд</div>
-                            </div>
-                        </div>
-                        
-                        <div class="ticket-price">
-                            <img src="nft/ton.png" alt="TON" style="width: 20px; height: 20px;">
-                            <span>Цена билета: 1 TON</span>
-                        </div>
-                        
-                        <button class="ticket-btn" id="buy-ticket-btn">
-                            <i class="fas fa-ticket-alt"></i>
-                            <span>Купить билет за 1 TON</span>
-                        </button>
-                        
-                        <div class="participant-status" id="participant-status">
-                            <i class="fas fa-check-circle"></i>
-                            Вы участвуете в розыгрыше!
-                        </div>
+            <div class="lottery-container">
+                <div class="lottery-header">
+                    <i class="fas fa-ticket-alt lottery-icon"></i>
+                    <h2 class="lottery-title">Розыгрыш NFT</h2>
+                </div>
+                
+                <img src="nft/пепе.png" alt="Pepe NFT" class="lottery-image" 
+                     onerror="this.src='https://via.placeholder.com/400x200/000/fff?text=Pepe+NFT'">
+                
+                <div class="lottery-info">
+                    <div class="info-item">
+                        <span>Цена билета:</span>
+                        <span class="info-value">1 TON</span>
                     </div>
+                    <div class="info-item">
+                        <span>Участников:</span>
+                        <span class="info-value">${Math.floor(Math.random() * 100) + 50}</span>
+                    </div>
+                    <div class="info-item">
+                        <span>Призовой фонд:</span>
+                        <span class="info-value">150 TON</span>
+                    </div>
+                </div>
+                
+                <div class="countdown" id="countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="days">00</div>
+                        <div class="countdown-label">Дней</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="hours">00</div>
+                        <div class="countdown-label">Часов</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="minutes">00</div>
+                        <div class="countdown-label">Минут</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="seconds">00</div>
+                        <div class="countdown-label">Секунд</div>
+                    </div>
+                </div>
+                
+                <button class="buy-ticket-btn" id="buy-ticket-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Купить билет за 1 TON</span>
+                </button>
+                
+                <div class="participant-status" id="participant-status">
+                    <i class="fas fa-check-circle"></i> Вы участвуете в розыгрыше!
                 </div>
             </div>
         `;
@@ -278,355 +301,326 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function createTasksContent() {
         return `
-            <div class="page-content">
-                <div class="tasks-container">
-                    <div class="tasks-icon">
-                        <i class="fas fa-tasks"></i>
-                    </div>
-                    <h2>🎯 Задания</h2>
-                    <div class="tasks-message">
-                        Пока заданий нет, ожидайте.<br>
-                        Следите за обновлениями!
-                    </div>
+            <div class="tasks-container">
+                <div class="tasks-icon">
+                    <i class="fas fa-tasks"></i>
                 </div>
+                <h2 class="tasks-title">Задания</h2>
+                <p class="tasks-message">
+                    Новые задания появятся скоро.<br>
+                    Следите за обновлениями!
+                </p>
             </div>
         `;
     }
     
     function createRatingContent() {
         return `
-            <div class="page-content">
-                <div class="rating-container">
-                    <div class="rating-icon">
-                        <i class="fas fa-trophy"></i>
-                    </div>
-                    <h2>🏆 Рейтинг игроков</h2>
-                    <p class="rating-description">
-                        Соревнуйся с другими участниками! Зарабатывай очки активности и поднимайся в рейтинге.
-                    </p>
+            <div class="rating-container">
+                <div class="rating-icon">
+                    <i class="fas fa-trophy"></i>
                 </div>
+                <h2 class="rating-title">Рейтинг</h2>
+                <p class="rating-description">
+                    Топ игроков появится в ближайшем обновлении
+                </p>
             </div>
         `;
     }
     
     function createProfileContent() {
         return `
-            <div class="page-content">
-                <div class="profile-container">
+            <div class="profile-container">
+                <div class="profile-header">
                     <div class="profile-avatar">
                         ${userData.avatarUrl ? 
                             `<img src="${userData.avatarUrl}" alt="${userData.username}">` : 
-                            `<div class="avatar-placeholder" style="border-radius: 20px;">
-                                <span style="font-size: 2.5rem; font-weight: bold;">${userData.username.charAt(0).toUpperCase()}</span>
-                            </div>`
+                            `<i class="fas fa-user"></i>`
                         }
                     </div>
-                    
                     <h2 class="profile-username">${userData.username}</h2>
-                    
-                    <div class="profile-stats">
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="stats-row">
                         <div class="stat-item">
-                            <div class="stat-icon">💰</div>
-                            <div class="stat-value ton-stat">${userData.totalVolume}</div>
+                            <div class="stat-value">${userData.totalVolume}</div>
                             <div class="stat-label">Total volume</div>
                         </div>
-                        
+                        <span class="stat-separator">|</span>
                         <div class="stat-item">
-                            <div class="stat-icon">🎁</div>
-                            <div class="stat-value gift-stat">${userData.bought}</div>
+                            <div class="stat-value">${userData.bought}</div>
                             <div class="stat-label">Bought</div>
                         </div>
-                        
+                        <span class="stat-separator">|</span>
                         <div class="stat-item">
-                            <div class="stat-icon">💎</div>
-                            <div class="stat-value sold-stat">${userData.sold}</div>
+                            <div class="stat-value">${userData.sold}</div>
                             <div class="stat-label">Sold</div>
                         </div>
                     </div>
+                </div>
+                
+                <div class="wallet-info">
+                    <h3>TON Кошелек</h3>
+                    ${userData.walletConnected ? 
+                        `<div class="wallet-address">${userData.walletAddress}</div>
+                         <div class="wallet-balance-info">
+                             <span>Баланс:</span>
+                             <span class="wallet-balance-amount">${userData.walletBalance.toFixed(2)} TON</span>
+                         </div>` :
+                        `<p style="color: #888; text-align: center;">Кошелек не подключен</p>`
+                    }
                 </div>
             </div>
         `;
     }
     
-    // Обновление таймера лотереи
-    function updateLotteryTimer() {
-        const timerElement = document.getElementById('countdown-timer');
-        if (!timerElement) return;
+    function initLotteryPage() {
+        const buyTicketBtn = document.getElementById('buy-ticket-btn');
+        const participantStatus = document.getElementById('participant-status');
         
-        const now = new Date();
-        const timeLeft = lotteryEndDate - now;
-        
-        if (timeLeft <= 0) {
-            document.getElementById('days').textContent = '00';
-            document.getElementById('hours').textContent = '00';
-            document.getElementById('minutes').textContent = '00';
-            document.getElementById('seconds').textContent = '00';
-            return;
+        if (userData.lotteryParticipating) {
+            participantStatus.classList.add('active');
+            buyTicketBtn.disabled = true;
+            buyTicketBtn.innerHTML = '<i class="fas fa-check"></i><span>Вы уже участвуете</span>';
         }
         
-        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-        
-        document.getElementById('days').textContent = days.toString().padStart(2, '0');
-        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-    }
-    
-    // Обновление контента страницы
-    function updateContent(page) {
-        // Анимация исчезновения
-        mainContent.style.opacity = '0';
-        mainContent.style.transform = 'translateY(10px)';
-        
-        setTimeout(() => {
-            let content = '';
-            
-            switch(page) {
-                case 'home':
-                    content = createHomeContent();
-                    break;
-                case 'lottery':
-                    content = createLotteryContent();
-                    break;
-                case 'tasks':
-                    content = createTasksContent();
-                    break;
-                case 'rating':
-                    content = createRatingContent();
-                    break;
-                case 'profile':
-                    content = createProfileContent();
-                    break;
+        buyTicketBtn.addEventListener('click', async function() {
+            if (userData.balance < 1) {
+                tg.showAlert('❌ Недостаточно TON для покупки билета!');
+                tg.HapticFeedback.notificationOccurred('error');
+                return;
             }
             
-            mainContent.innerHTML = content;
+            userData.balance -= 1;
+            userData.bought += 1;
+            userData.lotteryParticipating = true;
             
-            // Инициализация элементов после создания контента
-            if (page === 'lottery') {
-                const buyTicketBtn = document.getElementById('buy-ticket-btn');
-                const participantStatus = document.getElementById('participant-status');
-                
-                if (userData.lotteryParticipating) {
-                    participantStatus.classList.add('show');
-                    buyTicketBtn.disabled = true;
-                    buyTicketBtn.innerHTML = '<i class="fas fa-check"></i><span>Вы уже участвуете</span>';
-                }
-                
-                buyTicketBtn.addEventListener('click', function() {
-                    if (userData.balance < 1) {
-                        tg.showAlert('❌ Недостаточно TON для покупки билета!');
-                        tg.HapticFeedback.notificationOccurred('error');
-                        return;
-                    }
-                    
-                    // Покупка билета
-                    userData.balance -= 1;
-                    userData.bought += 1;
-                    userData.lotteryParticipating = true;
-                    
-                    updateBalanceDisplay();
-                    saveUserData();
-                    
-                    participantStatus.classList.add('show');
-                    this.disabled = true;
-                    this.innerHTML = '<i class="fas fa-check"></i><span>Вы уже участвуете</span>';
-                    
-                    tg.showAlert('✅ Вы успешно приобрели билет! Удачи в розыгрыше!');
-                    tg.HapticFeedback.notificationOccurred('success');
-                    
-                    // Вибрация
-                    if (navigator.vibrate) {
-                        navigator.vibrate([50, 50, 50]);
-                    }
-                });
-                
-                // Запускаем таймер
-                setInterval(updateLotteryTimer, 1000);
-                updateLotteryTimer();
-            }
+            updateBalanceDisplay();
+            saveUserData();
             
-            // Анимация появления
-            setTimeout(() => {
-                mainContent.style.opacity = '1';
-                mainContent.style.transform = 'translateY(0)';
-            }, 50);
+            participantStatus.classList.add('active');
+            buyTicketBtn.disabled = true;
+            buyTicketBtn.innerHTML = '<i class="fas fa-check"></i><span>Вы уже участвуете</span>';
             
-        }, 200);
-    }
-    
-    // Установка активной кнопки
-    function setActiveButton(button) {
-        navButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-    }
-    
-    // Обработчики событий
-    navButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const page = this.getAttribute('data-page');
-            setActiveButton(this);
-            updateContent(page);
-            
-            // Эффект нажатия
-            this.style.transform = 'scale(0.92)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 150);
-            
-            // Вибрация
-            if (navigator.vibrate) {
-                navigator.vibrate(20);
-            }
+            tg.showAlert('✅ Вы успешно приобрели билет! Удачи в розыгрыше!');
+            tg.HapticFeedback.notificationOccurred('success');
         });
-    });
+    }
     
-    // Обработчик кнопки пополнения баланса
-    addBalanceBtn.addEventListener('click', function() {
-        // Эффект нажатия
-        this.style.transform = 'scale(0.85)';
-        setTimeout(() => {
-            this.style.transform = 'scale(1)';
-        }, 150);
-        
-        // Вибрация
-        if (navigator.vibrate) {
-            navigator.vibrate(30);
+    function initProfilePage() {
+        // Профиль уже загружен, можно добавить дополнительные обработчики
+    }
+    
+    function startLotteryTimer() {
+        function updateTimer() {
+            const endDate = new Date(LOTTERY_END_DATE);
+            const now = new Date();
+            const timeLeft = endDate - now;
+            
+            if (timeLeft <= 0) {
+                // Лотерея завершена
+                document.querySelectorAll('.countdown-value').forEach(el => el.textContent = '00');
+                return;
+            }
+            
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            // Обновляем на всех страницах, где есть таймер
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+            
+            if (daysEl) daysEl.textContent = days.toString().padStart(2, '0');
+            if (hoursEl) hoursEl.textContent = hours.toString().padStart(2, '0');
+            if (minutesEl) minutesEl.textContent = minutes.toString().padStart(2, '0');
+            if (secondsEl) secondsEl.textContent = seconds.toString().padStart(2, '0');
         }
         
-        // Показать модальное окно
-        balanceModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    }
     
-    // Закрытие модального окна
-    closeBalanceModal.addEventListener('click', function() {
-        balanceModal.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    });
-    
-    // Клик вне модального окна
-    balanceModal.addEventListener('click', function(e) {
-        if (e.target === this) {
+    function setupEventListeners() {
+        // Навигация
+        navButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.getAttribute('data-page');
+                updateContent(page);
+            });
+        });
+        
+        // Открытие модалки баланса
+        addBalanceBtn.addEventListener('click', () => {
+            balanceModal.classList.add('active');
+        });
+        
+        // Закрытие модалки баланса
+        closeBalanceModal.addEventListener('click', () => {
             balanceModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-    });
-    
-    // Кнопка пополнения
-    depositBtn.addEventListener('click', function() {
-        tg.showPopup({
-            title: '💰 Пополнение баланса',
-            message: 'Выберите сумму для пополнения:',
-            buttons: [
-                {id: '10', type: 'default', text: '➕ 10 TON'},
-                {id: '50', type: 'default', text: '➕ 50 TON'},
-                {id: '100', type: 'default', text: '➕ 100 TON'},
-                {type: 'cancel', text: '❌ Отмена'}
-            ]
-        }, function(buttonId) {
-            if (buttonId === '10' || buttonId === '50' || buttonId === '100') {
-                const amount = parseInt(buttonId);
-                userData.balance += amount;
-                updateBalanceDisplay();
-                saveUserData();
-                tg.showAlert(`✅ Баланс пополнен на ${amount} TON!`);
-                tg.HapticFeedback.notificationOccurred('success');
+        });
+        
+        // Клик вне модалки
+        balanceModal.addEventListener('click', (e) => {
+            if (e.target === balanceModal) {
+                balanceModal.classList.remove('active');
             }
         });
-    });
-    
-    // Кнопка вывода
-    withdrawBtn.addEventListener('click', function() {
-        if (!userData.walletConnected) {
-            tg.showAlert('❌ Пожалуйста, подключите TON кошелек для вывода средств');
-            return;
-        }
         
-        if (userData.balance <= 0) {
-            tg.showAlert('❌ На вашем балансе недостаточно средств');
-            return;
-        }
-        
-        tg.showPopup({
-            title: '💰 Вывод средств',
-            message: `Вы можете вывести до ${userData.balance} TON\n\nВаш кошелек: ${userData.walletAddress.slice(0, 8)}...${userData.walletAddress.slice(-8)}`,
-            buttons: [
-                {id: 'withdraw_all', type: 'default', text: 'Вывести всё'},
-                {id: 'custom', type: 'default', text: 'Указать сумму'},
-                {type: 'cancel', text: '❌ Отмена'}
-            ]
-        }, function(buttonId) {
-            if (buttonId === 'withdraw_all') {
-                // В реальном приложении здесь была бы транзакция
-                tg.showAlert(`✅ Запрос на вывод ${userData.balance} TON отправлен! Обработка займет до 24 часов.`);
-                tg.HapticFeedback.notificationOccurred('success');
-            } else if (buttonId === 'custom') {
-                // Здесь можно добавить ввод суммы
-                tg.showAlert('В разработке');
-            }
+        // Кнопка пополнения
+        depositBtn.addEventListener('click', () => {
+            balanceModal.classList.remove('active');
+            depositModal.classList.add('active');
         });
-    });
-    
-    // Кнопка подключения кошелька
-    connectWalletBtn.addEventListener('click', function() {
-        if (userData.walletConnected) {
-            // Отключение кошелька
-            tonConnectUI.disconnect();
-            userData.walletConnected = false;
-            userData.walletAddress = null;
-            userData.walletBalance = 0;
-            updateConnectInfo();
-        } else {
-            // Подключение кошелька
-            tonConnectUI.openModal();
-        }
-    });
-    
-    // Инициализация
-    loadUserData();
-    initTonConnect();
-    updateContent('home');
-    
-    // Проверка иконки TON
-    checkTonIcon();
-    
-    // Плавное появление
-    setTimeout(() => {
-        document.body.style.opacity = '1';
-    }, 100);
-    
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.3s ease';
-    
-    // Сохранение данных при закрытии
-    window.addEventListener('beforeunload', function() {
-        saveUserData();
-    });
-    
-    // Проверка иконки TON
-    function checkTonIcon() {
-        setTimeout(() => {
-            const icons = document.querySelectorAll('.ton-icon');
-            icons.forEach(icon => {
-                if (icon && (icon.naturalWidth === 0 || icon.complete === false)) {
-                    console.log('TON icon failed to load, using fallback');
-                    const svg = `
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="16" cy="16" r="16" fill="#7B2FF7"/>
-                            <path d="M16 8L22 12L16 16L10 12L16 8Z" fill="white"/>
-                            <path d="M16 16L22 20L16 24L10 20L16 16Z" fill="white"/>
-                        </svg>
-                    `;
-                    icon.src = 'data:image/svg+xml;base64,' + btoa(svg);
-                    icon.style.background = 'transparent';
+        
+        // Кнопка вывода
+        withdrawBtn.addEventListener('click', async () => {
+            if (!userData.walletConnected) {
+                tg.showAlert('❌ Подключите кошелек TON для вывода средств');
+                return;
+            }
+            
+            if (userData.balance <= 0) {
+                tg.showAlert('❌ Недостаточно средств на балансе');
+                return;
+            }
+            
+            tg.showPopup({
+                title: 'Вывод средств',
+                message: `Доступно для вывода: ${userData.balance} TON\n\nАдрес: ${userData.walletAddress}`,
+                buttons: [
+                    {id: 'withdraw_all', type: 'default', text: 'Вывести все'},
+                    {id: 'withdraw_custom', type: 'default', text: 'Указать сумму'},
+                    {type: 'cancel', text: 'Отмена'}
+                ]
+            }, async (buttonId) => {
+                if (buttonId === 'withdraw_all') {
+                    // В реальном приложении здесь был бы запрос к боту
+                    tg.showAlert(`✅ Заявка на вывод ${userData.balance} TON отправлена!`);
                 }
             });
-        }, 1500);
+        });
+        
+        // Подключение кошелька
+        connectWalletBtn.addEventListener('click', () => {
+            if (userData.walletConnected) {
+                tonConnectUI.disconnect();
+            } else {
+                tonConnectUI.openModal();
+            }
+        });
+        
+        // Депозит модалка
+        closeDepositModal.addEventListener('click', () => {
+            depositModal.classList.remove('active');
+        });
+        
+        cancelDeposit.addEventListener('click', () => {
+            depositModal.classList.remove('active');
+        });
+        
+        depositModal.addEventListener('click', (e) => {
+            if (e.target === depositModal) {
+                depositModal.classList.remove('active');
+            }
+        });
+        
+        // Быстрые суммы
+        quickAmounts.forEach(button => {
+            button.addEventListener('click', () => {
+                const amount = button.getAttribute('data-amount');
+                depositInput.value = amount;
+            });
+        });
+        
+        // Подтверждение депозита
+        submitDeposit.addEventListener('click', async () => {
+            const amount = parseFloat(depositInput.value);
+            
+            if (!amount || amount <= 0) {
+                tg.showAlert('❌ Введите корректную сумму');
+                return;
+            }
+            
+            if (!userData.walletConnected) {
+                tg.showAlert('❌ Подключите кошелек TON');
+                return;
+            }
+            
+            if (userData.walletBalance < amount) {
+                tg.showAlert(`❌ Недостаточно средств в кошельке. Доступно: ${userData.walletBalance.toFixed(2)} TON`);
+                return;
+            }
+            
+            // Создаем транзакцию через TON Connect
+            const transaction = {
+                validUntil: Math.floor(Date.now() / 1000) + 600, // 10 минут
+                messages: [
+                    {
+                        address: "UQBj-73MvYMYXrkcndu_CnwzpKmtwR9nKexMjjX9ZcdXohro", // Адрес бота (замените на реальный)
+                        amount: (amount * 1000000000).toString(), // Конвертируем в наноТоны
+                    }
+                ]
+            };
+            
+            try {
+                const result = await tonConnectUI.sendTransaction(transaction);
+                
+                if (result) {
+                    // Успешная транзакция
+                    userData.balance += amount;
+                    userData.walletBalance -= amount;
+                    updateBalanceDisplay();
+                    updateConnectInfo();
+                    saveUserData();
+                    
+                    depositModal.classList.remove('active');
+                    tg.showAlert(`✅ Успешно пополнено на ${amount} TON!`);
+                    tg.HapticFeedback.notificationOccurred('success');
+                }
+            } catch (error) {
+                console.error('Transaction error:', error);
+                tg.showAlert('❌ Ошибка при выполнении транзакции');
+            }
+        });
+        
+        // Депозит из главного окна
+        confirmDepositBtn.addEventListener('click', () => {
+            const amount = parseFloat(depositAmountInput.value);
+            
+            if (!amount || amount <= 0) {
+                tg.showAlert('❌ Введите корректную сумму');
+                return;
+            }
+            
+            if (!userData.walletConnected) {
+                tg.showAlert('❌ Подключите кошелек TON');
+                return;
+            }
+            
+            if (userData.walletBalance < amount) {
+                tg.showAlert(`❌ Недостаточно средств в кошельке. Доступно: ${userData.walletBalance.toFixed(2)} TON`);
+                return;
+            }
+            
+            // Показываем модалку подтверждения
+            depositInput.value = amount;
+            balanceModal.classList.remove('active');
+            depositModal.classList.add('active');
+        });
     }
     
-    // Автоматическое обновление баланса кошелька
-    setInterval(updateWalletBalance, 30000);
+    function saveUserData() {
+        localStorage.setItem('user_balance', userData.balance.toString());
+        localStorage.setItem('bought', userData.bought.toString());
+        localStorage.setItem('sold', userData.sold.toString());
+        localStorage.setItem('total_volume', userData.totalVolume.toString());
+        localStorage.setItem('lottery_participating', userData.lotteryParticipating.toString());
+    }
 });
