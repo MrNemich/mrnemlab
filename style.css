@@ -2,190 +2,505 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
-    background: linear-gradient(135deg, #0a0a0f, #12121a);
-    color: white;
+    background: #000;
+    color: #fff;
     min-height: 100vh;
-    overflow: hidden;
-    position: relative;
-}
-
-/* Анимированный фон */
-body::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 80%, rgba(88, 28, 135, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(0, 122, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(255, 45, 85, 0.08) 0%, transparent 50%);
-    z-index: -1;
+    overflow-x: hidden;
 }
 
 .container {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 15px;
-    max-width: 1200px;
+    padding: 12px;
+    max-width: 100%;
     margin: 0 auto;
+    background: #000;
 }
 
-/* Верхнее меню с аватаркой и балансом */
+/* Верхнее меню */
 .top-menu {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 8px 0;
-    margin-bottom: 10px;
-    flex-shrink: 0;
-    height: 60px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 12px;
 }
 
-/* Информация о пользователе слева */
 .user-info {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 8px 15px 8px 10px;
-    background: rgba(40, 40, 45, 0.8);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    max-width: 200px;
-    overflow: hidden;
+    gap: 10px;
 }
 
-/* Аватарка пользователя */
 .user-avatar {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
-    position: relative;
-    border: 2px solid #7b2ff7;
-    box-shadow: 0 3px 8px rgba(123, 47, 247, 0.3);
-}
-
-.user-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.avatar-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
+    background: linear-gradient(135deg, #333, #000);
+    border: 2px solid #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
 }
 
-.avatar-placeholder i {
-    font-size: 1.4rem;
+.avatar-placeholder {
+    color: #fff;
+    font-size: 1.2rem;
 }
 
 .user-name {
     font-weight: 600;
     font-size: 1rem;
-    color: #ffffff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
+    color: #fff;
 }
 
 .balance-container {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
-/* Баланс справа */
 .balance {
-    background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
-    padding: 8px 15px;
-    border-radius: 15px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    box-shadow: 0 3px 10px rgba(123, 47, 247, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    min-width: 110px;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #000;
+    border: 2px solid #fff;
+    border-radius: 20px;
+    min-width: 120px;
     justify-content: center;
-    height: 40px;
 }
 
-/* Увеличенная иконка TON */
-.ton-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+.ton-icon-large {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ton-logo {
+    width: 28px;
+    height: 28px;
     object-fit: contain;
-    background: white;
-    padding: 3px;
-    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.4));
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    filter: invert(1);
 }
 
 .balance-amount {
     font-weight: 700;
     font-size: 1.2rem;
-    color: white;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    min-width: 50px;
-    text-align: center;
+    color: #fff;
 }
 
 .add-balance-btn {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #1c1c1e;
-    border: 2px solid #2c2c2e;
-    color: white;
+    background: #000;
+    border: 2px solid #fff;
+    color: #fff;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
 }
 
 .add-balance-btn:hover {
-    background: #2c2c2e;
-    border-color: #7b2ff7;
-    transform: scale(1.05);
+    background: #333;
 }
 
-.add-balance-btn i {
+/* Основной контент */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 0;
+    margin-bottom: 10px;
+}
+
+.page-content {
+    background: #000;
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid #333;
+    min-height: calc(100vh - 200px);
+}
+
+/* Главная страница */
+.home-container {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.home-icon {
+    font-size: 4rem;
+    color: #fff;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.home-title {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.home-description {
+    color: #888;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Лотерея */
+.lottery-container {
+    background: #111;
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid #333;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.lottery-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.lottery-icon {
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+.lottery-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.lottery-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #333;
+}
+
+.lottery-info {
+    background: #000;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #333;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.info-value {
+    color: #fff;
+    font-weight: 600;
+}
+
+.countdown {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.countdown-item {
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+}
+
+.countdown-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.countdown-label {
+    font-size: 0.7rem;
+    color: #888;
+    margin-top: 5px;
+    text-transform: uppercase;
+}
+
+.buy-ticket-btn {
+    width: 100%;
+    padding: 15px;
+    background: #000;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.buy-ticket-btn:hover:not(:disabled) {
+    background: #fff;
+    color: #000;
+}
+
+.buy-ticket-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.participant-status {
+    text-align: center;
+    color: #0f0;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    display: none;
+}
+
+.participant-status.active {
+    display: block;
+}
+
+/* Задания */
+.tasks-container {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.tasks-icon {
+    font-size: 4rem;
+    color: #fff;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.tasks-title {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.tasks-message {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Рейтинг */
+.rating-container {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.rating-icon {
+    font-size: 4rem;
+    color: #fff;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.rating-title {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.rating-description {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Профиль */
+.profile-container {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #333, #000);
+    border: 3px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 2.5rem;
+    color: #fff;
+}
+
+.profile-username {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.profile-stats {
+    background: #111;
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid #333;
+    margin-bottom: 20px;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.stat-item {
+    text-align: center;
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.stat-separator {
+    color: #333;
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+.wallet-info {
+    background: #111;
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid #333;
+}
+
+.wallet-info h3 {
+    color: #fff;
+    margin-bottom: 15px;
     font-size: 1.1rem;
 }
 
-/* Модальное окно пополнения баланса */
+.wallet-address {
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    font-family: monospace;
+    color: #fff;
+    font-size: 0.8rem;
+    word-break: break-all;
+    margin-bottom: 15px;
+}
+
+.wallet-balance-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.wallet-balance-amount {
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Нижняя навигация */
+.bottom-nav {
+    background: #000;
+    border-top: 1px solid #333;
+    padding: 10px 0 5px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-around;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.nav-button {
+    background: transparent;
+    border: none;
+    color: #888;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 60px;
+}
+
+.nav-button.active {
+    color: #fff;
+    background: #111;
+}
+
+.nav-icon {
+    font-size: 1.2rem;
+}
+
+.nav-text {
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+/* Модальные окна */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.9);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 2000;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
@@ -197,15 +512,12 @@ body::before {
 }
 
 .modal-content {
-    background: linear-gradient(135deg, #1a1a1f, #0f0f15);
-    border-radius: 25px;
+    background: #000;
+    border-radius: 20px;
     padding: 25px;
     width: 90%;
     max-width: 400px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.6),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border: 2px solid #333;
     position: relative;
     transform: translateY(20px);
     transition: transform 0.3s ease;
@@ -217,90 +529,76 @@ body::before {
 
 .modal-header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    color: #fff;
+    font-size: 1.3rem;
 }
 
 .modal-close {
     background: none;
     border: none;
-    color: #8e8e93;
-    font-size: 1.8rem;
+    color: #888;
+    font-size: 1.5rem;
     cursor: pointer;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    transition: all 0.3s ease;
 }
 
 .modal-close:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: white;
+    background: #111;
 }
 
-/* Стили для кошелька */
-.wallet-top-circle {
-    background: linear-gradient(180deg, #007aff, #0056cc);
-    border-radius: 50% 50% 0 0;
-    padding: 40px 30px 60px;
+.wallet-top {
+    background: #007AFF;
+    border-radius: 15px;
+    padding: 30px 20px;
     text-align: center;
-    margin: -25px -25px 20px;
-    position: relative;
-    overflow: hidden;
+    margin-bottom: 20px;
 }
 
-.wallet-top-circle::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(180deg, 
-        rgba(0, 122, 255, 1) 0%,
-        rgba(0, 86, 204, 0.9) 100%);
-}
-
-.wallet-title {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 15px;
-    position: relative;
-    z-index: 1;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
-.wallet-balance {
+.wallet-balance-display {
     font-size: 2.5rem;
     font-weight: 700;
-    color: white;
-    position: relative;
-    z-index: 1;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 5px;
 }
 
 .ton-text {
     font-size: 1.2rem;
     color: rgba(255, 255, 255, 0.9);
-    margin-left: 8px;
+}
+
+.wallet-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-top: 5px;
 }
 
 .wallet-buttons {
     display: flex;
     gap: 15px;
-    margin: 25px 0 30px;
-    justify-content: center;
+    margin-bottom: 25px;
 }
 
 .wallet-btn {
     flex: 1;
-    padding: 18px 20px;
-    border-radius: 15px;
-    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    border: 2px solid #333;
+    background: #000;
+    color: #fff;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -309,37 +607,19 @@ body::before {
     justify-content: center;
     gap: 10px;
     transition: all 0.3s ease;
-    min-height: 60px;
 }
 
-.deposit-btn {
-    background: white;
-    color: #000;
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-}
-
-.deposit-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
-}
-
-.withdraw-btn {
-    background: linear-gradient(135deg, #007aff, #0056cc);
-    color: white;
-    box-shadow: 0 5px 15px rgba(0, 122, 255, 0.3);
-}
-
-.withdraw-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 122, 255, 0.4);
+.wallet-btn:hover {
+    background: #111;
+    border-color: #fff;
 }
 
 .wallet-connect {
-    background: rgba(255, 255, 255, 0.05);
+    background: #111;
     border-radius: 15px;
     padding: 20px;
     margin-bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid #333;
 }
 
 .connect-header {
@@ -350,18 +630,18 @@ body::before {
 }
 
 .connect-header span {
-    font-size: 1.1rem;
-    color: white;
+    color: #fff;
+    font-size: 1rem;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
 .connect-btn {
-    background: linear-gradient(135deg, #007aff, #0056cc);
-    color: white;
+    background: #007AFF;
+    color: #fff;
     border: none;
-    padding: 8px 20px;
+    padding: 8px 16px;
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 600;
@@ -370,833 +650,282 @@ body::before {
 }
 
 .connect-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 122, 255, 0.3);
+    background: #0056CC;
 }
 
-.connect-info {
-    background: rgba(0, 0, 0, 0.2);
+.connect-placeholder {
+    text-align: center;
+    color: #888;
+}
+
+.connect-placeholder i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    opacity: 0.5;
+}
+
+.connected-wallet {
+    background: #000;
     border-radius: 10px;
     padding: 15px;
-    text-align: center;
+    border: 1px solid #333;
 }
 
-.wallet-footer {
-    text-align: center;
-    color: #8e8e93;
+.wallet-address-display {
+    font-family: monospace;
+    color: #fff;
+    font-size: 0.8rem;
+    word-break: break-all;
+    margin-bottom: 10px;
+}
+
+.wallet-balance-display-small {
+    color: #888;
     font-size: 0.9rem;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Основной контент */
-.main-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 10px 5px;
-    margin: 5px 0;
-    position: relative;
+.wallet-balance-display-small span {
+    color: #fff;
+    font-weight: 600;
 }
 
-/* Стили для разных страниц */
-.page-content {
-    background: rgba(28, 28, 30, 0.9);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 
-        0 8px 25px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    min-height: calc(100vh - 180px);
-    display: flex;
-    flex-direction: column;
-    animation: fadeInUp 0.5s ease-out;
-}
-
-/* Стили для лотереи */
-.lottery-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 25px;
-}
-
-.pepe-image {
-    width: 180px;
-    height: 180px;
-    border-radius: 20px;
-    object-fit: cover;
-    border: 4px solid #7b2ff7;
-    box-shadow: 
-        0 10px 30px rgba(123, 47, 247, 0.4),
-        0 0 50px rgba(123, 47, 247, 0.2);
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-.lottery-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    text-align: center;
-    background: linear-gradient(90deg, #ff375f, #7b2ff7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.lottery-description {
-    text-align: center;
-    color: #8e8e93;
-    line-height: 1.6;
-    max-width: 500px;
-}
-
-.countdown-container {
-    background: linear-gradient(135deg, rgba(40, 40, 45, 0.9), rgba(25, 25, 30, 0.9));
+.deposit-section {
+    background: #111;
     border-radius: 15px;
-    padding: 25px;
-    width: 100%;
-    max-width: 500px;
-    border: 2px solid #7b2ff7;
-    text-align: center;
+    padding: 20px;
+    border: 1px solid #333;
 }
 
-.countdown-title {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-    color: white;
-}
-
-.countdown-timer {
+.deposit-input-group {
     display: flex;
-    justify-content: center;
-    gap: 15px;
+    gap: 10px;
+}
+
+#deposit-amount {
+    flex: 1;
+    padding: 12px;
+    background: #000;
+    border: 2px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+#deposit-amount:focus {
+    outline: none;
+    border-color: #007AFF;
+}
+
+#confirm-deposit {
+    padding: 12px 20px;
+    background: #007AFF;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#confirm-deposit:hover {
+    background: #0056CC;
+}
+
+/* Модалка депозита */
+.deposit-modal {
+    max-width: 350px;
+}
+
+.modal-body {
     margin-bottom: 20px;
 }
 
-.countdown-item {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    padding: 15px;
-    min-width: 70px;
-    border: 1px solid rgba(123, 47, 247, 0.3);
-}
-
-.countdown-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #7b2ff7;
-    text-shadow: 0 0 10px rgba(123, 47, 247, 0.5);
-}
-
-.countdown-label {
-    font-size: 0.8rem;
-    color: #8e8e93;
-    margin-top: 5px;
-}
-
-.ticket-btn {
-    background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
-    color: white;
-    border: none;
-    padding: 18px 40px;
-    border-radius: 15px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 15px;
-    width: 100%;
-    max-width: 300px;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 20px rgba(123, 47, 247, 0.4);
-}
-
-.ticket-btn:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(123, 47, 247, 0.6);
-}
-
-.ticket-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.ticket-price {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-    color: #8e8e93;
-    font-size: 0.9rem;
-}
-
-.ticket-price img {
-    width: 20px;
-    height: 20px;
-}
-
-.participant-status {
-    margin-top: 15px;
-    padding: 15px;
-    background: rgba(123, 47, 247, 0.1);
-    border-radius: 10px;
-    border: 1px solid rgba(123, 47, 247, 0.3);
-    color: #7b2ff7;
-    font-weight: 600;
-    display: none;
-}
-
-.participant-status.show {
-    display: block;
-    animation: fadeIn 0.3s ease;
-}
-
-/* Стили для заданий */
-.tasks-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-
-.tasks-icon {
-    font-size: 4rem;
-    margin-bottom: 25px;
-    background: linear-gradient(90deg, #ff375f, #7b2ff7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.tasks-message {
-    font-size: 1.3rem;
-    color: #8e8e93;
+.deposit-info {
     text-align: center;
-    padding: 30px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px dashed rgba(255, 255, 255, 0.1);
-    max-width: 400px;
+    margin-bottom: 20px;
 }
 
-/* Стили для профиля */
-.profile-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 25px;
-}
-
-.profile-avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 25px;
-    overflow: hidden;
-    border: 4px solid #7b2ff7;
-    box-shadow: 0 10px 30px rgba(123, 47, 247, 0.4);
-}
-
-.profile-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.profile-avatar .avatar-placeholder {
-    border-radius: 20px;
-}
-
-.profile-username {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: white;
-    text-align: center;
-}
-
-.profile-stats {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    max-width: 500px;
-    gap: 15px;
-}
-
-.stat-item {
-    background: rgba(40, 40, 45, 0.8);
-    border-radius: 15px;
-    padding: 20px;
-    text-align: center;
-    flex: 1;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s ease;
-}
-
-.stat-item:hover {
-    transform: translateY(-5px);
-    background: rgba(50, 50, 55, 0.9);
-    border-color: #7b2ff7;
-}
-
-.stat-label {
-    font-size: 0.9rem;
-    color: #8e8e93;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.stat-value {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: white;
-    margin-bottom: 5px;
-}
-
-.stat-icon {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-}
-
-.ton-stat {
-    color: #7b2ff7;
-}
-
-.gift-stat {
-    color: #ff375f;
-}
-
-.sold-stat {
-    color: #06D6A0;
-}
-
-/* Стили для рейтинга */
-.rating-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-
-.rating-icon {
-    font-size: 3rem;
+.deposit-info p {
+    color: #888;
     margin-bottom: 15px;
-    background: linear-gradient(90deg, #ff375f, #7b2ff7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
-.rating-description {
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+#deposit-input {
+    width: 100%;
+    padding: 15px;
+    padding-right: 60px;
+    background: #111;
+    border: 2px solid #333;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 1.2rem;
     text-align: center;
-    color: #8e8e93;
-    line-height: 1.6;
-    max-width: 500px;
 }
 
-/* Нижняя навигация */
-.bottom-nav {
-    background: rgba(18, 18, 24, 0.95);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 12px 0 18px 0;
-    flex-shrink: 0;
-    margin-top: 10px;
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.5);
-    position: relative;
-    z-index: 100;
-    height: 75px;
-}
-
-.bottom-nav::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 20%;
-    right: 20%;
-    height: 3px;
-    background: linear-gradient(90deg, 
-        transparent 0%, 
-        #ff375f 25%, 
-        #7b2ff7 50%, 
-        #007aff 75%, 
-        transparent 100%);
-    border-radius: 0 0 2px 2px;
-}
-
-.nav-container {
-    display: flex;
-    justify-content: space-around;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 0 10px;
-    gap: 3px;
-}
-
-.nav-button {
-    background: transparent;
-    border: none;
-    color: #8e8e93;
-    padding: 8px 0 6px 0;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 14px;
-    width: 68px;
+#deposit-input:focus {
     outline: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    height: 65px;
+    border-color: #007AFF;
 }
 
-.nav-button::before {
-    content: '';
+.ton-label {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 55, 95, 0.1), rgba(123, 47, 247, 0.1));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    border-radius: 14px;
-}
-
-.nav-button.active::before {
-    opacity: 1;
-}
-
-.nav-button .button-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    position: relative;
-    z-index: 1;
-}
-
-.nav-emoji {
-    font-size: 1.8rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-.nav-text {
-    font-size: 0.8rem;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #007AFF;
     font-weight: 600;
+}
+
+.quick-amounts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.quick-amount {
+    padding: 10px;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.quick-amount:hover {
+    background: #222;
+    border-color: #007AFF;
+}
+
+.wallet-info {
+    background: #111;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary, .btn-secondary {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
-/* Активное состояние кнопки */
-.nav-button.active {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 
-        0 6px 15px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+.btn-primary {
+    background: #007AFF;
+    color: #fff;
+    border: none;
 }
 
-.nav-button.active .nav-emoji {
-    transform: translateY(-6px) scale(1.15);
-    filter: drop-shadow(0 3px 8px rgba(123, 47, 247, 0.4));
+.btn-primary:hover {
+    background: #0056CC;
 }
 
-.nav-button.active .nav-text {
-    color: #ffffff;
-    font-weight: 700;
-    text-shadow: 0 0 8px rgba(123, 47, 247, 0.5);
+.btn-secondary {
+    background: #111;
+    color: #fff;
+    border: 2px solid #333;
 }
 
-/* Эффект наведения */
-.nav-button:hover:not(.active)::before {
-    opacity: 0.5;
-}
-
-.nav-button:hover:not(.active) .nav-emoji {
-    transform: translateY(-2px);
-}
-
-.nav-button:hover:not(.active) .nav-text {
-    color: #ffffff;
+.btn-secondary:hover {
+    background: #222;
 }
 
 /* Адаптивность */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
     .container {
         padding: 10px;
     }
     
-    .top-menu {
-        height: 55px;
-        padding: 5px 0;
-    }
-    
-    .user-info {
-        padding: 6px 12px 6px 8px;
-        max-width: 170px;
-        gap: 10px;
-    }
-    
-    .user-avatar {
-        width: 38px;
-        height: 38px;
-    }
-    
-    .avatar-placeholder i {
-        font-size: 1.3rem;
-    }
-    
-    .user-name {
-        font-size: 0.9rem;
-    }
-    
     .balance {
-        padding: 6px 12px;
         min-width: 100px;
-        height: 36px;
-        border-radius: 12px;
+        padding: 6px 12px;
     }
     
     .balance-amount {
-        font-size: 1.1rem;
-    }
-    
-    .ton-icon {
-        width: 28px;
-        height: 28px;
-    }
-    
-    .add-balance-btn {
-        width: 36px;
-        height: 36px;
-    }
-    
-    .add-balance-btn i {
         font-size: 1rem;
     }
     
-    .main-content {
-        padding: 8px 3px;
-    }
-    
-    .page-content {
-        padding: 20px;
-        min-height: calc(100vh - 170px);
-        border-radius: 18px;
-    }
-    
-    .wallet-top-circle {
-        padding: 30px 20px 50px;
-    }
-    
-    .wallet-balance {
-        font-size: 2.2rem;
-    }
-    
-    .pepe-image {
-        width: 150px;
-        height: 150px;
-    }
-    
-    .countdown-item {
-        min-width: 60px;
-        padding: 12px;
-    }
-    
-    .countdown-value {
-        font-size: 1.8rem;
-    }
-    
-    .profile-stats {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .stat-item {
-        width: 100%;
-        max-width: 300px;
-    }
-    
-    .bottom-nav {
-        padding: 10px 0 15px 0;
-        border-radius: 18px 18px 0 0;
-        height: 70px;
+    .ton-icon-large {
+        width: 24px;
+        height: 24px;
     }
     
     .nav-button {
-        width: 62px;
-        padding: 7px 0 5px 0;
-        height: 60px;
-        border-radius: 12px;
+        width: 50px;
+        padding: 6px 8px;
     }
     
-    .nav-emoji {
-        font-size: 1.6rem;
-    }
-    
-    .nav-text {
-        font-size: 0.75rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 8px;
-    }
-    
-    .top-menu {
-        height: 50px;
-    }
-    
-    .user-info {
-        padding: 5px 10px 5px 8px;
-        max-width: 150px;
-        gap: 8px;
-        border-radius: 18px;
-    }
-    
-    .user-avatar {
-        width: 36px;
-        height: 36px;
-    }
-    
-    .avatar-placeholder i {
-        font-size: 1.2rem;
-    }
-    
-    .user-name {
-        font-size: 0.85rem;
-    }
-    
-    .balance {
-        padding: 5px 10px;
-        min-width: 90px;
-        height: 34px;
-        border-radius: 10px;
-    }
-    
-    .balance-amount {
+    .nav-icon {
         font-size: 1rem;
     }
     
-    .ton-icon {
-        width: 26px;
-        height: 26px;
-    }
-    
-    .add-balance-btn {
-        width: 34px;
-        height: 34px;
-    }
-    
-    .add-balance-btn i {
-        font-size: 0.9rem;
+    .nav-text {
+        font-size: 0.6rem;
     }
     
     .page-content {
         padding: 15px;
-        border-radius: 16px;
     }
     
-    .wallet-top-circle {
-        padding: 25px 15px 45px;
-    }
-    
-    .wallet-balance {
+    .wallet-balance-display {
         font-size: 2rem;
     }
     
-    .wallet-btn {
-        padding: 15px;
-        font-size: 0.9rem;
-    }
-    
-    .pepe-image {
-        width: 130px;
-        height: 130px;
-    }
-    
-    .countdown-timer {
-        gap: 10px;
-    }
-    
-    .countdown-item {
-        min-width: 55px;
-        padding: 10px;
-    }
-    
-    .countdown-value {
-        font-size: 1.6rem;
-    }
-    
-    .bottom-nav {
-        padding: 8px 0 12px 0;
-        border-radius: 16px 16px 0 0;
-        height: 65px;
-    }
-    
-    .nav-button {
-        width: 58px;
-        height: 58px;
-        border-radius: 10px;
-    }
-    
-    .nav-emoji {
-        font-size: 1.5rem;
-    }
-    
-    .nav-text {
-        font-size: 0.7rem;
+    .modal-content {
+        padding: 20px;
     }
 }
 
-/* Стили для скроллбара */
-.main-content::-webkit-scrollbar {
-    width: 5px;
+@media (max-width: 350px) {
+    .user-name {
+        display: none;
+    }
+    
+    .balance {
+        min-width: 80px;
+    }
+    
+    .quick-amounts {
+        grid-template-columns: 1fr;
+    }
 }
 
-.main-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.03);
+/* Утилиты */
+.hidden {
+    display: none !important;
+}
+
+/* Скроллбар */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
     border-radius: 3px;
 }
 
-.main-content::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #ff375f, #7b2ff7);
-    border-radius: 3px;
-}
-
-.main-content::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #ff4d75, #8a4bff);
-}
-
-/* Анимации */
-@keyframes pulse {
-    0%, 100% { 
-        transform: scale(1);
-        box-shadow: 0 3px 10px rgba(123, 47, 247, 0.3);
-    }
-    50% { 
-        transform: scale(1.02);
-        box-shadow: 0 5px 15px rgba(123, 47, 247, 0.4);
-    }
-}
-
-.balance {
-    animation: pulse 3s infinite ease-in-out;
-}
-
-/* Анимация для аватарки */
-@keyframes avatarPop {
-    0% {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.user-avatar, .profile-avatar {
-    animation: avatarPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Анимация для появления контента */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.page-content, .gradient-box {
-    animation: fadeInUp 0.4s ease-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-/* Стили для TON Connect */
-.tc-modal {
-    background: rgba(0, 0, 0, 0.9) !important;
-    backdrop-filter: blur(20px) !important;
-}
-
-.tc-modal__content {
-    background: linear-gradient(135deg, #1a1a1f, #0f0f15) !important;
-    border-radius: 25px !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.tc-modal__header {
-    color: white !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.tc-btn {
-    background: linear-gradient(135deg, #007aff, #0056cc) !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 15px !important;
-}
-
-.tc-btn:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 5px 15px rgba(0, 122, 255, 0.4) !important;
-}
-
-/* Эффект нажатия */
-.nav-button:active, .wallet-btn:active, .ticket-btn:active {
-    transform: scale(0.95);
-    transition: transform 0.1s ease;
-}
-
-/* Запасной вариант если изображение не загрузится */
-.ton-icon {
-    background-color: #7b2ff7;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 11px;
-}
-
-.ton-icon:before {
-    content: "TON";
-    display: none;
-}
-
-.ton-icon[src=""]:before,
-.ton-icon:not([src]):before {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-}
-
-/* Плавное появление */
-.container > * {
-    animation: fadeIn 0.5s ease-out;
+::-webkit-scrollbar-thumb:hover {
+    background: #444;
 }
