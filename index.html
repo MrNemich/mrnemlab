@@ -32,145 +32,108 @@
             </div>
         </div>
 
-        <!-- Модальное окно пополнения -->
+        <!-- Пополнение баланса модальное окно -->
         <div class="modal-overlay" id="balance-modal">
             <div class="modal-content wallet-modal">
                 <div class="modal-header">
-                    <h3 class="modal-title">BeatClub Wallet</h3>
                     <button class="modal-close" id="close-balance-modal">&times;</button>
                 </div>
                 
                 <div class="wallet-top-circle">
-                    <div class="wallet-balance-display">
-                        <span class="wallet-title">Баланс в боте</span>
-                        <div class="wallet-balance">
-                            <span id="bot-balance">0</span>
-                            <span class="ton-text">TON</span>
-                        </div>
+                    <div class="wallet-title">BeatClub wallet balance</div>
+                    <div class="wallet-balance">
+                        <span id="bot-balance">0</span>
+                        <span class="ton-text">TON</span>
                     </div>
                 </div>
                 
                 <div class="wallet-buttons">
                     <button class="wallet-btn deposit-btn" id="deposit-btn">
                         <i class="fas fa-plus"></i>
-                        <span>Пополнить</span>
+                        <span>Deposit</span>
                     </button>
                     <button class="wallet-btn withdraw-btn" id="withdraw-btn">
                         <i class="fas fa-arrow-up"></i>
-                        <span>Вывести</span>
+                        <span>Withdraw</span>
                     </button>
+                </div>
+                
+                <!-- Модальное окно для ввода суммы пополнения -->
+                <div class="deposit-modal" id="deposit-modal" style="display: none;">
+                    <div class="deposit-header">
+                        <h3>💰 Введите сумму пополнения</h3>
+                        <button class="modal-close" id="close-deposit-modal">&times;</button>
+                    </div>
+                    <div class="deposit-body">
+                        <div class="deposit-input-group">
+                            <input type="number" id="deposit-amount" min="1" max="1000" placeholder="Сумма в TON" class="deposit-input">
+                            <span class="deposit-label">TON</span>
+                        </div>
+                        <div class="deposit-info">
+                            <p>Доступно на кошельке: <span id="wallet-available">0</span> TON</p>
+                        </div>
+                        <button class="wallet-btn confirm-deposit-btn" id="confirm-deposit-btn">
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Отправить</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="wallet-connect">
                     <div class="connect-header">
-                        <span><i class="fas fa-wallet"></i> TON Кошелек</span>
+                        <span>👛 Wallet</span>
                         <button class="connect-btn" id="connect-wallet-btn">
-                            <i class="fas fa-plug"></i> Подключить
+                            Connect +
                         </button>
                     </div>
                     <div class="connect-info" id="connect-info">
-                        <div class="wallet-info-placeholder">
-                            <i class="fas fa-wallet"></i>
-                            <span>Подключите ваш TON кошелек для вывода средств</span>
-                        </div>
+                        <!-- Информация о подключенном кошельке будет здесь -->
                     </div>
                 </div>
                 
-                <div class="transaction-history">
-                    <h4><i class="fas fa-history"></i> История операций</h4>
-                    <div class="history-list" id="history-list">
-                        <div class="no-transactions">
-                            <i class="fas fa-clock"></i>
-                            <span>Нет операций</span>
-                        </div>
-                    </div>
+                <div class="wallet-footer">
+                    <p>Баланс в боте</p>
                 </div>
             </div>
         </div>
 
-        <!-- Модальное окно пополнения суммы -->
-        <div class="modal-overlay" id="deposit-modal">
-            <div class="modal-content deposit-modal">
-                <div class="modal-header">
-                    <h3 class="modal-title">Пополнение баланса</h3>
-                    <button class="modal-close" id="close-deposit-modal">&times;</button>
-                </div>
-                
-                <div class="deposit-amount">
-                    <div class="amount-input-container">
-                        <input type="number" 
-                               id="deposit-amount" 
-                               placeholder="0" 
-                               min="0.1" 
-                               step="0.1" 
-                               class="amount-input">
-                        <span class="amount-label">TON</span>
-                    </div>
-                    <div class="amount-presets">
-                        <button class="amount-preset" data-amount="10">10 TON</button>
-                        <button class="amount-preset" data-amount="50">50 TON</button>
-                        <button class="amount-preset" data-amount="100">100 TON</button>
-                        <button class="amount-preset" data-amount="200">200 TON</button>
-                    </div>
-                </div>
-                
-                <div class="deposit-info">
-                    <div class="info-item">
-                        <i class="fas fa-wallet"></i>
-                        <span>Кошелек: <span id="deposit-wallet-address">Не подключен</span></span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-coins"></i>
-                        <span>Баланс кошелька: <span id="deposit-wallet-balance">0</span> TON</span>
-                    </div>
-                </div>
-                
-                <button class="confirm-deposit-btn" id="confirm-deposit-btn">
-                    <i class="fas fa-paper-plane"></i>
-                    <span>Пополнить</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Основной контент -->
         <main class="main-content" id="main-content">
             <!-- Контент будет меняться через JS -->
         </main>
 
-        <!-- Нижняя навигация -->
         <nav class="bottom-nav">
             <div class="nav-container">
                 <button class="nav-button active" data-page="home">
                     <div class="button-content">
-                        <div class="nav-icon"><i class="fas fa-home"></i></div>
+                        <div class="nav-emoji">🏠</div>
                         <span class="nav-text">Главная</span>
                     </div>
                 </button>
                 
                 <button class="nav-button" data-page="lottery">
                     <div class="button-content">
-                        <div class="nav-icon"><i class="fas fa-ticket-alt"></i></div>
+                        <div class="nav-emoji">🎰</div>
                         <span class="nav-text">Лотерея</span>
                     </div>
                 </button>
                 
                 <button class="nav-button" data-page="tasks">
                     <div class="button-content">
-                        <div class="nav-icon"><i class="fas fa-tasks"></i></div>
+                        <div class="nav-emoji">🎯</div>
                         <span class="nav-text">Задания</span>
                     </div>
                 </button>
                 
                 <button class="nav-button" data-page="rating">
                     <div class="button-content">
-                        <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                        <div class="nav-emoji">🏆</div>
                         <span class="nav-text">Рейтинг</span>
                     </div>
                 </button>
                 
                 <button class="nav-button" data-page="profile">
                     <div class="button-content">
-                        <div class="nav-icon"><i class="fas fa-user"></i></div>
+                        <div class="nav-emoji">👤</div>
                         <span class="nav-text">Профиль</span>
                     </div>
                 </button>
@@ -178,10 +141,11 @@
         </nav>
     </div>
 
-    <!-- TON Connect Modal -->
+    <!-- Контейнер для TON Connect -->
     <div id="ton-connect-modal" style="display: none;"></div>
 
     <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
+    <script src="https://unpkg.com/ton@12.1.1/dist/ton.umd.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
