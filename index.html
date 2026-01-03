@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -23,22 +24,60 @@
             <div class="balance-container">
                 <div class="balance">
                     <img src="nft/ton.png" alt="TON" class="ton-icon">
-                    <span class="balance-amount">0</span>
+                    <span class="balance-amount" id="balance-amount">0</span>
                 </div>
-                <button class="add-balance-btn">
+                <button class="add-balance-btn" id="add-balance-btn">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
         </div>
 
-        <main class="main-content">
-            <div class="content-card">
-                <div class="gradient-box" id="content-display">
-                    <i class="fas fa-home content-icon"></i>
-                    <h3>Главная страница</h3>
-                    <p>Товаров нет, приходите позже...</p>
+        <!-- Пополнение баланса модальное окно -->
+        <div class="modal-overlay" id="balance-modal">
+            <div class="modal-content wallet-modal">
+                <div class="modal-header">
+                    <button class="modal-close" id="close-balance-modal">&times;</button>
+                </div>
+                
+                <div class="wallet-top-circle">
+                    <div class="wallet-title">BeatClub wallet balance</div>
+                    <div class="wallet-balance">
+                        <span id="bot-balance">0</span>
+                        <span class="ton-text">TON</span>
+                    </div>
+                </div>
+                
+                <div class="wallet-buttons">
+                    <button class="wallet-btn deposit-btn" id="deposit-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Deposit</span>
+                    </button>
+                    <button class="wallet-btn withdraw-btn" id="withdraw-btn">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Withdraw</span>
+                    </button>
+                </div>
+                
+                <div class="wallet-connect">
+                    <div class="connect-header">
+                        <span>👛 Wallet</span>
+                        <button class="connect-btn" id="connect-wallet-btn">
+                            Connect +
+                        </button>
+                    </div>
+                    <div class="connect-info" id="connect-info">
+                        <!-- Информация о подключенном кошельке будет здесь -->
+                    </div>
+                </div>
+                
+                <div class="wallet-footer">
+                    <p>Ваш внутренний баланс в боте</p>
                 </div>
             </div>
+        </div>
+
+        <main class="main-content" id="main-content">
+            <!-- Контент будет меняться через JS -->
         </main>
 
         <nav class="bottom-nav">
@@ -81,6 +120,10 @@
         </nav>
     </div>
 
+    <!-- Контейнер для TON Connect -->
+    <div id="ton-connect-modal" style="display: none;"></div>
+
+    <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
