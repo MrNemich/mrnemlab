@@ -46,6 +46,9 @@ document.addEventListener('DOMContentLoaded', function() {
         lotteryParticipating: false
     };
     
+    // Ваш кошелек для пополнения
+    const BOT_ADDRESS = "UQBhcIzPNZJXa1nWLypYIvO-ybYhBSZEGyH-6MDRdaKyzEJV";
+    
     // Даты лотереи - фиксированные
     const lotteryStartDate = new Date('2026-01-05T00:00:00');
     const lotteryEndDate = new Date('2026-01-10T00:00:00');
@@ -764,7 +767,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Отправка транзакции через TON Connect
+    // ОТПРАВКА НАСТОЯЩЕЙ ТРАНЗАКЦИИ на ваш кошелек
     async function sendDepositTransaction(amount) {
         if (!tonConnectUI || !userData.walletConnected) {
             tg.showAlert('❌ Кошелек не подключен');
@@ -778,16 +781,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 return false;
             }
             
-            // Создаем транзакцию
-            const botAddress = "EQCqRqk6Hx7vygYGlZT5Wp9ESIgUtXDbvP59jql4d4m_7L1B";
-            
+            // Создаем транзакцию на ВАШ кошелек
             const transaction = {
                 validUntil: Math.floor(Date.now() / 1000) + 300, // 5 минут
                 messages: [
                     {
-                        address: botAddress,
+                        address: BOT_ADDRESS, // Ваш кошелек UQBhcIzPNZJXa1nWLypYIvO-ybYhBSZEGyH-6MDRdaKyzEJV
                         amount: (amount * 1000000000).toString(), // Конвертируем в наноТоны
-                        payload: userData.id ? userData.id.toString() : "deposit"
+                        // payload можно использовать для идентификации пользователя
+                        payload: userData.id ? Buffer.from(userData.id.toString()).toString('hex') : ""
                     }
                 ]
             };
@@ -795,8 +797,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Показываем статус
             showTransactionStatus('pending', 'Подтвердите транзакцию в кошельке...');
             
-            // Отправляем транзакцию
-            console.log('Sending transaction:', transaction);
+            // Отправляем НАСТОЯЩУЮ транзакцию
+            console.log('Sending REAL transaction to:', BOT_ADDRESS);
+            console.log('Transaction amount:', amount, 'TON');
+            
             const result = await tonConnectUI.sendTransaction(transaction);
             
             console.log('Transaction result:', result);
@@ -805,7 +809,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Транзакция отправлена успешно
                 showTransactionStatus('success', 'Транзакция отправлена! Ожидаем подтверждения...');
                 
-                // Для демо просто увеличиваем баланс через 3 секунды
+                // ВНИМАНИЕ: Это ДЕМО! В реальном приложении нужно:
+                // 1. Проверять транзакции на вашем кошельке через API
+                // 2. Зачислять баланс только после подтверждения транзакции
+                
+                // Для демо: увеличиваем баланс через 3 секунды
+                // В РЕАЛЬНОМ ПРИЛОЖЕНИИ УБЕРИТЕ ЭТОТ КОД И ДОБАВЬТЕ ПРОВЕРКУ ТРАНЗАКЦИЙ
                 setTimeout(() => {
                     userData.balance += amount;
                     userData.totalVolume += amount;
@@ -833,7 +842,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Transaction error:', error);
             showTransactionStatus('error', '❌ Ошибка транзакции');
-            tg.showAlert('❌ Ошибка при отправке транзакции');
+            tg.showAlert('❌ Ошибка при отправке транзакции: ' + error.message);
             return false;
         }
     }
@@ -1034,7 +1043,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transform = 'scale(1)';
         }, 150);
         
-        // Отправляем транзакцию
+        // Отправляем НАСТОЯЩУЮ транзакцию на ваш кошелек
         await sendDepositTransaction(amount);
     });
     
