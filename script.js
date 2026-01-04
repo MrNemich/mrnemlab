@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 manifestUrl: manifestUrl,
                 buttonRootId: 'ton-connect-modal',
                 actionsConfiguration: {
-                    twaReturnUrl: 'https://t.me/beatclub_bot' // Замените на ваш бот
+                    twaReturnUrl: 'https://mrnemlab.vercel.app/' // Замените на ваш бот
                 }
             };
             
@@ -1152,3 +1152,4 @@ document.addEventListener('DOMContentLoaded', function() {
     
     checkTonIcon();
 });
+
