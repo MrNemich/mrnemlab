@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.css" />
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -32,7 +32,47 @@
             </div>
         </div>
 
-        <!-- Модальное окно пополнения (уменьшенное для мобильных) -->
+        <!-- Пополнение баланса модальное окно -->
+        <div class="modal-overlay" id="balance-modal">
+            <div class="modal-content wallet-modal">
+                <div class="modal-header">
+                    <button class="modal-close" id="close-balance-modal">&times;</button>
+                </div>
+                
+                <div class="wallet-top-circle">
+                    <div class="wallet-title">Баланс</div>
+                    <div class="wallet-balance">
+                        <span id="bot-balance">0</span>
+                        <span class="ton-text">TON</span>
+                    </div>
+                </div>
+                
+                <div class="wallet-buttons">
+                    <button class="wallet-btn deposit-btn" id="deposit-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Пополнить</span>
+                    </button>
+                    <button class="wallet-btn withdraw-btn" id="withdraw-btn">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Вывести</span>
+                    </button>
+                </div>
+                
+                <div class="wallet-connect">
+                    <div class="connect-header">
+                        <span>👛 Кошелек</span>
+                        <button class="connect-btn" id="connect-wallet-btn">
+                            Подключить +
+                        </button>
+                    </div>
+                    <div class="connect-info" id="connect-info">
+                        <!-- Информация о подключенном кошельке будет здесь -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно пополнения -->
         <div class="modal-overlay" id="deposit-modal">
             <div class="modal-content deposit-modal-content">
                 <div class="modal-header">
@@ -41,36 +81,26 @@
                 </div>
                 
                 <div class="deposit-container">
-                    <div class="address-container" id="address-container">
-                        <!-- Адрес и QR код будут здесь -->
-                    </div>
-                    
-                    <div class="deposit-amount-section">
-                        <div class="deposit-amount-label">
-                            <span>Сумма пополнения:</span>
-                            <span class="balance-ton">TON</span>
-                        </div>
+                    <div class="deposit-amount">
+                        <label for="deposit-amount-input">Сумма пополнения (TON):</label>
                         <div class="amount-input-group">
-                            <input type="number" id="deposit-amount-input" min="0.1" max="1000" step="0.1" placeholder="0.1" value="0.1">
+                            <input type="number" id="deposit-amount-input" min="1" max="1000" step="0.01" placeholder="10" value="10">
                             <span class="ton-symbol">TON</span>
                         </div>
                         <div class="amount-presets">
-                            <button class="amount-preset" data-amount="1">1</button>
-                            <button class="amount-preset" data-amount="5">5</button>
-                            <button class="amount-preset" data-amount="10">10</button>
-                            <button class="amount-preset" data-amount="50">50</button>
+                            <button class="amount-preset" data-amount="10">10 TON</button>
+                            <button class="amount-preset" data-amount="50">50 TON</button>
+                            <button class="amount-preset" data-amount="100">100 TON</button>
                         </div>
                     </div>
                     
-                    <div class="deposit-actions">
-                        <button class="confirm-deposit-btn" id="confirm-deposit-btn">
-                            <i class="fas fa-paper-plane"></i>
-                            <span>Пополнить</span>
-                        </button>
-                    </div>
+                    <button class="confirm-deposit-btn" id="confirm-deposit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Пополнить</span>
+                    </button>
                     
-                    <div class="deposit-status" id="deposit-status">
-                        <!-- Статус депозита будет здесь -->
+                    <div class="transaction-status" id="transaction-status">
+                        <!-- Статус транзакции будет здесь -->
                     </div>
                 </div>
             </div>
@@ -103,6 +133,13 @@
                     </div>
                 </button>
                 
+                <button class="nav-button" data-page="rating">
+                    <div class="button-content">
+                        <div class="nav-emoji">🏆</div>
+                        <span class="nav-text">Рейтинг</span>
+                    </div>
+                </button>
+                
                 <button class="nav-button" data-page="profile">
                     <div class="button-content">
                         <div class="nav-emoji">👤</div>
@@ -114,10 +151,9 @@
     </div>
 
     <!-- Контейнер для TON Connect -->
-    <div id="ton-connect-modal"></div>
+    <div id="ton-connect-modal" style="display: none;"></div>
 
     <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
-    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
