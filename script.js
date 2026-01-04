@@ -1,3 +1,4 @@
+// script.js
 document.addEventListener('DOMContentLoaded', function() {
     // Инициализация Telegram Web App
     const tg = window.Telegram.WebApp;
@@ -46,12 +47,15 @@ document.addEventListener('DOMContentLoaded', function() {
         lotteryParticipating: false
     };
     
-    // Ваш кошелек для пополнения
+    // Ваш кошелек для пополнения (ИЗМЕНЕН НА ВАШ)
     const BOT_ADDRESS = "UQBhcIzPNZJXa1nWLypYIvO-ybYhBSZEGyH-6MDRdaKyzEJV";
     
     // Даты лотереи - фиксированные
     const lotteryStartDate = new Date('2026-01-05T00:00:00');
     const lotteryEndDate = new Date('2026-01-10T00:00:00');
+    
+    // URL для API (ваш сайт на Vercel)
+    const API_URL = "https://mrnemlab.vercel.app/api";
     
     // Инициализация TON Connect
     let tonConnectUI = null;
@@ -193,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 manifestUrl: manifestUrl,
                 buttonRootId: 'ton-connect-modal',
                 actionsConfiguration: {
-                    twaReturnUrl: 'https://t.me/your_bot_username' // Замените на ваш бот
+                    twaReturnUrl: 'https://t.me/beatclub_bot' // Замените на ваш бот
                 }
             };
             
@@ -345,6 +349,51 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             connectWalletBtn.innerHTML = '<i class="fas fa-plug"></i> Подключить кошелек';
             connectWalletBtn.style.background = 'linear-gradient(135deg, #007aff, #0056cc)';
+        }
+    }
+    
+    // Функция для проверки транзакции через API
+    async function checkTransactionOnServer(amount) {
+        try {
+            if (!userData.walletConnected || !userData.walletAddress) {
+                return { success: false, message: 'Кошелек не подключен' };
+            }
+            
+            // Отправляем запрос на API для проверки депозита
+            const response = await fetch(`${API_URL}/check-deposit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: userData.id || 'anonymous',
+                    amount: amount,
+                    walletAddress: userData.walletAddress,
+                    timestamp: Date.now()
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                return {
+                    success: true,
+                    newBalance: result.newBalance || (userData.balance + amount),
+                    message: result.message || 'Транзакция подтверждена'
+                };
+            } else {
+                return {
+                    success: false,
+                    message: result.message || 'Транзакция не найдена'
+                };
+            }
+            
+        } catch (error) {
+            console.error('Error checking transaction:', error);
+            return {
+                success: false,
+                message: 'Ошибка при проверке транзакции'
+            };
         }
     }
     
@@ -807,16 +856,14 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (result) {
                 // Транзакция отправлена успешно
-                showTransactionStatus('success', 'Транзакция отправлена! Ожидаем подтверждения...');
+                showTransactionStatus('success', 'Транзакция отправлена! Проверяем...');
                 
-                // ВНИМАНИЕ: Это ДЕМО! В реальном приложении нужно:
-                // 1. Проверять транзакции на вашем кошельке через API
-                // 2. Зачислять баланс только после подтверждения транзакции
+                // Проверяем транзакцию через API
+                const checkResult = await checkTransactionOnServer(amount);
                 
-                // Для демо: увеличиваем баланс через 3 секунды
-                // В РЕАЛЬНОМ ПРИЛОЖЕНИИ УБЕРИТЕ ЭТОТ КОД И ДОБАВЬТЕ ПРОВЕРКУ ТРАНЗАКЦИЙ
-                setTimeout(() => {
-                    userData.balance += amount;
+                if (checkResult.success) {
+                    // Обновляем баланс из результата API
+                    userData.balance = checkResult.newBalance;
                     userData.totalVolume += amount;
                     updateBalanceDisplay();
                     saveUserData();
@@ -834,7 +881,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         depositModal.classList.remove('active');
                         document.body.style.overflow = 'auto';
                     }, 2000);
-                }, 3000);
+                } else {
+                    showTransactionStatus('error', '❌ Транзакция не подтверждена');
+                    tg.showAlert('❌ Транзакция не подтверждена. Попробуйте позже.');
+                }
                 
                 return true;
             }
