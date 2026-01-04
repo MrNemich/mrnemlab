@@ -198,10 +198,10 @@ body::before {
 
 .modal-content {
     background: linear-gradient(135deg, #1a1a1f, #0f0f15);
-    border-radius: 25px;
-    padding: 25px;
+    border-radius: 20px;
+    padding: 20px;
     width: 90%;
-    max-width: 400px;
+    max-width: 350px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 
         0 20px 40px rgba(0, 0, 0, 0.6),
@@ -218,7 +218,7 @@ body::before {
 .modal-header {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .modal-close {
@@ -244,10 +244,10 @@ body::before {
 /* Стили для кошелька */
 .wallet-top-circle {
     background: linear-gradient(180deg, #007aff, #0056cc);
-    border-radius: 50% 50% 0 0;
-    padding: 40px 30px 60px;
+    border-radius: 20px;
+    padding: 30px 20px 40px;
     text-align: center;
-    margin: -25px -25px 20px;
+    margin: -20px -20px 15px;
     position: relative;
     overflow: hidden;
 }
@@ -267,15 +267,14 @@ body::before {
 .wallet-title {
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     position: relative;
     z-index: 1;
     letter-spacing: 1px;
-    text-transform: uppercase;
 }
 
 .wallet-balance {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: 700;
     color: white;
     position: relative;
@@ -284,32 +283,32 @@ body::before {
 }
 
 .ton-text {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: rgba(255, 255, 255, 0.9);
-    margin-left: 8px;
+    margin-left: 5px;
 }
 
 .wallet-buttons {
     display: flex;
-    gap: 15px;
-    margin: 25px 0 30px;
+    gap: 12px;
+    margin: 20px 0 25px;
     justify-content: center;
 }
 
 .wallet-btn {
     flex: 1;
-    padding: 18px 20px;
+    padding: 16px 15px;
     border-radius: 15px;
     border: none;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     transition: all 0.3s ease;
-    min-height: 60px;
+    min-height: 55px;
 }
 
 .deposit-btn {
@@ -337,8 +336,7 @@ body::before {
 .wallet-connect {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 15px;
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -346,11 +344,11 @@ body::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .connect-header span {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: white;
     display: flex;
     align-items: center;
@@ -361,9 +359,9 @@ body::before {
     background: linear-gradient(135deg, #007aff, #0056cc);
     color: white;
     border: none;
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 15px;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -377,17 +375,9 @@ body::before {
 .connect-info {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 10px;
-    padding: 15px;
+    padding: 12px;
     text-align: center;
-    min-height: 70px;
-}
-
-.wallet-footer {
-    text-align: center;
-    color: #8e8e93;
-    font-size: 0.9rem;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    min-height: 60px;
 }
 
 /* Основной контент */
@@ -404,7 +394,7 @@ body::before {
     background: rgba(28, 28, 30, 0.9);
     backdrop-filter: blur(20px);
     border-radius: 20px;
-    padding: 25px;
+    padding: 20px;
     box-shadow: 
         0 8px 25px rgba(0, 0, 0, 0.5),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -420,46 +410,53 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 25px;
+    gap: 20px;
 }
 
-.pepe-image {
-    width: 180px;
-    height: 180px;
+.pepe-image-placeholder {
+    width: 150px;
+    height: 150px;
     border-radius: 20px;
-    object-fit: cover;
-    border: 4px solid #7b2ff7;
-    box-shadow: 
-        0 10px 30px rgba(123, 47, 247, 0.4),
-        0 0 50px rgba(123, 47, 247, 0.2);
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(123, 47, 247, 0.1);
+    border: 2px solid #7b2ff7;
 }
 
 .lottery-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 700;
     text-align: center;
     background: linear-gradient(90deg, #ff375f, #7b2ff7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
 }
 
 .lottery-description {
     text-align: center;
     color: #8e8e93;
-    line-height: 1.6;
+    line-height: 1.5;
     max-width: 500px;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+
+.lottery-status {
+    background: rgba(123, 47, 247, 0.1);
+    color: #7b2ff7;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid rgba(123, 47, 247, 0.3);
 }
 
 .countdown-container {
     background: linear-gradient(135deg, rgba(40, 40, 45, 0.9), rgba(25, 25, 30, 0.9));
     border-radius: 15px;
-    padding: 25px;
+    padding: 20px;
     width: 100%;
     max-width: 500px;
     border: 2px solid #7b2ff7;
@@ -467,7 +464,7 @@ body::before {
 }
 
 .countdown-title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-bottom: 15px;
     color: white;
 }
@@ -475,27 +472,28 @@ body::before {
 .countdown-timer {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
 }
 
 .countdown-item {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
-    padding: 15px;
-    min-width: 70px;
+    padding: 12px;
+    min-width: 60px;
     border: 1px solid rgba(123, 47, 247, 0.3);
 }
 
 .countdown-value {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 700;
     color: #7b2ff7;
     text-shadow: 0 0 10px rgba(123, 47, 247, 0.5);
 }
 
 .countdown-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #8e8e93;
     margin-top: 5px;
 }
@@ -507,6 +505,7 @@ body::before {
     margin-top: 10px;
     color: #8e8e93;
     font-size: 0.9rem;
+    justify-content: center;
 }
 
 .ticket-price img {
@@ -518,9 +517,9 @@ body::before {
     background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
     color: white;
     border: none;
-    padding: 18px 40px;
+    padding: 16px 30px;
     border-radius: 15px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
@@ -529,7 +528,7 @@ body::before {
     gap: 10px;
     margin-top: 15px;
     width: 100%;
-    max-width: 300px;
+    max-width: 280px;
     transition: all 0.3s ease;
     box-shadow: 0 5px 20px rgba(123, 47, 247, 0.4);
 }
@@ -546,13 +545,14 @@ body::before {
 
 .participant-status {
     margin-top: 15px;
-    padding: 15px;
+    padding: 12px;
     background: rgba(123, 47, 247, 0.1);
     border-radius: 10px;
     border: 1px solid rgba(123, 47, 247, 0.3);
     color: #7b2ff7;
     font-weight: 600;
     display: none;
+    font-size: 0.9rem;
 }
 
 .participant-status.show {
@@ -570,22 +570,22 @@ body::before {
 }
 
 .tasks-icon {
-    font-size: 4rem;
-    margin-bottom: 25px;
+    font-size: 3.5rem;
+    margin-bottom: 20px;
     background: linear-gradient(90deg, #ff375f, #7b2ff7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .tasks-message {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     color: #8e8e93;
     text-align: center;
-    padding: 30px;
+    padding: 25px;
     border-radius: 15px;
     background: rgba(255, 255, 255, 0.03);
     border: 1px dashed rgba(255, 255, 255, 0.1);
-    max-width: 400px;
+    max-width: 350px;
 }
 
 /* Стили для профиля */
@@ -593,16 +593,16 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 25px;
+    gap: 20px;
 }
 
 .profile-avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 25px;
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
     overflow: hidden;
-    border: 4px solid #7b2ff7;
-    box-shadow: 0 10px 30px rgba(123, 47, 247, 0.4);
+    border: 3px solid #7b2ff7;
+    box-shadow: 0 8px 25px rgba(123, 47, 247, 0.4);
 }
 
 .profile-avatar img {
@@ -616,7 +616,7 @@ body::before {
 }
 
 .profile-username {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: white;
     text-align: center;
@@ -624,46 +624,49 @@ body::before {
 
 .profile-stats {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     width: 100%;
     max-width: 500px;
-    gap: 15px;
+    gap: 10px;
 }
 
 .stat-item {
     background: rgba(40, 40, 45, 0.8);
-    border-radius: 15px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 15px;
     text-align: center;
     flex: 1;
     border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 0.3s ease;
+    min-width: 0;
 }
 
 .stat-item:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     background: rgba(50, 50, 55, 0.9);
     border-color: #7b2ff7;
 }
 
-.stat-label {
-    font-size: 0.9rem;
-    color: #8e8e93;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.stat-icon {
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    display: block;
 }
 
 .stat-value {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: white;
     margin-bottom: 5px;
+    display: block;
 }
 
-.stat-icon {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+.stat-label {
+    font-size: 0.8rem;
+    color: #8e8e93;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
 }
 
 .ton-stat {
@@ -683,11 +686,11 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
 }
 
 .rating-icon {
-    font-size: 3rem;
+    font-size: 2.5rem;
     margin-bottom: 15px;
     background: linear-gradient(90deg, #ff375f, #7b2ff7);
     -webkit-background-clip: text;
@@ -697,8 +700,9 @@ body::before {
 .rating-description {
     text-align: center;
     color: #8e8e93;
-    line-height: 1.6;
-    max-width: 500px;
+    line-height: 1.5;
+    max-width: 450px;
+    font-size: 0.95rem;
 }
 
 /* Нижняя навигация */
@@ -706,14 +710,14 @@ body::before {
     background: rgba(18, 18, 24, 0.95);
     backdrop-filter: blur(20px);
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 12px 0 18px 0;
+    padding: 12px 0 15px 0;
     flex-shrink: 0;
     margin-top: 10px;
     border-radius: 20px 20px 0 0;
     box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.5);
     position: relative;
     z-index: 100;
-    height: 75px;
+    height: 70px;
 }
 
 .bottom-nav::before {
@@ -738,18 +742,18 @@ body::before {
     max-width: 500px;
     margin: 0 auto;
     padding: 0 10px;
-    gap: 3px;
+    gap: 2px;
 }
 
 .nav-button {
     background: transparent;
     border: none;
     color: #8e8e93;
-    padding: 8px 0 6px 0;
+    padding: 6px 0 5px 0;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 14px;
-    width: 68px;
+    border-radius: 12px;
+    width: 65px;
     outline: none;
     display: flex;
     flex-direction: column;
@@ -757,7 +761,7 @@ body::before {
     justify-content: center;
     position: relative;
     overflow: hidden;
-    height: 65px;
+    height: 60px;
 }
 
 .nav-button::before {
@@ -770,7 +774,7 @@ body::before {
     background: linear-gradient(135deg, rgba(255, 55, 95, 0.1), rgba(123, 47, 247, 0.1));
     opacity: 0;
     transition: opacity 0.3s ease;
-    border-radius: 14px;
+    border-radius: 12px;
 }
 
 .nav-button.active::before {
@@ -781,19 +785,19 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     position: relative;
     z-index: 1;
 }
 
 .nav-emoji {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .nav-text {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
     transition: all 0.3s ease;
 }
@@ -808,14 +812,14 @@ body::before {
 }
 
 .nav-button.active .nav-emoji {
-    transform: translateY(-6px) scale(1.15);
+    transform: translateY(-5px) scale(1.1);
     filter: drop-shadow(0 3px 8px rgba(123, 47, 247, 0.4));
 }
 
 .nav-button.active .nav-text {
     color: #ffffff;
     font-weight: 700;
-    text-shadow: 0 0 8px rgba(123, 47, 247, 0.5);
+    text-shadow: 0 0 6px rgba(123, 47, 247, 0.5);
 }
 
 /* Эффект наведения */
@@ -833,119 +837,32 @@ body::before {
 
 /* Стили для модального окна пополнения */
 .deposit-modal-content {
-    max-width: 450px;
+    max-width: 320px;
 }
 
 .modal-title {
     color: white;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     text-align: center;
 }
 
 .deposit-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-}
-
-.address-container {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    padding: 20px;
-    border: 1px solid rgba(123, 47, 247, 0.3);
-}
-
-.address-label {
-    color: #8e8e93;
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-}
-
-.address-value-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.address-value {
-    font-family: monospace;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 10px 15px;
-    border-radius: 10px;
-    flex: 1;
-    word-break: break-all;
-    font-size: 0.9rem;
-    color: white;
-}
-
-.copy-btn {
-    background: linear-gradient(135deg, #007aff, #0056cc);
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.copy-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 122, 255, 0.3);
-}
-
-.address-note {
-    color: #ffd166;
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 15px;
-}
-
-.address-note i {
-    font-size: 1rem;
-}
-
-.qr-code-placeholder {
-    background: rgba(255, 255, 255, 0.03);
-    border: 2px dashed rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    color: #8e8e93;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.qr-code-placeholder:hover {
-    border-color: rgba(123, 47, 247, 0.3);
-    background: rgba(123, 47, 247, 0.05);
-}
-
-.qr-code-placeholder i {
-    font-size: 2.5rem;
-    color: #7b2ff7;
+    gap: 15px;
 }
 
 .deposit-amount {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 15px;
-    padding: 20px;
+    padding: 15px;
 }
 
 .deposit-amount label {
     color: white;
-    font-size: 1rem;
+    font-size: 0.95rem;
     margin-bottom: 10px;
     display: block;
 }
@@ -953,8 +870,8 @@ body::before {
 .amount-input-group {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
+    gap: 8px;
+    margin-bottom: 12px;
 }
 
 .amount-input-group input {
@@ -962,9 +879,9 @@ body::before {
     background: rgba(0, 0, 0, 0.3);
     border: 2px solid rgba(123, 47, 247, 0.5);
     border-radius: 10px;
-    padding: 15px;
+    padding: 12px;
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
     outline: none;
 }
@@ -977,13 +894,13 @@ body::before {
 .ton-symbol {
     color: #7b2ff7;
     font-weight: 700;
-    font-size: 1.2rem;
-    min-width: 40px;
+    font-size: 1.1rem;
+    min-width: 35px;
 }
 
 .amount-presets {
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 
 .amount-preset {
@@ -991,11 +908,12 @@ body::before {
     background: rgba(123, 47, 247, 0.1);
     border: 1px solid rgba(123, 47, 247, 0.3);
     color: #7b2ff7;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 8px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
+    font-size: 0.9rem;
 }
 
 .amount-preset:hover {
@@ -1009,38 +927,13 @@ body::before {
     border-color: #7b2ff7;
 }
 
-.deposit-info {
-    background: rgba(0, 122, 255, 0.1);
-    border-radius: 15px;
-    padding: 15px;
-    border: 1px solid rgba(0, 122, 255, 0.2);
-}
-
-.info-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #8e8e93;
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-}
-
-.info-item:last-child {
-    margin-bottom: 0;
-}
-
-.info-item i {
-    color: #007aff;
-    min-width: 16px;
-}
-
 .confirm-deposit-btn {
     background: linear-gradient(135deg, #06D6A0, #04A97F);
     color: white;
     border: none;
-    padding: 20px;
+    padding: 16px;
     border-radius: 15px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
@@ -1048,6 +941,7 @@ body::before {
     justify-content: center;
     gap: 10px;
     transition: all 0.3s ease;
+    margin-top: 5px;
 }
 
 .confirm-deposit-btn:hover:not(:disabled) {
@@ -1061,7 +955,7 @@ body::before {
 }
 
 .transaction-status {
-    min-height: 50px;
+    min-height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1074,10 +968,11 @@ body::before {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 15px;
+    padding: 12px;
     border-radius: 10px;
     width: 100%;
     animation: fadeIn 0.3s ease;
+    font-size: 0.9rem;
 }
 
 .transaction-status-pending {
@@ -1107,31 +1002,31 @@ body::before {
 /* Стили для информации о кошельке в профиле */
 .wallet-info-card {
     background: linear-gradient(135deg, rgba(40, 40, 45, 0.9), rgba(25, 25, 30, 0.9));
-    border-radius: 20px;
-    padding: 20px;
+    border-radius: 15px;
+    padding: 15px;
     width: 100%;
-    max-width: 500px;
+    max-width: 450px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 .wallet-info-header {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     color: white;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .wallet-info-header i {
     color: #7b2ff7;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 .wallet-info-content {
-    min-height: 100px;
+    min-height: 90px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1141,45 +1036,47 @@ body::before {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
 .wallet-address {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    gap: 5px;
     background: rgba(0, 0, 0, 0.3);
-    padding: 12px 15px;
-    border-radius: 10px;
+    padding: 10px;
+    border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .wallet-address span:first-child {
     color: #8e8e93;
-    font-size: 0.9rem;
-    min-width: 50px;
+    font-size: 0.85rem;
 }
 
 .address-value {
     font-family: monospace;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     word-break: break-all;
     flex: 1;
     color: white;
+    line-height: 1.3;
 }
 
 .copy-address-btn {
     background: rgba(123, 47, 247, 0.2);
     border: 1px solid rgba(123, 47, 247, 0.4);
     color: #7b2ff7;
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    align-self: flex-end;
+    margin-top: 5px;
 }
 
 .copy-address-btn:hover {
@@ -1190,24 +1087,22 @@ body::before {
 .wallet-balance-display {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: space-between;
     background: linear-gradient(135deg, rgba(123, 47, 247, 0.1), rgba(90, 27, 214, 0.1));
-    padding: 15px;
-    border-radius: 10px;
+    padding: 12px;
+    border-radius: 8px;
     border: 1px solid rgba(123, 47, 247, 0.3);
 }
 
 .wallet-balance-display span:first-child {
     color: #8e8e93;
-    font-size: 0.9rem;
-    min-width: 60px;
+    font-size: 0.85rem;
 }
 
 .balance-value {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #7b2ff7;
-    flex: 1;
 }
 
 .not-connected {
@@ -1216,7 +1111,8 @@ body::before {
     align-items: center;
     gap: 10px;
     color: #8e8e93;
-    padding: 20px;
+    padding: 15px;
+    text-align: center;
 }
 
 .not-connected i {
@@ -1285,91 +1181,98 @@ body::before {
     }
     
     .page-content {
-        padding: 20px;
+        padding: 15px;
         min-height: calc(100vh - 170px);
         border-radius: 18px;
     }
     
     .wallet-top-circle {
-        padding: 30px 20px 50px;
+        padding: 25px 15px 35px;
     }
     
     .wallet-balance {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
     
-    .pepe-image {
-        width: 150px;
-        height: 150px;
+    .wallet-btn {
+        padding: 14px;
+        font-size: 0.9rem;
+        min-height: 50px;
+    }
+    
+    .pepe-image-placeholder {
+        width: 130px;
+        height: 130px;
     }
     
     .countdown-item {
-        min-width: 60px;
-        padding: 12px;
+        min-width: 55px;
+        padding: 10px;
     }
     
     .countdown-value {
-        font-size: 1.8rem;
-    }
-    
-    .profile-stats {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .stat-item {
-        width: 100%;
-        max-width: 300px;
-    }
-    
-    .bottom-nav {
-        padding: 10px 0 15px 0;
-        border-radius: 18px 18px 0 0;
-        height: 70px;
-    }
-    
-    .nav-button {
-        width: 62px;
-        padding: 7px 0 5px 0;
-        height: 60px;
-        border-radius: 12px;
-    }
-    
-    .nav-emoji {
         font-size: 1.6rem;
     }
     
+    .profile-stats {
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+    
+    .stat-item {
+        padding: 12px 8px;
+    }
+    
+    .stat-icon {
+        font-size: 1.2rem;
+    }
+    
+    .stat-value {
+        font-size: 1.3rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .bottom-nav {
+        padding: 10px 0 12px 0;
+        border-radius: 18px 18px 0 0;
+        height: 65px;
+    }
+    
+    .nav-button {
+        width: 60px;
+        padding: 5px 0 4px 0;
+        height: 58px;
+        border-radius: 10px;
+    }
+    
+    .nav-emoji {
+        font-size: 1.5rem;
+    }
+    
     .nav-text {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
     }
     
     .deposit-modal-content {
-        max-width: 380px;
+        max-width: 300px;
+        padding: 15px;
     }
     
-    .address-value {
-        font-size: 0.8rem;
-    }
-    
-    .amount-input-group input {
+    .deposit-amount,
+    .transaction-status {
         padding: 12px;
-        font-size: 1.1rem;
     }
     
-    .amount-presets {
-        flex-direction: column;
+    .confirm-deposit-btn {
+        padding: 14px;
+        font-size: 0.95rem;
     }
     
-    .wallet-address {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
-    }
-    
-    .wallet-balance-display {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
+    .wallet-info-card {
+        padding: 12px;
     }
 }
 
@@ -1428,95 +1331,119 @@ body::before {
     }
     
     .page-content {
-        padding: 15px;
+        padding: 12px;
         border-radius: 16px;
     }
     
     .wallet-top-circle {
-        padding: 25px 15px 45px;
+        padding: 20px 12px 30px;
     }
     
     .wallet-balance {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
     
     .wallet-btn {
-        padding: 15px;
-        font-size: 0.9rem;
+        padding: 12px;
+        font-size: 0.85rem;
+        min-height: 48px;
     }
     
-    .pepe-image {
-        width: 130px;
-        height: 130px;
+    .pepe-image-placeholder {
+        width: 120px;
+        height: 120px;
     }
     
     .countdown-timer {
-        gap: 10px;
+        gap: 8px;
     }
     
     .countdown-item {
-        min-width: 55px;
-        padding: 10px;
+        min-width: 50px;
+        padding: 8px;
     }
     
     .countdown-value {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
+    }
+    
+    .countdown-label {
+        font-size: 0.7rem;
+    }
+    
+    .profile-stats {
+        gap: 8px;
+    }
+    
+    .stat-item {
+        padding: 10px 6px;
+    }
+    
+    .stat-icon {
+        font-size: 1.1rem;
+    }
+    
+    .stat-value {
+        font-size: 1.2rem;
+    }
+    
+    .stat-label {
+        font-size: 0.65rem;
     }
     
     .bottom-nav {
-        padding: 8px 0 12px 0;
+        padding: 8px 0 10px 0;
         border-radius: 16px 16px 0 0;
-        height: 65px;
+        height: 62px;
     }
     
     .nav-button {
-        width: 58px;
-        height: 58px;
+        width: 56px;
+        height: 55px;
         border-radius: 10px;
     }
     
     .nav-emoji {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
     
     .nav-text {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
     
     .deposit-modal-content {
-        max-width: 320px;
-        padding: 15px;
+        max-width: 280px;
+        padding: 12px;
     }
     
-    .address-container,
     .deposit-amount,
-    .deposit-info {
-        padding: 15px;
+    .transaction-status {
+        padding: 10px;
     }
     
     .confirm-deposit-btn {
-        padding: 15px;
-        font-size: 1rem;
+        padding: 12px;
+        font-size: 0.9rem;
     }
     
     .wallet-info-card {
-        padding: 15px;
+        padding: 10px;
     }
 }
 
 /* Стили для скроллбара */
 .main-content::-webkit-scrollbar {
-    width: 5px;
+    width: 4px;
 }
 
 .main-content::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.03);
-    border-radius: 3px;
+    border-radius: 2px;
 }
 
 .main-content::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, #ff375f, #7b2ff7);
-    border-radius: 3px;
+    border-radius: 2px;
 }
 
 .main-content::-webkit-scrollbar-thumb:hover {
@@ -1588,7 +1515,7 @@ body::before {
 
 .tc-modal__content {
     background: linear-gradient(135deg, #1a1a1f, #0f0f15) !important;
-    border-radius: 25px !important;
+    border-radius: 20px !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
@@ -1601,7 +1528,7 @@ body::before {
     background: linear-gradient(135deg, #007aff, #0056cc) !important;
     color: white !important;
     border: none !important;
-    border-radius: 15px !important;
+    border-radius: 12px !important;
 }
 
 .tc-btn:hover {
@@ -1649,43 +1576,42 @@ body::before {
 .gradient-box {
     background: linear-gradient(135deg, rgba(40, 40, 45, 0.8), rgba(25, 25, 30, 0.8));
     border-radius: 20px;
-    padding: 40px 20px;
+    padding: 30px 15px;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
     margin: auto;
-    max-width: 500px;
+    max-width: 450px;
     width: 100%;
 }
 
 .content-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
+    font-size: 3.5rem;
+    margin-bottom: 15px;
     background: linear-gradient(90deg, #ff375f, #7b2ff7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .gradient-box h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
     color: white;
 }
 
 .empty-message {
     color: #8e8e93;
-    font-size: 1.1rem;
-    line-height: 1.6;
+    font-size: 1rem;
+    line-height: 1.5;
 }
 
 /* Дополнительные стили для кнопок в профиле */
 .wallet-address .address-value {
     font-family: monospace;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: white;
     background: rgba(0, 0, 0, 0.3);
-    padding: 8px 12px;
-    border-radius: 8px;
-    margin: 0 10px;
+    padding: 6px 10px;
+    border-radius: 6px;
     flex: 1;
     word-break: break-all;
 }
@@ -1703,16 +1629,17 @@ body::before {
 /* Стили для уведомлений */
 .notification {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 15px;
+    right: 15px;
     background: linear-gradient(135deg, #06D6A0, #04A97F);
     color: white;
-    padding: 15px 25px;
+    padding: 12px 20px;
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
     z-index: 10000;
     animation: slideInRight 0.3s ease;
-    max-width: 300px;
+    max-width: 280px;
+    font-size: 0.9rem;
 }
 
 .notification.error {
@@ -1736,10 +1663,10 @@ body::before {
 
 /* Стили для QR кода */
 .qr-code {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
     background: white;
-    padding: 10px;
+    padding: 8px;
     border-radius: 10px;
     margin: 0 auto;
 }
@@ -1775,16 +1702,25 @@ body::before {
 }
 
 .preloader-spinner {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     border: 3px solid rgba(123, 47, 247, 0.3);
     border-top-color: #7b2ff7;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
+    margin: 0 auto 15px;
 }
 
 .preloader-text {
     color: #8e8e93;
-    font-size: 1rem;
+    font-size: 0.9rem;
+}
+
+/* Черные кастомные эмодзи для навигации */
+.nav-emoji {
+    filter: invert(1) brightness(0.8);
+}
+
+.nav-button.active .nav-emoji {
+    filter: invert(1) brightness(1);
 }
