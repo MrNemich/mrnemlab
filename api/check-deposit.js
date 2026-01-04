@@ -4,7 +4,7 @@ const axios = require('axios');
 // Ваш кошелек для пополнения
 const BOT_ADDRESS = "UQBhcIzPNZJXa1nWLypYIvO-ybYhBSZEGyH-6MDRdaKyzEJV";
 // TON Center API ключ (получите бесплатный на https://toncenter.com)
-const TON_API_KEY = process.env.TON_API_KEY || "YOUR_API_KEY";
+const TON_API_KEY = process.env.TON_API_KEY || "a01e20f2cfbc0e467faeb0dc9910b8ea8d4b5e6e5319458392f53e89bb1d0d18";
 
 // Временное хранилище в памяти (в продакшене используйте базу данных)
 const deposits = new Map();
@@ -261,4 +261,5 @@ function processSuccessfulDeposit(userId, amount, res) {
 
 // api/user-balance.js - для получения баланса пользователя
 // api/transaction-history.js - для истории транзакций
+
 // api/verify-payment.js - для верификации платежа
