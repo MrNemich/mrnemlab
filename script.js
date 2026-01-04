@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const amountPresets = document.querySelectorAll('.amount-preset');
     const confirmDepositBtn = document.getElementById('confirm-deposit-btn');
     const transactionStatusElement = document.getElementById('transaction-status');
-    const walletAddressDisplay = document.getElementById('wallet-address-display');
     
     // Текущий пользователь
     let userData = {
@@ -47,8 +46,9 @@ document.addEventListener('DOMContentLoaded', function() {
         lotteryParticipating: false
     };
     
-    // Дата окончания лотереи (5 дней с текущего момента)
-    const lotteryEndDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000);
+    // Даты лотереи - фиксированные
+    const lotteryStartDate = new Date('2026-01-05T00:00:00');
+    const lotteryEndDate = new Date('2026-01-10T00:00:00');
     
     // Инициализация TON Connect
     let tonConnectUI = null;
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.setItem('tonconnect_manifest', JSON.stringify(tempManifest));
             }
             
-            // Инициализируем TON Connect UI - ПРАВИЛЬНЫЙ СПОСОБ
+            // Инициализируем TON Connect UI
             const options = {
                 manifestUrl: manifestUrl,
                 buttonRootId: 'ton-connect-modal',
@@ -308,12 +308,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обновление информации о подключении
     function updateConnectInfo() {
         if (userData.walletConnected && userData.walletAddress) {
-            const shortAddress = userData.walletAddress.slice(0, 6) + '...' + userData.walletAddress.slice(-4);
+            const shortAddress = userData.walletAddress.slice(0, 8) + '...' + userData.walletAddress.slice(-8);
             connectInfoElement.innerHTML = `
                 <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 15px;">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <i class="fas fa-wallet" style="color: #7b2ff7; font-size: 1.2rem;"></i>
-                        <span style="color: white; font-weight: 600; font-size: 0.9rem;">${shortAddress}</span>
+                        <span style="color: white; font-weight: 600; font-size: 0.9rem; font-family: monospace;">${shortAddress}</span>
                     </div>
                     <div style="
                         font-size: 1.3rem; 
@@ -338,9 +338,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div style="color: #8e8e93; font-size: 0.9rem; text-align: center; padding: 25px;">
                     <i class="fas fa-plug" style="font-size: 2rem; margin-bottom: 15px; display: block; color: #8e8e93;"></i>
                     Подключите TON кошелек для пополнения баланса и участия в лотереях
-                    <div style="margin-top: 15px; font-size: 0.8rem; color: #7b2ff7;">
-                        Поддерживается: Tonkeeper, Tonhub, OpenMask
-                    </div>
                 </div>
             `;
             connectWalletBtn.innerHTML = '<i class="fas fa-plug"></i> Подключить кошелек';
@@ -362,6 +359,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function createLotteryContent() {
+        const now = new Date();
+        let lotteryStatus = '';
+        
+        if (now < lotteryStartDate) {
+            lotteryStatus = 'Лотерея начнется 05.01.2026 в 00:00';
+        } else if (now > lotteryEndDate) {
+            lotteryStatus = 'Лотерея завершена';
+        } else {
+            lotteryStatus = 'Идет розыгрыш!';
+        }
+        
         return `
             <div class="page-content">
                 <div class="lottery-container">
@@ -374,6 +382,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p class="lottery-description">
                         Участвуй в розыгрыше уникального NFT Pepe! Купи билет за 1 TON и получи шанс выиграть эксклюзивный NFT Pepe.
                     </p>
+                    
+                    <div class="lottery-status">${lotteryStatus}</div>
                     
                     <div class="countdown-container">
                         <h3 class="countdown-title">До конца розыгрыша:</h3>
@@ -507,7 +517,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 border-radius: 6px;
                                                 word-break: break-all;
                                             ">
-                                                ${userData.walletAddress.slice(0, 8)}...${userData.walletAddress.slice(-8)}
+                                                ${userData.walletAddress}
                                             </span>
                                             <button class="copy-address-btn" onclick="copyToClipboard('${userData.walletAddress}')" style="
                                                 background: rgba(123, 47, 247, 0.2);
@@ -590,7 +600,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!timerElement) return;
         
         const now = new Date();
-        const timeLeft = lotteryEndDate - now;
+        let timeLeft;
+        
+        if (now < lotteryStartDate) {
+            timeLeft = lotteryStartDate - now;
+        } else if (now > lotteryEndDate) {
+            timeLeft = 0;
+        } else {
+            timeLeft = lotteryEndDate - now;
+        }
         
         if (timeLeft <= 0) {
             document.getElementById('days').textContent = '00';
@@ -645,7 +663,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const buyTicketBtn = document.getElementById('buy-ticket-btn');
                 const participantStatus = document.getElementById('participant-status');
                 
-                if (userData.lotteryParticipating) {
+                const now = new Date();
+                if (now < lotteryStartDate || now > lotteryEndDate) {
+                    if (buyTicketBtn) {
+                        buyTicketBtn.disabled = true;
+                        buyTicketBtn.innerHTML = '<i class="fas fa-clock"></i><span>Лотерея не активна</span>';
+                    }
+                } else if (userData.lotteryParticipating) {
                     participantStatus.classList.add('show');
                     if (buyTicketBtn) {
                         buyTicketBtn.disabled = true;
@@ -653,7 +677,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 
-                if (buyTicketBtn) {
+                if (buyTicketBtn && !buyTicketBtn.disabled) {
                     buyTicketBtn.addEventListener('click', function() {
                         if (userData.balance < 1) {
                             tg.showAlert('❌ Недостаточно TON для покупки билета!');
@@ -740,49 +764,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Отображение адреса для пополнения
-    function showDepositAddress() {
-        // В реальном приложении здесь должен быть адрес вашего бота/контракта
-        const botAddress = "EQCqRqk6Hx7vygYGlZT5Wp9ESIgUtXDbvP59jql4d4m_7L1B";
-        
-        walletAddressDisplay.innerHTML = `
-            <div class="address-container">
-                <div class="address-label">Адрес для пополнения:</div>
-                <div class="address-value-container">
-                    <span class="address-value">${botAddress}</span>
-                    <button class="copy-btn" id="copy-address-btn">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                </div>
-                <div class="address-note">
-                    <i class="fas fa-exclamation-circle"></i>
-                    Отправляйте TON только на этот адрес
-                </div>
-                <div class="qr-code-placeholder" id="qr-code-placeholder">
-                    <div style="font-size: 4rem; color: #7b2ff7; margin-bottom: 10px;">⎙</div>
-                    <span>Отсканируйте QR-код в кошельке</span>
-                </div>
-            </div>
-        `;
-        
-        // Копирование адреса
-        const copyBtn = document.getElementById('copy-address-btn');
-        if (copyBtn) {
-            copyBtn.addEventListener('click', function() {
-                navigator.clipboard.writeText(botAddress).then(() => {
-                    tg.showAlert('✅ Адрес скопирован в буфер обмена');
-                    tg.HapticFeedback.notificationOccurred('success');
-                    
-                    // Эффект нажатия
-                    this.style.transform = 'scale(0.9)';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 150);
-                });
-            });
-        }
-    }
-    
     // Отправка транзакции через TON Connect
     async function sendDepositTransaction(amount) {
         if (!tonConnectUI || !userData.walletConnected) {
@@ -838,6 +819,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Обновляем баланс кошелька
                     updateRealWalletBalance();
+                    
+                    // Закрываем модальное окно через 2 секунды
+                    setTimeout(() => {
+                        depositModal.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    }, 2000);
                 }, 3000);
                 
                 return true;
@@ -946,7 +933,6 @@ document.addEventListener('DOMContentLoaded', function() {
         balanceModal.classList.remove('active');
         
         // Показываем окно пополнения
-        showDepositAddress();
         depositAmountInput.value = '10';
         transactionStatusElement.innerHTML = '';
         depositModal.classList.add('active');
@@ -1107,4 +1093,3 @@ document.addEventListener('DOMContentLoaded', function() {
     
     checkTonIcon();
 });
-
