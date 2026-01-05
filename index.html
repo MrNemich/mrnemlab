@@ -11,16 +11,23 @@
 </head>
 <body>
     <div class="container">
-        <!-- Верхнее меню с балансом -->
+        <!-- Верхнее меню с аватаркой и балансом -->
         <div class="top-menu">
-            <div class="balance-circle">
-                <div class="ton-gradient-bg"></div>
-                <img src="nft/ton.png" alt="TON" class="ton-icon-small">
-                <div class="balance-info">
-                    <span class="balance-amount" id="balance-amount">0</span>
-                    <span class="ton-label">TON</span>
+            <div class="user-info" id="user-info">
+                <div class="user-avatar" id="user-avatar">
+                    <div class="avatar-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
                 </div>
-                <button class="add-balance-circle-btn" id="add-balance-btn">
+                <span class="user-name" id="user-name">Гость</span>
+            </div>
+            <div class="balance-container">
+                <div class="balance">
+                    <img src="nft/ton.png" alt="TON" class="ton-icon">
+                    <span class="balance-amount" id="balance-amount">0</span>
+                    <span class="ton-text-nav">TON</span>
+                </div>
+                <button class="add-balance-btn" id="add-balance-btn">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
@@ -101,78 +108,76 @@
         </div>
 
         <!-- Модальное окно фильтров -->
-        <div class="modal-overlay" id="filter-modal">
-            <div class="modal-content filter-modal-content">
-                <div class="filter-header">
-                    <h3 class="filter-title">Фильтры</h3>
-                    <button class="filter-close" id="close-filter-modal">&times;</button>
+        <div class="modal-overlay" id="filters-modal">
+            <div class="modal-content filters-modal-content">
+                <div class="filters-header">
+                    <h3 class="filters-title">Фильтры</h3>
+                    <button class="modal-close" id="close-filters-modal">&times;</button>
                 </div>
-                
-                <div class="filter-divider"></div>
-                
-                <div class="filter-buttons">
+                <div class="filters-divider"></div>
+                <div class="filters-buttons">
                     <button class="filter-btn" data-filter="sort">
                         <span>Сортировать по</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
+                    <div class="filter-options" id="sort-options">
+                        <button class="filter-option" data-value="newest">
+                            <div class="option-selector"></div>
+                            <span>Сначала новые</span>
+                        </button>
+                        <button class="filter-option" data-value="price-asc">
+                            <div class="option-selector"></div>
+                            <span>Цена: по возрастанию</span>
+                        </button>
+                        <button class="filter-option" data-value="price-desc">
+                            <div class="option-selector"></div>
+                            <span>Цена: по убыванию</span>
+                        </button>
+                    </div>
+                    
                     <button class="filter-btn" data-filter="collection">
                         <span>Коллекция</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
+                    <div class="filter-options" id="collection-options">
+                        <!-- Коллекции будут добавлены через JS -->
+                    </div>
+                    
                     <button class="filter-btn" data-filter="price">
                         <span>Цена</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
+                    <div class="filter-options" id="price-options">
+                        <div class="price-slider-container">
+                            <div class="price-slider-track">
+                                <div class="price-slider-fill" id="slider-fill"></div>
+                                <input type="range" class="price-slider" min="0" max="100000" value="0" id="price-min-slider">
+                                <input type="range" class="price-slider" min="0" max="100000" value="100000" id="price-max-slider">
+                            </div>
+                            <div class="price-inputs">
+                                <input type="number" class="price-input" id="price-min-input" value="0" min="0" max="100000">
+                                <span>-</span>
+                                <input type="number" class="price-input" id="price-max-input" value="100000" min="0" max="100000">
+                            </div>
+                        </div>
+                    </div>
+                    
                     <button class="filter-btn" data-filter="background">
                         <span>Background</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
-                </div>
-                
-                <!-- Подменю сортировки -->
-                <div class="filter-submenu" id="sort-submenu">
-                    <button class="filter-option" data-value="newest">
-                        <div class="radio-circle"></div>
-                        <span>Сначала новые</span>
-                    </button>
-                    <button class="filter-option" data-value="price-asc">
-                        <div class="radio-circle"></div>
-                        <span>Цена: по возрастанию</span>
-                    </button>
-                    <button class="filter-option" data-value="price-desc">
-                        <div class="radio-circle"></div>
-                        <span>Цена: по убыванию</span>
-                    </button>
-                </div>
-                
-                <!-- Подменю коллекций -->
-                <div class="filter-submenu collections-submenu" id="collection-submenu">
-                    <!-- Коллекции будут добавляться через JS -->
-                </div>
-                
-                <!-- Подменю цены -->
-                <div class="filter-submenu" id="price-submenu">
-                    <div class="price-slider-container">
-                        <div class="price-range-slider">
-                            <div class="slider-track"></div>
-                            <input type="range" min="0" max="100000" value="0" class="slider-min" id="price-min">
-                            <input type="range" min="0" max="100000" value="100000" class="slider-max" id="price-max">
-                        </div>
-                        <div class="price-inputs">
-                            <input type="number" class="price-input" id="price-input-min" value="0" min="0" max="100000">
-                            <input type="number" class="price-input" id="price-input-max" value="100000" min="0" max="100000">
-                        </div>
+                    <div class="filter-options" id="background-options">
+                        <!-- Background options будут добавлены через JS -->
                     </div>
                 </div>
                 
-                <!-- Подменю бэкграундов -->
-                <div class="filter-submenu collections-submenu" id="background-submenu">
-                    <!-- Бэкграунды будут добавляться через JS -->
-                </div>
-                
-                <div class="filter-actions">
-                    <button class="filter-action-btn reset-btn" id="reset-filters-btn">Сбросить</button>
-                    <button class="filter-action-btn search-btn" id="apply-filters-btn">Поиск</button>
+                <div class="filters-actions">
+                    <button class="filter-action-btn reset-btn" id="reset-filters-btn">
+                        Сбросить
+                    </button>
+                    <button class="filter-action-btn apply-btn" id="apply-filters-btn">
+                        Поиск
+                    </button>
                 </div>
             </div>
         </div>
@@ -199,7 +204,7 @@
                 
                 <button class="nav-button" data-page="season">
                     <div class="button-content">
-                        <div class="nav-emoji">📅</div>
+                        <div class="nav-emoji">🏆</div>
                         <span class="nav-text">Сезон</span>
                     </div>
                 </button>
