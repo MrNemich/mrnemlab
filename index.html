@@ -8,10 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body>
     <div class="container">
-        <!-- Верхнее меню с балансом в полукруге -->
+        <!-- Верхнее меню с балансом -->
         <div class="top-menu">
             <div class="ton-balance-circle">
                 <div class="ton-circle-bg"></div>
@@ -26,7 +27,7 @@
             </div>
         </div>
 
-        <!-- Модальные окна остаются без изменений -->
+        <!-- Модальное окно баланса -->
         <div class="modal-overlay" id="balance-modal">
             <div class="modal-content wallet-modal">
                 <div class="modal-header">
@@ -54,7 +55,7 @@
                 
                 <div class="wallet-connect">
                     <div class="connect-header">
-                        <span>👛 Кошелек</span>
+                        <span>👛 Подключение кошелька</span>
                         <button class="connect-btn" id="connect-wallet-btn">
                             Подключить +
                         </button>
@@ -75,6 +76,11 @@
                 </div>
                 
                 <div class="deposit-container">
+                    <div class="wallet-status" id="wallet-status">
+                        <i class="fas fa-wallet"></i>
+                        <span id="wallet-status-text">Кошелёк не подключен</span>
+                    </div>
+                    
                     <div class="deposit-amount">
                         <label for="deposit-amount-input">Сумма пополнения (TON):</label>
                         <div class="amount-input-group">
@@ -109,13 +115,13 @@
                 </div>
                 
                 <div class="filters-container">
-                    <div class="filter-section">
+                    <div class="filter-section active" id="filter-sort">
                         <button class="filter-option" data-filter="sort">
                             <span>Сортировать по</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
                         <div class="filter-dropdown" id="sort-dropdown">
-                            <div class="filter-option-item" data-value="newest">
+                            <div class="filter-option-item active" data-value="newest">
                                 <div class="radio-circle"></div>
                                 <span>Сначала новые</span>
                             </div>
@@ -130,7 +136,7 @@
                         </div>
                     </div>
                     
-                    <div class="filter-section">
+                    <div class="filter-section" id="filter-collection">
                         <button class="filter-option" data-filter="collection">
                             <span>Коллекция</span>
                             <i class="fas fa-chevron-down"></i>
@@ -140,7 +146,7 @@
                         </div>
                     </div>
                     
-                    <div class="filter-section">
+                    <div class="filter-section" id="filter-price">
                         <button class="filter-option" data-filter="price">
                             <span>Цена</span>
                             <i class="fas fa-chevron-down"></i>
@@ -160,7 +166,7 @@
                         </div>
                     </div>
                     
-                    <div class="filter-section">
+                    <div class="filter-section" id="filter-background">
                         <button class="filter-option" data-filter="background">
                             <span>Background</span>
                             <i class="fas fa-chevron-down"></i>
@@ -178,10 +184,121 @@
             </div>
         </div>
 
+        <!-- Модальное окно игр -->
+        <div class="modal-overlay" id="games-modal">
+            <div class="modal-content games-modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">🎮 Игры на NFT</h3>
+                    <button class="modal-close" id="close-games-modal">&times;</button>
+                </div>
+                
+                <div class="games-container">
+                    <div class="game-card" id="triangle-game-btn">
+                        <div class="game-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <div class="game-info">
+                            <h3>Игра "Треугольник"</h3>
+                            <p>Запустите NFT-шарик по траектории и испытайте удачу! Каждый раз непредсказуемый результат, но всегда честная игра.</p>
+                        </div>
+                        <div class="game-play-btn">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно игры "Треугольник" -->
+        <div class="modal-overlay" id="triangle-game-modal">
+            <div class="modal-content triangle-game-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">🎯 Игра "Треугольник"</h3>
+                    <button class="modal-close" id="close-triangle-game">&times;</button>
+                </div>
+                
+                <div class="game-content">
+                    <div class="game-rules">
+                        <div class="rule-item">
+                            <i class="fas fa-basketball-ball"></i>
+                            <span>Выберите NFT из инвентаря как "шарик"</span>
+                        </div>
+                        <div class="rule-item">
+                            <i class="fas fa-route"></i>
+                            <span>Шарик скатывается по физической траектории</span>
+                        </div>
+                        <div class="rule-item">
+                            <i class="fas fa-random"></i>
+                            <span>Случайные отскоки через точки</span>
+                        </div>
+                        <div class="rule-item">
+                            <i class="fas fa-bullseye"></i>
+                            <span>Попадание в лунку определяет множитель</span>
+                        </div>
+                    </div>
+                    
+                    <div class="game-board">
+                        <div class="holes-grid">
+                            <div class="hole" data-multiplier="20">20×</div>
+                            <div class="hole" data-multiplier="10">10×</div>
+                            <div class="hole" data-multiplier="5">5×</div>
+                            <div class="hole" data-multiplier="2.5">2.5×</div>
+                            <div class="hole" data-multiplier="2">2×</div>
+                            <div class="hole" data-multiplier="1.5">1.5×</div>
+                            <div class="hole" data-multiplier="1">1×</div>
+                            <div class="hole center-hole" data-multiplier="0">0×</div>
+                            <div class="hole" data-multiplier="1">1×</div>
+                            <div class="hole" data-multiplier="1.5">1.5×</div>
+                            <div class="hole" data-multiplier="2">2×</div>
+                            <div class="hole" data-multiplier="2.5">2.5×</div>
+                            <div class="hole" data-multiplier="5">5×</div>
+                            <div class="hole" data-multiplier="10">10×</div>
+                            <div class="hole" data-multiplier="20">20×</div>
+                        </div>
+                        
+                        <div class="ball-track" id="ball-track">
+                            <div class="ball" id="game-ball"></div>
+                        </div>
+                        
+                        <div class="bounce-points">
+                            <div class="bounce-point" style="left: 20%;"></div>
+                            <div class="bounce-point" style="left: 40%;"></div>
+                            <div class="bounce-point" style="left: 60%;"></div>
+                            <div class="bounce-point" style="left: 80%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="game-controls">
+                        <div class="selected-nft" id="selected-nft">
+                            <i class="fas fa-gem"></i>
+                            <span>NFT не выбран</span>
+                        </div>
+                        <button class="play-game-btn" id="play-game-btn" disabled>
+                            <i class="fas fa-play"></i>
+                            <span>Играть</span>
+                        </button>
+                    </div>
+                    
+                    <div class="inventory-section">
+                        <h4>🎁 Инвентарь NFT</h4>
+                        <div class="inventory-grid" id="inventory-grid">
+                            <!-- NFT из инвентаря будут здесь -->
+                        </div>
+                    </div>
+                    
+                    <div class="game-result" id="game-result">
+                        <!-- Результат игры будет здесь -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Основной контент -->
         <main class="main-content" id="main-content">
             <!-- Контент будет меняться через JS -->
         </main>
 
+        <!-- Нижняя навигация -->
         <nav class="bottom-nav">
             <div class="nav-container">
                 <button class="nav-button active" data-page="market">
@@ -194,7 +311,7 @@
                 <button class="nav-button" data-page="gifts">
                     <div class="button-content">
                         <div class="nav-emoji">🎁</div>
-                        <span class="nav-text">Мои подарки</span>
+                        <span class="nav-text">Подарки</span>
                     </div>
                 </button>
                 
