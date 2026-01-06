@@ -11,29 +11,22 @@
 </head>
 <body>
     <div class="container">
-        <!-- Верхнее меню с аватаркой и балансом -->
+        <!-- Верхнее меню с балансом в полукруге -->
         <div class="top-menu">
-            <div class="user-info" id="user-info">
-                <div class="user-avatar" id="user-avatar">
-                    <div class="avatar-placeholder">
-                        <i class="fas fa-user"></i>
-                    </div>
-                </div>
-                <span class="user-name" id="user-name">Гость</span>
-            </div>
-            <div class="balance-container">
-                <div class="balance">
-                    <img src="nft/ton.png" alt="TON" class="ton-icon">
+            <div class="ton-balance-circle">
+                <div class="ton-circle-bg"></div>
+                <img src="nft/ton.png" alt="TON" class="ton-icon-circle">
+                <div class="balance-info">
                     <span class="balance-amount" id="balance-amount">0</span>
-                    <span class="ton-text-nav">TON</span>
+                    <span class="ton-label">TON</span>
                 </div>
-                <button class="add-balance-btn" id="add-balance-btn">
+                <button class="add-balance-btn-circle" id="add-balance-btn">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Пополнение баланса модальное окно -->
+        <!-- Модальные окна остаются без изменений -->
         <div class="modal-overlay" id="balance-modal">
             <div class="modal-content wallet-modal">
                 <div class="modal-header">
@@ -110,74 +103,77 @@
         <!-- Модальное окно фильтров -->
         <div class="modal-overlay" id="filters-modal">
             <div class="modal-content filters-modal-content">
-                <div class="filters-header">
-                    <h3 class="filters-title">Фильтры</h3>
+                <div class="modal-header">
+                    <h3 class="modal-title">Фильтры</h3>
                     <button class="modal-close" id="close-filters-modal">&times;</button>
                 </div>
-                <div class="filters-divider"></div>
-                <div class="filters-buttons">
-                    <button class="filter-btn" data-filter="sort">
-                        <span>Сортировать по</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="filter-options" id="sort-options">
-                        <button class="filter-option" data-value="newest">
-                            <div class="option-selector"></div>
-                            <span>Сначала новые</span>
+                
+                <div class="filters-container">
+                    <div class="filter-section">
+                        <button class="filter-option" data-filter="sort">
+                            <span>Сортировать по</span>
+                            <i class="fas fa-chevron-down"></i>
                         </button>
-                        <button class="filter-option" data-value="price-asc">
-                            <div class="option-selector"></div>
-                            <span>Цена: по возрастанию</span>
-                        </button>
-                        <button class="filter-option" data-value="price-desc">
-                            <div class="option-selector"></div>
-                            <span>Цена: по убыванию</span>
-                        </button>
-                    </div>
-                    
-                    <button class="filter-btn" data-filter="collection">
-                        <span>Коллекция</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="filter-options" id="collection-options">
-                        <!-- Коллекции будут добавлены через JS -->
-                    </div>
-                    
-                    <button class="filter-btn" data-filter="price">
-                        <span>Цена</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="filter-options" id="price-options">
-                        <div class="price-slider-container">
-                            <div class="price-slider-track">
-                                <div class="price-slider-fill" id="slider-fill"></div>
-                                <input type="range" class="price-slider" min="0" max="100000" value="0" id="price-min-slider">
-                                <input type="range" class="price-slider" min="0" max="100000" value="100000" id="price-max-slider">
+                        <div class="filter-dropdown" id="sort-dropdown">
+                            <div class="filter-option-item" data-value="newest">
+                                <div class="radio-circle"></div>
+                                <span>Сначала новые</span>
                             </div>
-                            <div class="price-inputs">
-                                <input type="number" class="price-input" id="price-min-input" value="0" min="0" max="100000">
-                                <span>-</span>
-                                <input type="number" class="price-input" id="price-max-input" value="100000" min="0" max="100000">
+                            <div class="filter-option-item" data-value="price-asc">
+                                <div class="radio-circle"></div>
+                                <span>Цена: по возрастанию</span>
+                            </div>
+                            <div class="filter-option-item" data-value="price-desc">
+                                <div class="radio-circle"></div>
+                                <span>Цена: по убыванию</span>
                             </div>
                         </div>
                     </div>
                     
-                    <button class="filter-btn" data-filter="background">
-                        <span>Background</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="filter-options" id="background-options">
-                        <!-- Background options будут добавлены через JS -->
+                    <div class="filter-section">
+                        <button class="filter-option" data-filter="collection">
+                            <span>Коллекция</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="filter-dropdown" id="collection-dropdown">
+                            <!-- Коллекции будут заполнены через JS -->
+                        </div>
                     </div>
-                </div>
-                
-                <div class="filters-actions">
-                    <button class="filter-action-btn reset-btn" id="reset-filters-btn">
-                        Сбросить
-                    </button>
-                    <button class="filter-action-btn apply-btn" id="apply-filters-btn">
-                        Поиск
-                    </button>
+                    
+                    <div class="filter-section">
+                        <button class="filter-option" data-filter="price">
+                            <span>Цена</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="filter-dropdown" id="price-dropdown">
+                            <div class="price-slider-container">
+                                <div class="price-slider-track" id="price-slider-track">
+                                    <div class="price-slider-range" id="price-slider-range"></div>
+                                    <div class="price-slider-handle" id="price-slider-handle-min"></div>
+                                    <div class="price-slider-handle" id="price-slider-handle-max"></div>
+                                </div>
+                                <div class="price-inputs">
+                                    <input type="number" class="price-input" id="price-min" min="0" max="100000" value="0">
+                                    <input type="number" class="price-input" id="price-max" min="0" max="100000" value="100000">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <button class="filter-option" data-filter="background">
+                            <span>Background</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="filter-dropdown" id="background-dropdown">
+                            <!-- Backgrounds будут заполнены через JS -->
+                        </div>
+                    </div>
+                    
+                    <div class="filter-buttons">
+                        <button class="filter-btn reset-btn" id="reset-filters-btn">Сбросить</button>
+                        <button class="filter-btn search-btn" id="search-filters-btn">Поиск</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -204,7 +200,7 @@
                 
                 <button class="nav-button" data-page="season">
                     <div class="button-content">
-                        <div class="nav-emoji">🏆</div>
+                        <div class="nav-emoji">📅</div>
                         <span class="nav-text">Сезон</span>
                     </div>
                 </button>
