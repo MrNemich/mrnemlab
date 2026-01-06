@@ -22,9 +22,9 @@ body::before {
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 20% 80%, rgba(0, 122, 255, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(0, 122, 255, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(255, 45, 85, 0.03) 0%, transparent 50%);
+        radial-gradient(circle at 20% 80%, rgba(88, 28, 135, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 122, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 45, 85, 0.08) 0%, transparent 50%);
     z-index: -1;
 }
 
@@ -37,164 +37,407 @@ body::before {
     margin: 0 auto;
 }
 
-/* Верхнее меню с аватаркой и балансом */
+/* Верхнее меню с балансом в полукруге */
 .top-menu {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    margin-bottom: 10px;
-    flex-shrink: 0;
-    height: 60px;
-}
-
-/* Информация о пользователе слева */
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 15px 8px 10px;
-    background: rgba(40, 40, 45, 0.8);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    max-width: 200px;
-    overflow: hidden;
-}
-
-/* Аватарка пользователя */
-.user-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
-    position: relative;
-    border: 2px solid #2c2c35;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-}
-
-.user-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.avatar-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #2c2c35, #1a1a1f);
-    display: flex;
-    align-items: center;
     justify-content: center;
-    color: white;
-}
-
-.avatar-placeholder i {
-    font-size: 1.4rem;
-}
-
-.user-name {
-    font-weight: 600;
-    font-size: 1rem;
-    color: #ffffff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
-}
-
-/* Обновленный баланс в полукруге */
-.balance-container {
-    display: flex;
     align-items: center;
-    gap: 10px;
+    padding: 10px 0;
+    margin-bottom: 15px;
+    flex-shrink: 0;
+    height: 70px;
 }
 
-.balance {
-    background: rgba(28, 28, 30, 0.9);
-    padding: 8px 15px 8px 10px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    min-width: 150px;
-    height: 40px;
+.ton-balance-circle {
     position: relative;
+    width: 240px;
+    height: 50px;
+    background: rgba(30, 30, 35, 0.9);
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px 0 5px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     overflow: hidden;
 }
 
-.balance::before {
-    content: '';
+.ton-circle-bg {
     position: absolute;
     left: 0;
     top: 0;
-    bottom: 0;
-    width: 20px;
-    background: linear-gradient(90deg, rgba(0, 122, 255, 0.2), transparent);
-    border-radius: 20px 0 0 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 122, 255, 0.15);
+    border-radius: 50%;
+    z-index: 1;
 }
 
-/* Обновленная иконка TON */
-.ton-icon {
-    width: 24px;
-    height: 24px;
+.ton-icon-circle {
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     object-fit: contain;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 2px;
-    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.4));
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: 1;
+    z-index: 2;
+    position: relative;
+    filter: brightness(0.9);
+}
+
+.balance-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    z-index: 2;
 }
 
 .balance-amount {
     font-weight: 700;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: white;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    min-width: 40px;
-    text-align: center;
 }
 
-.ton-text-nav {
-    color: #8e8e93;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-right: 5px;
+.ton-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: -3px;
 }
 
-.add-balance-btn {
-    width: 40px;
-    height: 40px;
+.add-balance-btn-circle {
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: #1c1c1e;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    color: white;
+    background: white;
+    border: none;
+    color: #000;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-    background: rgba(255, 255, 255, 0.1);
+    z-index: 2;
 }
 
-.add-balance-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
+.add-balance-btn-circle:hover {
     transform: scale(1.05);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.4);
 }
 
-.add-balance-btn i {
-    font-size: 1.1rem;
+.add-balance-btn-circle i {
+    font-size: 1rem;
 }
 
-/* Модальное окно пополнения баланса */
+/* Модальное окно фильтров */
+.filters-modal-content {
+    max-width: 320px;
+}
+
+.filters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.filter-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.filter-option {
+    width: 100%;
+    background: rgba(40, 40, 45, 0.8);
+    border: none;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.filter-option:hover {
+    background: rgba(50, 50, 55, 0.9);
+}
+
+.filter-option.active {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.filter-option.active i {
+    transform: rotate(180deg);
+}
+
+.filter-option i {
+    transition: transform 0.3s ease;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.filter-dropdown {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: rgba(30, 30, 35, 0.9);
+}
+
+.filter-dropdown.active {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.filter-option-item {
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.filter-option-item:last-child {
+    border-bottom: none;
+}
+
+.filter-option-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.filter-option-item.active {
+    background: rgba(123, 47, 247, 0.1);
+}
+
+.filter-option-item.active .radio-circle {
+    background: #7b2ff7;
+    border-color: #7b2ff7;
+}
+
+.filter-option-item.active .radio-circle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+}
+
+.radio-circle {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.price-slider-container {
+    padding: 20px;
+}
+
+.price-slider-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.price-slider-range {
+    position: absolute;
+    height: 100%;
+    background: #7b2ff7;
+    border-radius: 3px;
+}
+
+.price-slider-handle {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    border: 2px solid #7b2ff7;
+}
+
+.price-inputs {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.price-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    color: white;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.price-input:focus {
+    outline: none;
+    border-color: #7b2ff7;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.filter-btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.reset-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.reset-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.search-btn {
+    background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
+    color: white;
+}
+
+.search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(123, 47, 247, 0.3);
+}
+
+/* Контент маркета */
+.market-container {
+    width: 100%;
+}
+
+.search-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(40, 40, 45, 0.8);
+    padding: 12px 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.search-filter-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+}
+
+.filter-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(123, 47, 247, 0.1);
+    border: 1px solid rgba(123, 47, 247, 0.3);
+    color: #7b2ff7;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.filter-icon-btn:hover {
+    background: rgba(123, 47, 247, 0.2);
+    transform: translateY(-2px);
+}
+
+.nft-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.nft-item {
+    background: rgba(40, 40, 45, 0.9);
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nft-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    border-color: rgba(123, 47, 247, 0.3);
+}
+
+.nft-image {
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(135deg, #1a1a1f, #2a2a35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.nft-image img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+.nft-info {
+    padding: 12px;
+}
+
+.nft-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.nft-price {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #7b2ff7;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.nft-price img {
+    width: 16px;
+    height: 16px;
+}
+
+/* Модальные окна (остальное без изменений) */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -230,6 +473,8 @@ body::before {
     position: relative;
     transform: translateY(20px);
     transition: transform 0.3s ease;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .modal-overlay.active .modal-content {
@@ -238,8 +483,15 @@ body::before {
 
 .modal-header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 15px;
+}
+
+.modal-title {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .modal-close {
@@ -260,149 +512,6 @@ body::before {
 .modal-close:hover {
     background: rgba(255, 255, 255, 0.05);
     color: white;
-}
-
-/* Стили для кошелька */
-.wallet-top-circle {
-    background: linear-gradient(180deg, #2c2c35, #1a1a1f);
-    border-radius: 20px;
-    padding: 30px 20px 40px;
-    text-align: center;
-    margin: -20px -20px 15px;
-    position: relative;
-    overflow: hidden;
-}
-
-.wallet-top-circle::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(180deg, 
-        rgba(0, 122, 255, 0.1) 0%,
-        rgba(0, 122, 255, 0.05) 100%);
-}
-
-.wallet-title {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 10px;
-    position: relative;
-    z-index: 1;
-    letter-spacing: 1px;
-}
-
-.wallet-balance {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: white;
-    position: relative;
-    z-index: 1;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-.ton-text {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.9);
-    margin-left: 5px;
-}
-
-.wallet-buttons {
-    display: flex;
-    gap: 12px;
-    margin: 20px 0 25px;
-    justify-content: center;
-}
-
-.wallet-btn {
-    flex: 1;
-    padding: 16px 15px;
-    border-radius: 15px;
-    border: none;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    min-height: 55px;
-}
-
-.deposit-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-}
-
-.deposit-btn:hover {
-    transform: translateY(-3px);
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-}
-
-.withdraw-btn {
-    background: rgba(0, 122, 255, 0.1);
-    color: white;
-    border: 1px solid rgba(0, 122, 255, 0.3);
-    backdrop-filter: blur(10px);
-}
-
-.withdraw-btn:hover {
-    transform: translateY(-3px);
-    background: rgba(0, 122, 255, 0.2);
-    box-shadow: 0 8px 20px rgba(0, 122, 255, 0.2);
-}
-
-.wallet-connect {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    padding: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.connect-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.connect-header span {
-    font-size: 1rem;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.connect-btn {
-    background: linear-gradient(135deg, #007aff, #0056cc);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 15px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.connect-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 122, 255, 0.3);
-}
-
-.connect-info {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    padding: 12px;
-    text-align: center;
-    min-height: 60px;
 }
 
 /* Основной контент */
@@ -430,67 +539,6 @@ body::before {
     animation: fadeInUp 0.5s ease-out;
 }
 
-/* Стили для маркета */
-.market-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.search-suggestion {
-    background: rgba(40, 40, 45, 0.8);
-    border-radius: 12px;
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    margin-bottom: 10px;
-}
-
-.suggestion-text {
-    font-size: 0.95rem;
-    color: #8e8e93;
-    font-weight: 500;
-}
-
-.filter-icon-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: rgba(0, 122, 255, 0.1);
-    border: 1px solid rgba(0, 122, 255, 0.3);
-    color: #007aff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.filter-icon-btn:hover {
-    background: rgba(0, 122, 255, 0.2);
-    transform: translateY(-2px);
-}
-
-.market-items {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.market-message {
-    text-align: center;
-    color: #8e8e93;
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    max-width: 300px;
-}
-
 /* Стили для подарков */
 .gifts-container {
     display: flex;
@@ -498,46 +546,23 @@ body::before {
     align-items: center;
     justify-content: center;
     height: 100%;
-    gap: 20px;
 }
 
 .gifts-icon {
     font-size: 3.5rem;
-    margin-bottom: 10px;
-}
-
-.gifts-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    text-align: center;
-}
-
-.gifts-count {
-    background: rgba(40, 40, 45, 0.8);
-    border-radius: 15px;
-    padding: 20px 40px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.count-number {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #007aff;
-    display: block;
-}
-
-.count-label {
-    font-size: 0.9rem;
-    color: #8e8e93;
+    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .gifts-message {
+    font-size: 1.2rem;
     color: #8e8e93;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    max-width: 300px;
+    text-align: center;
+    padding: 25px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    max-width: 350px;
 }
 
 /* Стили для сезона */
@@ -547,39 +572,23 @@ body::before {
     align-items: center;
     justify-content: center;
     height: 100%;
-    gap: 20px;
-    text-align: center;
 }
 
 .season-icon {
     font-size: 3.5rem;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .season-message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-
-.development-badge {
-    background: rgba(255, 193, 7, 0.1);
-    border: 1px solid rgba(255, 193, 7, 0.3);
-    color: #ffd166;
-    padding: 12px 24px;
-    border-radius: 10px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.season-description {
+    font-size: 1.2rem;
     color: #8e8e93;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    max-width: 300px;
+    text-align: center;
+    padding: 25px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    max-width: 350px;
 }
 
 /* Стили для профиля */
@@ -593,9 +602,9 @@ body::before {
 .profile-avatar {
     width: 100px;
     height: 100px;
-    border-radius: 20px;
+    border-radius: 50%;
     overflow: hidden;
-    border: 3px solid #2c2c35;
+    border: 3px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
@@ -606,7 +615,7 @@ body::before {
 }
 
 .profile-avatar .avatar-placeholder {
-    border-radius: 20px;
+    border-radius: 50%;
 }
 
 .profile-username {
@@ -638,14 +647,14 @@ body::before {
 .stat-item:hover {
     transform: translateY(-3px);
     background: rgba(50, 50, 55, 0.9);
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(123, 47, 247, 0.3);
 }
 
 .stat-icon {
     font-size: 1.3rem;
     margin-bottom: 8px;
     display: block;
-    filter: brightness(0.8);
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .stat-value {
@@ -665,249 +674,136 @@ body::before {
 }
 
 .ton-stat {
-    color: #007aff;
+    color: #7b2ff7;
 }
 
 .gift-stat {
-    color: #8e8e93;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .sold-stat {
-    color: #8e8e93;
+    color: rgba(255, 255, 255, 0.9);
 }
 
-/* Стили для фильтров */
-.filters-modal-content {
-    max-width: 320px;
-    padding: 0;
-}
-
-.filters-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 20px 15px;
-    border-bottom: none;
-}
-
-.filters-title {
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-
-.filters-divider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.08);
-    margin: 0 20px;
-}
-
-.filters-buttons {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.filter-btn {
-    background: rgba(40, 40, 45, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
+/* Стили для информации о кошельке в профиле */
+.wallet-info-card {
+    background: linear-gradient(135deg, rgba(40, 40, 45, 0.9), rgba(25, 25, 30, 0.9));
+    border-radius: 15px;
     padding: 15px;
+    width: 100%;
+    max-width: 450px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 15px;
+}
+
+.wallet-info-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    color: white;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.filter-btn:hover {
-    background: rgba(50, 50, 55, 0.9);
-}
-
-.filter-btn i {
-    color: #8e8e93;
-    font-size: 0.8rem;
-    transition: transform 0.3s ease;
-}
-
-.filter-options {
-    display: none;
-    flex-direction: column;
     gap: 8px;
-    margin-top: 10px;
-    padding-left: 15px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
 }
 
-.filter-options.active {
-    display: flex;
+.wallet-info-header i {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
 }
 
-.filter-option {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    padding: 12px;
+.wallet-info-content {
+    min-height: 90px;
     display: flex;
     align-items: center;
+    justify-content: center;
+}
+
+.connected-wallet {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     gap: 12px;
+}
+
+.wallet-address {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.wallet-address span:first-child {
+    color: #8e8e93;
+    font-size: 0.85rem;
+}
+
+.address-value {
+    font-family: monospace;
+    font-size: 0.75rem;
+    word-break: break-all;
+    flex: 1;
     color: white;
-    font-size: 0.9rem;
+    line-height: 1.3;
+}
+
+.copy-address-btn {
+    background: rgba(123, 47, 247, 0.2);
+    border: 1px solid rgba(123, 47, 247, 0.4);
+    color: #7b2ff7;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.filter-option:hover {
-    background: rgba(40, 40, 45, 0.8);
-}
-
-.filter-option.selected {
-    background: rgba(0, 122, 255, 0.1);
-    border-color: rgba(0, 122, 255, 0.3);
-}
-
-.option-selector {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    align-self: flex-end;
+    margin-top: 5px;
 }
 
-.option-selector.multi-selector {
-    border-radius: 4px;
+.copy-address-btn:hover {
+    background: rgba(123, 47, 247, 0.3);
+    transform: translateY(-2px);
 }
 
-.selector-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #007aff;
-}
-
-.filter-option.selected .multi-selector {
-    background: #007aff;
-    border-color: #007aff;
-}
-
-.filter-option.selected .multi-selector i {
-    color: white;
-    font-size: 0.7rem;
-}
-
-/* Стили для ползунка цены */
-.price-slider-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 10px;
-}
-
-.price-slider-track {
-    position: relative;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
-    margin: 20px 0;
-}
-
-.price-slider-fill {
-    position: absolute;
-    height: 100%;
-    background: #007aff;
-    border-radius: 2px;
-    left: 0%;
-    right: 0%;
-}
-
-.price-slider {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 2;
-}
-
-.price-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #007aff;
-    cursor: pointer;
-    border: 2px solid white;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-.price-inputs {
+.wallet-balance-display {
     display: flex;
     align-items: center;
-    gap: 10px;
     justify-content: space-between;
-}
-
-.price-input {
-    flex: 1;
-    background: rgba(40, 40, 45, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(135deg, rgba(123, 47, 247, 0.1), rgba(90, 27, 214, 0.1));
+    padding: 12px;
     border-radius: 8px;
-    padding: 10px;
-    color: white;
-    font-size: 0.9rem;
-    text-align: center;
-    outline: none;
+    border: 1px solid rgba(123, 47, 247, 0.3);
 }
 
-.price-inputs span {
+.wallet-balance-display span:first-child {
     color: #8e8e93;
+    font-size: 0.85rem;
 }
 
-/* Кнопки действий фильтров */
-.filters-actions {
+.balance-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #7b2ff7;
+}
+
+.not-connected {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 10px;
-    padding: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.filter-action-btn {
-    flex: 1;
-    padding: 15px;
-    border-radius: 10px;
-    border: none;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.reset-btn {
-    background: rgba(255, 255, 255, 0.05);
     color: #8e8e93;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    text-align: center;
 }
 
-.reset-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.apply-btn {
-    background: rgba(0, 122, 255, 0.1);
-    color: #007aff;
-    border: 1px solid rgba(0, 122, 255, 0.3);
-}
-
-.apply-btn:hover {
-    background: rgba(0, 122, 255, 0.2);
-    transform: translateY(-2px);
+.not-connected i {
+    font-size: 2rem;
+    color: #8e8e93;
 }
 
 /* Нижняя навигация */
@@ -934,9 +830,9 @@ body::before {
     height: 3px;
     background: linear-gradient(90deg, 
         transparent 0%, 
-        #2c2c35 25%, 
-        #1a1a1f 50%, 
-        #2c2c35 75%, 
+        rgba(255, 55, 95, 0.5) 25%, 
+        rgba(123, 47, 247, 0.5) 50%, 
+        rgba(0, 122, 255, 0.5) 75%, 
         transparent 100%);
     border-radius: 0 0 2px 2px;
 }
@@ -958,7 +854,7 @@ body::before {
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 12px;
-    width: 65px;
+    width: 70px;
     outline: none;
     display: flex;
     flex-direction: column;
@@ -998,12 +894,11 @@ body::before {
 .nav-emoji {
     font-size: 1.6rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-    filter: invert(1) brightness(0.7);
+    filter: brightness(0.8);
 }
 
 .nav-text {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     transition: all 0.3s ease;
 }
@@ -1019,14 +914,12 @@ body::before {
 
 .nav-button.active .nav-emoji {
     transform: translateY(-5px) scale(1.1);
-    filter: invert(1) brightness(1);
-    filter: drop-shadow(0 3px 8px rgba(0, 122, 255, 0.4));
+    filter: brightness(1);
 }
 
 .nav-button.active .nav-text {
     color: #ffffff;
     font-weight: 700;
-    text-shadow: 0 0 6px rgba(0, 122, 255, 0.3);
 }
 
 /* Эффект наведения */
@@ -1036,23 +929,16 @@ body::before {
 
 .nav-button:hover:not(.active) .nav-emoji {
     transform: translateY(-2px);
+    filter: brightness(0.9);
 }
 
 .nav-button:hover:not(.active) .nav-text {
-    color: #ffffff;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 /* Стили для модального окна пополнения */
 .deposit-modal-content {
     max-width: 320px;
-}
-
-.modal-title {
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 15px;
-    text-align: center;
 }
 
 .deposit-container {
@@ -1206,516 +1092,6 @@ body::before {
     color: #EF476F;
 }
 
-/* Стили для информации о кошельке в профиле */
-.wallet-info-card {
-    background: linear-gradient(135deg, rgba(40, 40, 45, 0.9), rgba(25, 25, 30, 0.9));
-    border-radius: 15px;
-    padding: 15px;
-    width: 100%;
-    max-width: 450px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 15px;
-}
-
-.wallet-info-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 12px;
-}
-
-.wallet-info-header i {
-    color: #7b2ff7;
-    font-size: 1.1rem;
-}
-
-.wallet-info-content {
-    min-height: 90px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.connected-wallet {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.wallet-address {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.wallet-address span:first-child {
-    color: #8e8e93;
-    font-size: 0.85rem;
-}
-
-.address-value {
-    font-family: monospace;
-    font-size: 0.75rem;
-    word-break: break-all;
-    flex: 1;
-    color: white;
-    line-height: 1.3;
-}
-
-.copy-address-btn {
-    background: rgba(123, 47, 247, 0.2);
-    border: 1px solid rgba(123, 47, 247, 0.4);
-    color: #7b2ff7;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    align-self: flex-end;
-    margin-top: 5px;
-}
-
-.copy-address-btn:hover {
-    background: rgba(123, 47, 247, 0.3);
-    transform: translateY(-2px);
-}
-
-.wallet-balance-display {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(135deg, rgba(123, 47, 247, 0.1), rgba(90, 27, 214, 0.1));
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid rgba(123, 47, 247, 0.3);
-}
-
-.wallet-balance-display span:first-child {
-    color: #8e8e93;
-    font-size: 0.85rem;
-}
-
-.balance-value {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #7b2ff7;
-}
-
-.not-connected {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    color: #8e8e93;
-    padding: 15px;
-    text-align: center;
-}
-
-.not-connected i {
-    font-size: 2rem;
-    color: #8e8e93;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-    
-    .top-menu {
-        height: 55px;
-        padding: 5px 0;
-    }
-    
-    .user-info {
-        padding: 6px 12px 6px 8px;
-        max-width: 170px;
-        gap: 10px;
-        border-radius: 18px;
-    }
-    
-    .user-avatar {
-        width: 38px;
-        height: 38px;
-    }
-    
-    .avatar-placeholder i {
-        font-size: 1.3rem;
-    }
-    
-    .user-name {
-        font-size: 0.9rem;
-    }
-    
-    .balance {
-        padding: 6px 12px 6px 8px;
-        min-width: 140px;
-        height: 36px;
-        border-radius: 18px;
-    }
-    
-    .balance::before {
-        width: 18px;
-    }
-    
-    .balance-amount {
-        font-size: 1.1rem;
-    }
-    
-    .ton-icon {
-        width: 22px;
-        height: 22px;
-    }
-    
-    .ton-text-nav {
-        font-size: 0.85rem;
-    }
-    
-    .add-balance-btn {
-        width: 36px;
-        height: 36px;
-    }
-    
-    .add-balance-btn i {
-        font-size: 1rem;
-    }
-    
-    .main-content {
-        padding: 8px 3px;
-    }
-    
-    .page-content {
-        padding: 15px;
-        min-height: calc(100vh - 170px);
-        border-radius: 18px;
-    }
-    
-    .wallet-top-circle {
-        padding: 25px 15px 35px;
-    }
-    
-    .wallet-balance {
-        font-size: 2rem;
-    }
-    
-    .wallet-btn {
-        padding: 14px;
-        font-size: 0.9rem;
-        min-height: 50px;
-    }
-    
-    .search-suggestion {
-        padding: 12px;
-    }
-    
-    .profile-stats {
-        flex-direction: row;
-        flex-wrap: nowrap;
-    }
-    
-    .stat-item {
-        padding: 12px 8px;
-    }
-    
-    .stat-icon {
-        font-size: 1.2rem;
-    }
-    
-    .stat-value {
-        font-size: 1.3rem;
-    }
-    
-    .stat-label {
-        font-size: 0.7rem;
-    }
-    
-    .bottom-nav {
-        padding: 10px 0 12px 0;
-        border-radius: 18px 18px 0 0;
-        height: 65px;
-    }
-    
-    .nav-button {
-        width: 60px;
-        padding: 5px 0 4px 0;
-        height: 58px;
-        border-radius: 10px;
-    }
-    
-    .nav-emoji {
-        font-size: 1.5rem;
-    }
-    
-    .nav-text {
-        font-size: 0.7rem;
-    }
-    
-    .deposit-modal-content {
-        max-width: 300px;
-        padding: 15px;
-    }
-    
-    .filters-modal-content {
-        max-width: 300px;
-    }
-    
-    .deposit-amount,
-    .transaction-status {
-        padding: 12px;
-    }
-    
-    .confirm-deposit-btn {
-        padding: 14px;
-        font-size: 0.95rem;
-    }
-    
-    .wallet-info-card {
-        padding: 12px;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 8px;
-    }
-    
-    .top-menu {
-        height: 50px;
-    }
-    
-    .user-info {
-        padding: 5px 10px 5px 8px;
-        max-width: 150px;
-        gap: 8px;
-        border-radius: 18px;
-    }
-    
-    .user-avatar {
-        width: 36px;
-        height: 36px;
-    }
-    
-    .avatar-placeholder i {
-        font-size: 1.2rem;
-    }
-    
-    .user-name {
-        font-size: 0.85rem;
-    }
-    
-    .balance {
-        padding: 5px 10px 5px 8px;
-        min-width: 130px;
-        height: 34px;
-        border-radius: 17px;
-    }
-    
-    .balance::before {
-        width: 16px;
-    }
-    
-    .balance-amount {
-        font-size: 1rem;
-    }
-    
-    .ton-icon {
-        width: 20px;
-        height: 20px;
-    }
-    
-    .ton-text-nav {
-        font-size: 0.8rem;
-    }
-    
-    .add-balance-btn {
-        width: 34px;
-        height: 34px;
-    }
-    
-    .add-balance-btn i {
-        font-size: 0.9rem;
-    }
-    
-    .page-content {
-        padding: 12px;
-        border-radius: 16px;
-    }
-    
-    .wallet-top-circle {
-        padding: 20px 12px 30px;
-    }
-    
-    .wallet-balance {
-        font-size: 1.8rem;
-    }
-    
-    .wallet-btn {
-        padding: 12px;
-        font-size: 0.85rem;
-        min-height: 48px;
-    }
-    
-    .profile-stats {
-        gap: 8px;
-    }
-    
-    .stat-item {
-        padding: 10px 6px;
-    }
-    
-    .stat-icon {
-        font-size: 1.1rem;
-    }
-    
-    .stat-value {
-        font-size: 1.2rem;
-    }
-    
-    .stat-label {
-        font-size: 0.65rem;
-    }
-    
-    .bottom-nav {
-        padding: 8px 0 10px 0;
-        border-radius: 16px 16px 0 0;
-        height: 62px;
-    }
-    
-    .nav-button {
-        width: 56px;
-        height: 55px;
-        border-radius: 10px;
-    }
-    
-    .nav-emoji {
-        font-size: 1.4rem;
-    }
-    
-    .nav-text {
-        font-size: 0.65rem;
-    }
-    
-    .deposit-modal-content {
-        max-width: 280px;
-        padding: 12px;
-    }
-    
-    .filters-modal-content {
-        max-width: 280px;
-    }
-    
-    .filters-buttons {
-        padding: 15px;
-        max-height: 350px;
-    }
-    
-    .filter-option {
-        padding: 10px;
-        font-size: 0.85rem;
-    }
-    
-    .deposit-amount,
-    .transaction-status {
-        padding: 10px;
-    }
-    
-    .confirm-deposit-btn {
-        padding: 12px;
-        font-size: 0.9rem;
-    }
-    
-    .wallet-info-card {
-        padding: 10px;
-    }
-}
-
-/* Стили для скроллбара */
-.main-content::-webkit-scrollbar {
-    width: 4px;
-}
-
-.main-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 2px;
-}
-
-.main-content::-webkit-scrollbar-thumb {
-    background: rgba(0, 122, 255, 0.3);
-    border-radius: 2px;
-}
-
-.main-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 122, 255, 0.5);
-}
-
-/* Анимации */
-@keyframes pulse {
-    0%, 100% { 
-        transform: scale(1);
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    }
-    50% { 
-        transform: scale(1.02);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-    }
-}
-
-.balance {
-    animation: pulse 3s infinite ease-in-out;
-}
-
-/* Анимация для аватарки */
-@keyframes avatarPop {
-    0% {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.user-avatar, .profile-avatar {
-    animation: avatarPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Анимация для появления контента */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.page-content, .gradient-box {
-    animation: fadeInUp 0.4s ease-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
 /* Стили для TON Connect */
 .tc-modal {
     background: rgba(0, 0, 0, 0.9) !important;
@@ -1745,83 +1121,228 @@ body::before {
     box-shadow: 0 5px 15px rgba(0, 122, 255, 0.4) !important;
 }
 
-/* Эффект нажатия */
-.nav-button:active, .wallet-btn:active, .filter-icon-btn:active, .filter-option:active, .filter-action-btn:active {
-    transform: scale(0.95);
-    transition: transform 0.1s ease;
-}
-
-/* Запасной вариант если изображение не загрузится */
-.ton-icon {
-    background-color: rgba(0, 122, 255, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 9px;
-}
-
-.ton-icon:before {
-    content: "TON";
-    display: none;
-}
-
-.ton-icon[src=""]:before,
-.ton-icon:not([src]):before {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-}
-
-/* Плавное появление */
-.container > * {
-    animation: fadeIn 0.5s ease-out;
-}
-
-/* Стили для уведомлений */
-.notification {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    background: linear-gradient(135deg, #06D6A0, #04A97F);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-    z-index: 10000;
-    animation: slideInRight 0.3s ease;
-    max-width: 280px;
-    font-size: 0.9rem;
-}
-
-.notification.error {
-    background: linear-gradient(135deg, #EF476F, #D43A5E);
-}
-
-.notification.warning {
-    background: linear-gradient(135deg, #FFD166, #FFB347);
-}
-
-@keyframes slideInRight {
+/* Анимации */
+@keyframes fadeInUp {
     from {
-        transform: translateX(100%);
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-content {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
         opacity: 0;
     }
     to {
-        transform: translateX(0);
         opacity: 1;
     }
 }
 
-/* Стили для спиннера при загрузке */
-.spinner {
-    animation: spin 1s linear infinite;
+/* Стили для скроллбара */
+.main-content::-webkit-scrollbar,
+.filter-dropdown::-webkit-scrollbar {
+    width: 4px;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.main-content::-webkit-scrollbar-track,
+.filter-dropdown::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 2px;
+}
+
+.main-content::-webkit-scrollbar-thumb,
+.filter-dropdown::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(255, 55, 95, 0.5), rgba(123, 47, 247, 0.5));
+    border-radius: 2px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover,
+.filter-dropdown::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(255, 77, 117, 0.6), rgba(138, 75, 255, 0.6));
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .top-menu {
+        height: 60px;
+    }
+    
+    .ton-balance-circle {
+        width: 220px;
+        height: 45px;
+        border-radius: 22px;
+    }
+    
+    .ton-circle-bg {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .ton-icon-circle {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .balance-amount {
+        font-size: 1.2rem;
+    }
+    
+    .add-balance-btn-circle {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .main-content {
+        padding: 8px 3px;
+    }
+    
+    .page-content {
+        padding: 15px;
+        min-height: calc(100vh - 170px);
+        border-radius: 18px;
+    }
+    
+    .nft-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .nft-image {
+        height: 130px;
+    }
+    
+    .bottom-nav {
+        padding: 10px 0 12px 0;
+        border-radius: 18px 18px 0 0;
+        height: 65px;
+    }
+    
+    .nav-button {
+        width: 65px;
+        height: 58px;
+        border-radius: 10px;
+    }
+    
+    .nav-emoji {
+        font-size: 1.5rem;
+    }
+    
+    .nav-text {
+        font-size: 0.65rem;
+    }
+    
+    .deposit-modal-content {
+        max-width: 300px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 8px;
+    }
+    
+    .top-menu {
+        height: 55px;
+    }
+    
+    .ton-balance-circle {
+        width: 200px;
+        height: 40px;
+        border-radius: 20px;
+        padding: 0 12px 0 4px;
+    }
+    
+    .ton-circle-bg {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .ton-icon-circle {
+        width: 26px;
+        height: 26px;
+    }
+    
+    .balance-amount {
+        font-size: 1.1rem;
+    }
+    
+    .ton-label {
+        font-size: 0.7rem;
+    }
+    
+    .add-balance-btn-circle {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .page-content {
+        padding: 12px;
+        border-radius: 16px;
+    }
+    
+    .nft-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .nft-image {
+        height: 140px;
+    }
+    
+    .search-filter-bar {
+        padding: 10px 12px;
+    }
+    
+    .search-filter-text {
+        font-size: 0.85rem;
+    }
+    
+    .filter-icon-btn {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .bottom-nav {
+        padding: 8px 0 10px 0;
+        border-radius: 16px 16px 0 0;
+        height: 62px;
+    }
+    
+    .nav-button {
+        width: 60px;
+        height: 55px;
+        border-radius: 10px;
+    }
+    
+    .nav-emoji {
+        font-size: 1.4rem;
+    }
+    
+    .nav-text {
+        font-size: 0.6rem;
+    }
+    
+    .deposit-modal-content {
+        max-width: 280px;
+        padding: 12px;
+    }
+}
+
+/* Эффект нажатия */
+.nav-button:active, .wallet-btn:active, .filter-btn:active, .filter-option:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
 }
