@@ -20,7 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const withdrawBtn = document.getElementById('withdraw-btn');
     const connectWalletBtn = document.getElementById('connect-wallet-btn');
     const botBalanceElement = document.getElementById('bot-balance');
-    const connectInfoElement = document.getElementById('connect-info');
+    const walletStatusElement = document.getElementById('wallet-status');
+    const walletStatusText = document.getElementById('wallet-status-text');
     
     // Элементы для модалки пополнения
     const depositModal = document.getElementById('deposit-modal');
@@ -33,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Элементы для фильтров
     const filtersModal = document.getElementById('filters-modal');
     const closeFiltersModal = document.getElementById('close-filters-modal');
+    const filterSections = document.querySelectorAll('.filter-section');
     const filterOptions = document.querySelectorAll('.filter-option');
-    const filterDropdowns = document.querySelectorAll('.filter-dropdown');
     const resetFiltersBtn = document.getElementById('reset-filters-btn');
     const searchFiltersBtn = document.getElementById('search-filters-btn');
     const priceSliderTrack = document.getElementById('price-slider-track');
@@ -43,6 +44,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const priceSliderHandleMax = document.getElementById('price-slider-handle-max');
     const priceMinInput = document.getElementById('price-min');
     const priceMaxInput = document.getElementById('price-max');
+    
+    // Элементы для игр
+    const gamesModal = document.getElementById('games-modal');
+    const triangleGameModal = document.getElementById('triangle-game-modal');
+    const gamesBtn = document.getElementById('games-btn');
+    const triangleGameBtn = document.getElementById('triangle-game-btn');
+    const closeGamesModal = document.getElementById('close-games-modal');
+    const closeTriangleGame = document.getElementById('close-triangle-game');
+    const playGameBtn = document.getElementById('play-game-btn');
+    const gameBall = document.getElementById('game-ball');
+    const ballTrack = document.getElementById('ball-track');
+    const selectedNftElement = document.getElementById('selected-nft');
+    const inventoryGrid = document.getElementById('inventory-grid');
+    const gameResult = document.getElementById('game-result');
+    
+    // Инициализация TON Connect
+    let tonConnectUI = null;
     
     // Текущий пользователь
     let userData = {
@@ -56,17 +74,31 @@ document.addEventListener('DOMContentLoaded', function() {
         bought: 0,
         sold: 0,
         totalVolume: 0,
-        lotteryParticipating: false
+        referral: {
+            link: '',
+            invited: 42,
+            earnings: 1250,
+            level: 3,
+            nextLevel: 100
+        },
+        inventory: []
     };
+    
+    // Демо инвентарь NFT
+    const demoInventory = [
+        { id: 1, name: "Bodded Ring", type: "ring", value: 150 },
+        { id: 2, name: "Crystal Ball", type: "magic", value: 89 },
+        { id: 3, name: "Diamond Ring", type: "ring", value: 250 },
+        { id: 4, name: "Genie Lamp", type: "magic", value: 120 },
+        { id: 5, name: "Heroic Helmet", type: "armor", value: 75 },
+        { id: 6, name: "Moon Pendant", type: "jewelry", value: 95 },
+        { id: 7, name: "Golden Cup", type: "artifact", value: 180 },
+        { id: 8, name: "Magic Wand", type: "magic", value: 110 },
+        { id: 9, name: "Silver Sword", type: "weapon", value: 65 }
+    ];
     
     // Ваш кошелек для пополнения
     const BOT_ADDRESS = "UQBhcIzPNZJXa1nWLypYIvO-ybYhBSZEGyH-6MDRdaKyzEJV";
-    
-    // URL для API (ваш сайт на Vercel)
-    const API_URL = "https://mrnemlab.vercel.app/api";
-    
-    // Инициализация TON Connect
-    let tonConnectUI = null;
     
     // Данные для фильтров
     const collections = [
@@ -74,29 +106,12 @@ document.addEventListener('DOMContentLoaded', function() {
         "Clover Pin", "Crystal Ball", "Diamond Ring", "Durov's Coat", "Coconut",
         "Crystal Eagle", "Dove of Peace", "Durov's Figurine", "Coffin", "Cupid Charm",
         "Durov's Boots", "Durov's Sunglasses", "Cookie Heart", "Desk Calendar",
-        "Durov's Cap", "Easter Cake", "Evil Eye", "Faith Amulet", "Flying Broom",
-        "Gem Signet", "Genie Lamp", "Ginger Cookie", "Hanging Star", "Happy Brownie",
-        "Heart Locket", "Heroic Helmet", "Holiday Drink", "Homemade Cake", "Ice Cream Cone",
-        "Ice Cream Scoops", "Input Key", "lon Gem", "lonic Dryer", "Jack in the Box",
-        "Kissed Frog", "Kitty Medallion", "Lol Pop", "Loot Bag", "Love Candle",
-        "Love Potion", "Low Rider", "Lunar Snake", "Lush Bouquet", "Mask", "Medal",
-        "Mighty Arm", "Mouse Cake", "Party Sparkler", "Pink Flamingo", "Mini Oscar",
-        "Money Pot", "Neko Helmet", "Perfume Bottle", "Priccious Peach", "Pretty Posy",
-        "Moon Pendant", "Record Player", "Red Star", "Resistance Dog", "Restless Jar",
-        "Roses", "Sakura Flower", "Sandcastle", "Santa Hat", "Sky Stilettos",
-        "Sleigh Bell", "Snake Box", "Snoop Cigar", "Snoop Dogg", "Snow Globe",
-        "Snow Mittens", "Spiced Wine", "Statue of Liberty", "Stellar Rocket", "Surfboard",
-        "Star Notepad", "Swag Bag", "Swiss Watch", "Tornh of Freedom", "Telegram Pin",
-        "Top Hat", "Total Horse", "UFC Strike", "Valentine Box", "Vintage Cigar",
-        "Voodoo Doll", "Wrestide Sign", "Whip Cupcake", "Winter Wreath", "Witch Hat",
-        "Xmas Stocking"
+        "Durov's Cap", "Easter Cake", "Evil Eye", "Faith Amulet", "Flying Broom"
     ];
     
     const backgrounds = [
         "Amber", "Aquamarine", "Azure Blue", "Battleship Grey", "Black", "Burgundy",
-        "Deep Cyan", "Desert Sand", "Electric Indigo", "Electric Purple", "Emerald",
-        "English Violet", "Fandango", "Navy Blue", "Neon Blue", "Onyx Black", "Old Gold",
-        "Orange", "Pacific Cyan", "Pacific Green", "Persimmon", "Pine Green"
+        "Deep Cyan", "Desert Sand", "Electric Indigo", "Electric Purple", "Emerald"
     ];
     
     // Текущие фильтры
@@ -107,6 +122,9 @@ document.addEventListener('DOMContentLoaded', function() {
         backgrounds: []
     };
     
+    // Выбранный NFT для игры
+    let selectedGameNFT = null;
+    
     // Загрузка данных пользователя
     function loadUserData() {
         // Проверяем, есть ли сохраненные данные
@@ -115,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const parsed = JSON.parse(savedData);
             // Проверяем совпадение ID пользователя
             if (tg.initDataUnsafe?.user && parsed.id === tg.initDataUnsafe.user.id) {
-                userData = parsed;
+                userData = { ...userData, ...parsed };
             }
         }
         
@@ -140,11 +158,18 @@ document.addEventListener('DOMContentLoaded', function() {
             // Загружаем аватарку
             loadUserAvatar(user);
             
+            // Генерируем реферальную ссылку
+            userData.referral.link = `https://t.me/share/url?url=https://t.me/beatclub_bot?start=${userData.id}`;
+            
+            // Загружаем инвентарь
+            userData.inventory = demoInventory;
+            
             console.log('User data loaded:', userData);
         }
         
         // Обновляем отображение
         updateBalanceDisplay();
+        updateConnectInfo();
     }
     
     // Сохранение данных пользователя
@@ -161,8 +186,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Обновление отображения баланса
     function updateBalanceDisplay() {
-        balanceAmount.textContent = userData.balance.toLocaleString();
-        botBalanceElement.textContent = userData.balance.toLocaleString();
+        balanceAmount.textContent = userData.balance.toLocaleString('ru-RU');
+        botBalanceElement.textContent = userData.balance.toLocaleString('ru-RU');
     }
     
     // Инициализация TON Connect
@@ -186,11 +211,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     userData.walletAddress = wallet.account.address;
                     console.log('Wallet connected:', userData.walletAddress);
                     
-                    // Получаем баланс
-                    updateRealWalletBalance();
-                    
                     // Обновляем UI
                     updateConnectInfo();
+                    updateWalletStatus();
                     
                     // Сохраняем
                     saveUserData();
@@ -198,11 +221,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Уведомление
                     tg.showAlert('✅ Кошелек подключен!');
                     tg.HapticFeedback.notificationOccurred('success');
-                    
-                    // Обновляем профиль если открыт
-                    if (document.querySelector('.nav-button[data-page="profile"].active')) {
-                        updateContent('profile');
-                    }
                 } else {
                     // Кошелек отключен
                     userData.walletConnected = false;
@@ -212,14 +230,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Обновляем UI
                     updateConnectInfo();
+                    updateWalletStatus();
                     
                     // Сохраняем
                     saveUserData();
-                    
-                    // Обновляем профиль если открыт
-                    if (document.querySelector('.nav-button[data-page="profile"].active')) {
-                        updateContent('profile');
-                    }
                 }
             });
             
@@ -229,8 +243,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Found existing connection:', currentWallet);
                 userData.walletConnected = true;
                 userData.walletAddress = currentWallet.account.address;
-                updateRealWalletBalance();
                 updateConnectInfo();
+                updateWalletStatus();
             }
             
             console.log('TON Connect initialized successfully');
@@ -241,66 +255,35 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Fallback для демо
             updateConnectInfo();
+            updateWalletStatus();
         }
-    }
-    
-    // Получение реального баланса кошелька
-    async function updateRealWalletBalance() {
-        if (!userData.walletConnected || !userData.walletAddress) return;
-        
-        try {
-            console.log('Fetching wallet balance for:', userData.walletAddress);
-            
-            // Используем TON Center API для получения баланса
-            const response = await fetch(
-                `https://toncenter.com/api/v2/getAddressBalance?address=${userData.walletAddress}`
-            );
-            
-            const data = await response.json();
-            console.log('Balance API response:', data);
-            
-            if (data.ok) {
-                // Конвертируем наноТоны в TON (1 TON = 1,000,000,000 наноТонов)
-                userData.walletBalance = parseInt(data.result) / 1000000000;
-                console.log('Wallet balance:', userData.walletBalance, 'TON');
-            } else {
-                // Fallback на случай если API не работает
-                userData.walletBalance = 12.5; // Для демо
-                console.log('Using demo balance');
-            }
-            
-        } catch (error) {
-            console.error('Error fetching wallet balance:', error);
-            // Fallback значение для демо
-            userData.walletBalance = 12.5;
-        }
-        
-        updateConnectInfo();
     }
     
     // Обновление информации о подключении
     function updateConnectInfo() {
         if (userData.walletConnected && userData.walletAddress) {
-            const shortAddress = userData.walletAddress.slice(0, 8) + '...' + userData.walletAddress.slice(-8);
+            const shortAddress = userData.walletAddress.slice(0, 6) + '...' + userData.walletAddress.slice(-6);
             connectInfoElement.innerHTML = `
-                <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 15px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="display: flex; flex-direction: column; gap: 16px; padding: 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px; background: rgba(0, 0, 0, 0.3); padding: 14px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.1);">
                         <i class="fas fa-wallet" style="color: #7b2ff7; font-size: 1.2rem;"></i>
-                        <span style="color: white; font-weight: 600; font-size: 0.9rem; font-family: monospace;">${shortAddress}</span>
+                        <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                            <span style="color: #8e8e93; font-size: 0.85rem;">Адрес кошелька</span>
+                            <span style="color: white; font-weight: 600; font-size: 0.9rem; font-family: monospace; letter-spacing: 0.5px;">${shortAddress}</span>
+                        </div>
                     </div>
                     <div style="
-                        font-size: 1.3rem; 
+                        font-size: 1.4rem; 
                         color: #06D6A0; 
-                        font-weight: 700; 
-                        background: rgba(6, 214, 160, 0.1); 
-                        padding: 10px 25px; 
-                        border-radius: 12px;
+                        font-weight: 800; 
+                        background: linear-gradient(135deg, rgba(6, 214, 160, 0.1), rgba(4, 169, 127, 0.1));
+                        padding: 16px; 
+                        border-radius: 16px;
                         border: 1px solid rgba(6, 214, 160, 0.3);
+                        text-align: center;
+                        box-shadow: 0 4px 20px rgba(6, 214, 160, 0.1);
                     ">
                         ${userData.walletBalance.toFixed(2)} TON
-                    </div>
-                    <div style="color: #8e8e93; font-size: 0.8rem; text-align: center;">
-                        <i class="fas fa-check-circle" style="color: #06D6A0;"></i> Кошелек подключен
                     </div>
                 </div>
             `;
@@ -308,9 +291,14 @@ document.addEventListener('DOMContentLoaded', function() {
             connectWalletBtn.style.background = 'linear-gradient(135deg, #ff375f, #d43a5e)';
         } else {
             connectInfoElement.innerHTML = `
-                <div style="color: #8e8e93; font-size: 0.9rem; text-align: center; padding: 25px;">
-                    <i class="fas fa-plug" style="font-size: 2rem; margin-bottom: 15px; display: block; color: #8e8e93;"></i>
-                    Подключите TON кошелек для пополнения баланса и участия в лотереях
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px;">
+                    <div style="width: 80px; height: 80px; background: rgba(123, 47, 247, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-wallet" style="font-size: 2rem; color: rgba(123, 47, 247, 0.5);"></i>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="color: #8e8e93; font-size: 0.9rem; margin-bottom: 8px;">Для пополнения баланса</div>
+                        <div style="color: white; font-size: 1rem; font-weight: 600;">Подключите TON кошелек</div>
+                    </div>
                 </div>
             `;
             connectWalletBtn.innerHTML = '<i class="fas fa-plug"></i> Подключить кошелек';
@@ -318,11 +306,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Обновление статуса кошелька в окне пополнения
+    function updateWalletStatus() {
+        if (userData.walletConnected && userData.walletAddress) {
+            const shortAddress = userData.walletAddress.slice(0, 6) + '...' + userData.walletAddress.slice(-6);
+            walletStatusElement.classList.add('connected');
+            walletStatusElement.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>Кошелёк подключен: ${shortAddress}</span>
+            `;
+        } else {
+            walletStatusElement.classList.remove('connected');
+            walletStatusElement.innerHTML = `
+                <i class="fas fa-wallet"></i>
+                <span>Кошелёк не подключен</span>
+            `;
+        }
+    }
+    
     // Инициализация фильтров
     function initFilters() {
         // Заполняем коллекции
         const collectionDropdown = document.getElementById('collection-dropdown');
-        collections.forEach(collection => {
+        collections.slice(0, 10).forEach(collection => {
             const item = document.createElement('div');
             item.className = 'filter-option-item';
             item.dataset.value = collection;
@@ -335,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Заполняем backgrounds
         const backgroundDropdown = document.getElementById('background-dropdown');
-        backgrounds.forEach(bg => {
+        backgrounds.slice(0, 8).forEach(bg => {
             const item = document.createElement('div');
             item.className = 'filter-option-item';
             item.dataset.value = bg;
@@ -352,30 +358,34 @@ document.addEventListener('DOMContentLoaded', function() {
         // Обработчики для фильтров
         filterOptions.forEach(option => {
             option.addEventListener('click', function() {
+                const filterSection = this.closest('.filter-section');
                 const filterType = this.dataset.filter;
-                const dropdown = document.getElementById(`${filterType}-dropdown`);
                 
-                // Закрываем все остальные дропдауны
-                filterDropdowns.forEach(d => {
-                    if (d !== dropdown) {
-                        d.classList.remove('active');
-                        const correspondingOption = document.querySelector(`.filter-option[data-filter="${d.id.replace('-dropdown', '')}"]`);
-                        if (correspondingOption) {
-                            correspondingOption.classList.remove('active');
-                        }
+                // Закрываем все остальные секции
+                filterSections.forEach(section => {
+                    if (section !== filterSection) {
+                        section.classList.remove('active');
+                        section.style.order = '';
                     }
                 });
                 
-                // Переключаем текущий дропдаун
-                dropdown.classList.toggle('active');
-                this.classList.toggle('active');
+                // Переключаем текущую секцию
+                const isActive = filterSection.classList.toggle('active');
                 
-                // Обновляем иконку стрелки
-                const icon = this.querySelector('i');
-                if (dropdown.classList.contains('active')) {
-                    icon.style.transform = 'rotate(180deg)';
+                if (isActive) {
+                    // Поднимаем активную секцию наверх
+                    filterSection.style.order = '-1';
+                    
+                    // Прокручиваем к активной секции
+                    setTimeout(() => {
+                        filterSection.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start' 
+                        });
+                    }, 100);
                 } else {
-                    icon.style.transform = 'rotate(0deg)';
+                    // Возвращаем обычный порядок
+                    filterSection.style.order = '';
                 }
             });
         });
@@ -389,31 +399,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Выделяем выбранную
                 this.classList.add('active');
                 currentFilters.sort = this.dataset.value;
-            });
-        });
-        
-        // Обработчики для коллекций и backgrounds (множественный выбор)
-        document.querySelectorAll('#collection-dropdown .filter-option-item, #background-dropdown .filter-option-item').forEach(item => {
-            item.addEventListener('click', function() {
-                this.classList.toggle('active');
-                const filterType = this.closest('.filter-dropdown').id.replace('-dropdown', '');
-                const value = this.dataset.value;
-                
-                if (filterType === 'collection') {
-                    const index = currentFilters.collections.indexOf(value);
-                    if (index > -1) {
-                        currentFilters.collections.splice(index, 1);
-                    } else {
-                        currentFilters.collections.push(value);
-                    }
-                } else if (filterType === 'background') {
-                    const index = currentFilters.backgrounds.indexOf(value);
-                    if (index > -1) {
-                        currentFilters.backgrounds.splice(index, 1);
-                    } else {
-                        currentFilters.backgrounds.push(value);
-                    }
-                }
             });
         });
         
@@ -461,34 +446,37 @@ document.addEventListener('DOMContentLoaded', function() {
         // Обработчики для ползунков
         function startDragMin(e) {
             isDraggingMin = true;
+            document.body.style.userSelect = 'none';
             e.preventDefault();
         }
         
         function startDragMax(e) {
             isDraggingMax = true;
+            document.body.style.userSelect = 'none';
             e.preventDefault();
         }
         
         function stopDrag() {
             isDraggingMin = false;
             isDraggingMax = false;
+            document.body.style.userSelect = '';
         }
         
         function handleDrag(e) {
             if (!isDraggingMin && !isDraggingMax) return;
             
             const rect = priceSliderTrack.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            let percent = (x / rect.width) * 100;
+            const x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+            let percent = ((x - rect.left) / rect.width) * 100;
             percent = Math.max(0, Math.min(100, percent));
             const value = Math.round((percent / 100) * 100000);
             
             if (isDraggingMin) {
-                if (value < currentFilters.priceRange.max) {
+                if (value < currentFilters.priceRange.max - 5000) {
                     currentFilters.priceRange.min = value;
                 }
             } else if (isDraggingMax) {
-                if (value > currentFilters.priceRange.min) {
+                if (value > currentFilters.priceRange.min + 5000) {
                     currentFilters.priceRange.max = value;
                 }
             }
@@ -499,8 +487,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Обработчики для инпутов
         priceMinInput.addEventListener('input', function() {
             let value = parseInt(this.value) || 0;
-            value = Math.max(0, Math.min(100000, value));
-            if (value < currentFilters.priceRange.max) {
+            value = Math.max(0, Math.min(95000, value));
+            if (value < currentFilters.priceRange.max - 5000) {
                 currentFilters.priceRange.min = value;
                 updateSlider();
             }
@@ -508,8 +496,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         priceMaxInput.addEventListener('input', function() {
             let value = parseInt(this.value) || 100000;
-            value = Math.max(0, Math.min(100000, value));
-            if (value > currentFilters.priceRange.min) {
+            value = Math.max(5000, Math.min(100000, value));
+            if (value > currentFilters.priceRange.min + 5000) {
                 currentFilters.priceRange.max = value;
                 updateSlider();
             }
@@ -548,6 +536,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Активируем первую опцию в сортировке
         document.querySelector('#sort-dropdown .filter-option-item[data-value="newest"]').classList.add('active');
         
+        // Сбрасываем все активные секции
+        filterSections.forEach(section => {
+            section.classList.remove('active');
+            section.style.order = '';
+        });
+        
         // Обновляем слайдер
         initPriceSlider();
     }
@@ -556,7 +550,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function performSearch() {
         console.log('Searching with filters:', currentFilters);
         // Здесь будет логика поиска NFT по фильтрам
-        // В демо-версии просто показываем уведомление
     }
     
     // Создание содержимого для разных страниц
@@ -564,15 +557,20 @@ document.addEventListener('DOMContentLoaded', function() {
         return `
             <div class="page-content">
                 <div class="market-container">
-                    <div class="search-filter-bar">
-                        <div class="search-filter-text">Опробуйте поиск по фильтрам</div>
-                        <button class="filter-icon-btn" id="open-filters-btn">
-                            <i class="fas fa-filter"></i>
+                    <div class="market-header">
+                        <button class="games-btn" id="games-btn">
+                            <i class="fas fa-gamepad"></i>
+                            <span>🎮 Игры на NFT</span>
                         </button>
+                        <div class="search-filter-bar">
+                            <div class="search-filter-text">Опробуйте поиск по фильтрам</div>
+                            <button class="filter-icon-btn" id="open-filters-btn">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="nft-grid" id="nft-grid">
-                        <!-- NFT будут загружены динамически -->
                         ${generateDemoNFTs()}
                     </div>
                 </div>
@@ -594,14 +592,14 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 0; i < 6; i++) {
             const nft = demoNFTs[i];
             nfts.push(`
-                <div class="nft-item">
+                <div class="nft-item" data-nft-id="${i}">
                     <div class="nft-image">
-                        <i class="fas fa-gem" style="font-size: 3rem; color: rgba(255, 255, 255, 0.7);"></i>
+                        <i class="fas fa-gem"></i>
                     </div>
                     <div class="nft-info">
                         <div class="nft-name">${nft.name}</div>
                         <div class="nft-price">
-                            <i class="fas fa-coins" style="color: #7b2ff7;"></i>
+                            <i class="fas fa-coins"></i>
                             <span>${nft.price} TON</span>
                         </div>
                     </div>
@@ -616,17 +614,26 @@ document.addEventListener('DOMContentLoaded', function() {
         return `
             <div class="page-content">
                 <div class="gifts-container">
-                    <div class="gifts-icon">
-                        <i class="fas fa-gift"></i>
+                    <div class="inventory-header">
+                        <h2>🎁 Мой инвентарь</h2>
+                        <div class="inventory-count">${userData.inventory.length} NFT</div>
                     </div>
-                    <h2>🎁 Мои подарки</h2>
-                    <div class="gifts-message">
-                        У вас пока нет подарков.<br>
-                        Продолжайте участвовать в активностях!
+                    
+                    <div class="inventory-grid" id="inventory-grid">
+                        ${generateInventoryItems()}
                     </div>
                 </div>
             </div>
         `;
+    }
+    
+    function generateInventoryItems() {
+        return userData.inventory.map((nft, index) => `
+            <div class="inventory-item" data-nft-id="${nft.id}">
+                <i class="fas fa-gem"></i>
+                <div class="inventory-item-name">${nft.name}</div>
+            </div>
+        `).join('');
     }
     
     function createSeasonContent() {
@@ -638,8 +645,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <h2>📅 Сезон</h2>
                     <div class="season-message">
-                        Раздел в разработке.<br>
-                        Следите за обновлениями!
+                        Активный сезон скоро начнется!<br>
+                        Готовьте свои NFT к новым испытаниям.
                     </div>
                 </div>
             </div>
@@ -650,127 +657,78 @@ document.addEventListener('DOMContentLoaded', function() {
         return `
             <div class="page-content">
                 <div class="profile-container">
-                    <div class="profile-avatar">
-                        ${userData.avatarUrl ? 
-                            `<img src="${userData.avatarUrl}" alt="${userData.username}">` : 
-                            `<div class="avatar-placeholder" style="
-                                background: linear-gradient(135deg, #2a2a35, #1a1a25);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                width: 100%;
-                                height: 100%;
-                            ">
-                                <span style="font-size: 2.5rem; font-weight: bold; color: rgba(255, 255, 255, 0.8);">
-                                    ${userData.username.charAt(0).toUpperCase()}
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            ${userData.avatarUrl ? 
+                                `<img src="${userData.avatarUrl}" alt="${userData.username}">` : 
+                                `<div class="avatar-placeholder">
+                                    <span>${userData.username.charAt(0).toUpperCase()}</span>
+                                </div>`
+                            }
+                        </div>
+                        <div class="profile-info">
+                            <h2 class="profile-username">${userData.username}</h2>
+                            <div class="profile-wallet">
+                                <i class="fas fa-wallet"></i>
+                                <span class="profile-wallet-address">
+                                    ${userData.walletConnected ? 
+                                        `${userData.walletAddress.slice(0, 6)}...${userData.walletAddress.slice(-6)}` : 
+                                        'Кошелёк не подключен'}
                                 </span>
-                            </div>`
-                        }
+                            </div>
+                        </div>
                     </div>
-                    
-                    <h2 class="profile-username">${userData.username}</h2>
                     
                     <div class="profile-stats">
                         <div class="stat-item">
                             <div class="stat-icon">💰</div>
-                            <div class="stat-value ton-stat">${userData.totalVolume}</div>
-                            <div class="stat-label">Total volume</div>
+                            <div class="stat-value">${userData.totalVolume}</div>
+                            <div class="stat-label">Объём</div>
                         </div>
                         
                         <div class="stat-item">
                             <div class="stat-icon">🎁</div>
-                            <div class="stat-value gift-stat">${userData.bought}</div>
-                            <div class="stat-label">Bought</div>
+                            <div class="stat-value">${userData.bought}</div>
+                            <div class="stat-label">Куплено</div>
                         </div>
                         
                         <div class="stat-item">
                             <div class="stat-icon">💎</div>
-                            <div class="stat-value sold-stat">${userData.sold}</div>
-                            <div class="stat-label">Sold</div>
+                            <div class="stat-value">${userData.sold}</div>
+                            <div class="stat-label">Продано</div>
                         </div>
                     </div>
                     
-                    <div class="wallet-info-card">
-                        <div class="wallet-info-header">
-                            <i class="fas fa-wallet"></i>
-                            <span>TON Кошелек</span>
-                            <span style="margin-left: auto; font-size: 0.8rem; color: ${userData.walletConnected ? '#06D6A0' : '#ff375f'};">
-                                ${userData.walletConnected ? '✓ Подключен' : '✗ Не подключен'}
-                            </span>
+                    <div class="referral-system">
+                        <div class="referral-header">
+                            <h3>👥 Реферальная система</h3>
+                            <button class="referral-level">Уровень ${userData.referral.level}</button>
                         </div>
-                        <div class="wallet-info-content">
-                            ${userData.walletConnected ? 
-                                `<div class="connected-wallet">
-                                    <div class="wallet-address">
-                                        <span>Адрес:</span>
-                                        <div style="flex: 1; display: flex; align-items: center; gap: 8px;">
-                                            <span class="address-value" id="profile-wallet-address" style="
-                                                font-family: monospace;
-                                                font-size: 0.8rem;
-                                                background: rgba(0,0,0,0.3);
-                                                padding: 6px 10px;
-                                                border-radius: 6px;
-                                                word-break: break-all;
-                                            ">
-                                                ${userData.walletAddress}
-                                            </span>
-                                            <button class="copy-address-btn" onclick="copyToClipboard('${userData.walletAddress}')" style="
-                                                background: rgba(123, 47, 247, 0.2);
-                                                border: 1px solid rgba(123, 47, 247, 0.4);
-                                                color: #7b2ff7;
-                                                width: 32px;
-                                                height: 32px;
-                                                border-radius: 6px;
-                                                cursor: pointer;
-                                                display: flex;
-                                                align-items: center;
-                                                justify-content: center;
-                                            ">
-                                                <i class="fas fa-copy"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="wallet-balance-display">
-                                        <span>Баланс:</span>
-                                        <span class="balance-value" style="color: #06D6A0; font-weight: 700; font-size: 1.3rem;">
-                                            ${userData.walletBalance.toFixed(2)} TON
-                                        </span>
-                                    </div>
-                                    <button class="disconnect-wallet-btn" id="disconnect-profile-btn" style="
-                                        background: rgba(255, 55, 95, 0.1);
-                                        border: 1px solid rgba(255, 55, 95, 0.3);
-                                        color: #ff375f;
-                                        padding: 12px;
-                                        border-radius: 10px;
-                                        cursor: pointer;
-                                        margin-top: 15px;
-                                        font-weight: 600;
-                                        width: 100%;
-                                        transition: all 0.3s ease;
-                                    ">
-                                        <i class="fas fa-unlink"></i> Отключить кошелек
-                                    </button>
-                                </div>` :
-                                `<div class="not-connected">
-                                    <i class="fas fa-plug" style="font-size: 2.5rem; color: #8e8e93; margin-bottom: 15px;"></i>
-                                    <span style="color: #8e8e93; margin-bottom: 20px; text-align: center;">
-                                        Подключите TON кошелек для пополнения баланса
-                                    </span>
-                                    <button class="connect-wallet-profile-btn" id="connect-wallet-profile-btn" style="
-                                        background: linear-gradient(135deg, #007aff, #0056cc);
-                                        color: white;
-                                        border: none;
-                                        padding: 15px 30px;
-                                        border-radius: 12px;
-                                        cursor: pointer;
-                                        font-weight: 600;
-                                        width: 100%;
-                                        transition: all 0.3s ease;
-                                    ">
-                                        <i class="fas fa-plug"></i> Подключить кошелек
-                                    </button>
-                                </div>`
-                            }
+                        
+                        <div class="referral-stats">
+                            <div class="referral-stat">
+                                <div class="referral-stat-value">${userData.referral.invited}</div>
+                                <div class="referral-stat-label">Приглашено</div>
+                            </div>
+                            <div class="referral-stat">
+                                <div class="referral-stat-value">${userData.referral.earnings}</div>
+                                <div class="referral-stat-label">TON заработано</div>
+                            </div>
+                        </div>
+                        
+                        <div class="referral-link">
+                            <div class="referral-link-title">Ваша реферальная ссылка:</div>
+                            <div class="referral-link-value">
+                                <span>${userData.referral.link}</span>
+                                <button class="referral-copy-btn" onclick="copyToClipboard('${userData.referral.link}')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="referral-desc">
+                            Приглашай друзей → получай % с их покупок<br>
+                            Многоуровневая система (1-10 уровней)
                         </div>
                     </div>
                 </div>
@@ -781,7 +739,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Функция копирования в буфер обмена
     window.copyToClipboard = function(text) {
         navigator.clipboard.writeText(text).then(() => {
-            tg.showAlert('✅ Адрес скопирован в буфер обмена');
+            tg.showAlert('✅ Скопировано в буфер обмена');
             tg.HapticFeedback.notificationOccurred('success');
         }).catch(err => {
             console.error('Failed to copy: ', err);
@@ -793,7 +751,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateContent(page) {
         // Анимация исчезновения
         mainContent.style.opacity = '0';
-        mainContent.style.transform = 'translateY(10px)';
+        mainContent.style.transform = 'translateY(20px) scale(0.98)';
         
         setTimeout(() => {
             let content = '';
@@ -818,39 +776,189 @@ document.addEventListener('DOMContentLoaded', function() {
             // Инициализация элементов после создания контента
             if (page === 'market') {
                 const openFiltersBtn = document.getElementById('open-filters-btn');
+                const gamesBtnElement = document.getElementById('games-btn');
+                
                 if (openFiltersBtn) {
                     openFiltersBtn.addEventListener('click', function() {
                         filtersModal.classList.add('active');
                         document.body.style.overflow = 'hidden';
                     });
                 }
+                
+                if (gamesBtnElement) {
+                    gamesBtnElement.addEventListener('click', function() {
+                        gamesModal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    });
+                }
             }
             
-            // Инициализация кнопок в профиле
-            if (page === 'profile') {
-                const disconnectProfileBtn = document.getElementById('disconnect-profile-btn');
-                const connectWalletProfileBtn = document.getElementById('connect-wallet-profile-btn');
-                
-                if (disconnectProfileBtn) {
-                    disconnectProfileBtn.addEventListener('click', function() {
-                        disconnectWallet();
-                    });
-                }
-                
-                if (connectWalletProfileBtn) {
-                    connectWalletProfileBtn.addEventListener('click', function() {
-                        connectWallet();
-                    });
-                }
+            if (page === 'gifts') {
+                initInventoryItems();
             }
             
             // Анимация появления
             setTimeout(() => {
                 mainContent.style.opacity = '1';
-                mainContent.style.transform = 'translateY(0)';
+                mainContent.style.transform = 'translateY(0) scale(1)';
             }, 50);
             
         }, 200);
+    }
+    
+    // Инициализация инвентаря
+    function initInventoryItems() {
+        const inventoryItems = document.querySelectorAll('.inventory-item');
+        inventoryItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const nftId = parseInt(this.dataset.nftId);
+                const nft = userData.inventory.find(n => n.id === nftId);
+                
+                if (nft) {
+                    // Снимаем выделение со всех предметов
+                    inventoryItems.forEach(i => i.classList.remove('selected'));
+                    
+                    // Выделяем выбранный предмет
+                    this.classList.add('selected');
+                    
+                    // Сохраняем выбранный NFT
+                    selectedGameNFT = nft;
+                    
+                    // Обновляем отображение выбранного NFT
+                    selectedNftElement.innerHTML = `
+                        <i class="fas fa-gem" style="color: #7b2ff7;"></i>
+                        <span>${nft.name}</span>
+                    `;
+                    selectedNftElement.classList.add('has-nft');
+                    
+                    // Активируем кнопку "Играть"
+                    playGameBtn.disabled = false;
+                    
+                    // Эффект нажатия
+                    tg.HapticFeedback.impactOccurred('light');
+                }
+            });
+        });
+    }
+    
+    // Инициализация игры "Треугольник"
+    function initTriangleGame() {
+        // Обработчик для кнопки "Играть"
+        playGameBtn.addEventListener('click', function() {
+            if (!selectedGameNFT) {
+                tg.showAlert('❌ Выберите NFT для игры');
+                return;
+            }
+            
+            playTriangleGame();
+        });
+    }
+    
+    // Запуск игры "Треугольник"
+    async function playTriangleGame() {
+        // Скрываем кнопку
+        playGameBtn.disabled = true;
+        playGameBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Запуск...</span>';
+        
+        // Очищаем предыдущий результат
+        gameResult.innerHTML = '';
+        
+        // Сбрасываем позицию шара
+        gameBall.style.top = '0px';
+        gameBall.style.left = '50%';
+        gameBall.style.transform = 'translateX(-50%)';
+        
+        // Запускаем анимацию падения шара
+        const trackHeight = ballTrack.offsetHeight;
+        const ballSize = 40;
+        const maxTop = trackHeight - ballSize;
+        
+        let top = 0;
+        let left = 50;
+        let bounceCount = 0;
+        const maxBounces = 4;
+        
+        function animateBall() {
+            const speed = 2 + (bounceCount * 0.5);
+            top += speed;
+            
+            // Эмуляция отскоков
+            if (bounceCount < maxBounces) {
+                const bouncePoints = [20, 40, 60, 80];
+                if (top >= (bouncePoints[bounceCount] / 100) * maxTop) {
+                    // Отскок
+                    top -= 20;
+                    left += (Math.random() - 0.5) * 30;
+                    bounceCount++;
+                    
+                    // Эффект отскока
+                    gameBall.style.transform = `translateX(${left - 50}%) scale(1.2)`;
+                    setTimeout(() => {
+                        gameBall.style.transform = `translateX(${left - 50}%) scale(1)`;
+                    }, 100);
+                    
+                    tg.HapticFeedback.impactOccurred('medium');
+                }
+            }
+            
+            // Ограничиваем движение
+            top = Math.min(top, maxTop);
+            left = Math.max(20, Math.min(80, left));
+            
+            // Применяем позицию
+            gameBall.style.top = `${top}px`;
+            gameBall.style.left = `${left}%`;
+            
+            if (top >= maxTop - 10) {
+                // Шар достиг дна - всегда попадает в центральную лунку
+                finishGame();
+            } else {
+                requestAnimationFrame(animateBall);
+            }
+        }
+        
+        // Запускаем анимацию
+        animateBall();
+    }
+    
+    function finishGame() {
+        // Всегда проигрыш (попадание в центральную лунку 0×)
+        setTimeout(() => {
+            gameResult.innerHTML = `
+                <div class="result-lose">
+                    <i class="fas fa-times-circle"></i><br>
+                    Вы проиграли, попробуйте ещё раз!<br>
+                    <small>NFT "${selectedGameNFT.name}" сгорел в игре</small>
+                </div>
+            `;
+            
+            // Эффект проигрыша
+            tg.HapticFeedback.notificationOccurred('error');
+            
+            // Удаляем NFT из инвентаря
+            userData.inventory = userData.inventory.filter(nft => nft.id !== selectedGameNFT.id);
+            saveUserData();
+            
+            // Сбрасываем выбранный NFT
+            selectedGameNFT = null;
+            selectedNftElement.innerHTML = '<i class="fas fa-gem"></i><span>NFT не выбран</span>';
+            selectedNftElement.classList.remove('has-nft');
+            
+            // Обновляем кнопку
+            playGameBtn.disabled = true;
+            playGameBtn.innerHTML = '<i class="fas fa-play"></i><span>Играть</span>';
+            
+            // Обновляем инвентарь если открыт
+            if (document.querySelector('.nav-button[data-page="gifts"].active')) {
+                updateContent('gifts');
+            }
+            
+            // Прокручиваем к результату
+            setTimeout(() => {
+                gameResult.scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+            
+        }, 1000);
     }
     
     // Установка активной кнопки
@@ -886,61 +994,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         try {
-            // Проверяем баланс пользователя
-            if (userData.walletBalance < amount) {
-                tg.showAlert(`❌ Недостаточно средств на кошельке. Доступно: ${userData.walletBalance.toFixed(2)} TON`);
-                return false;
-            }
-            
-            // Создаем транзакцию на ВАШ кошелек
-            const transaction = {
-                validUntil: Math.floor(Date.now() / 1000) + 300,
-                messages: [
-                    {
-                        address: BOT_ADDRESS,
-                        amount: (amount * 1000000000).toString(),
-                        payload: userData.id ? Buffer.from(userData.id.toString()).toString('hex') : ""
-                    }
-                ]
-            };
-            
             // Показываем статус
             showTransactionStatus('pending', 'Подтвердите транзакцию в кошельке...');
             
-            // Отправляем транзакцию
-            console.log('Sending transaction to:', BOT_ADDRESS);
-            console.log('Transaction amount:', amount, 'TON');
+            // Создаем демо-транзакцию (в реальном приложении здесь будет работа с TON Connect)
+            console.log('Simulating transaction for:', amount, 'TON');
             
-            const result = await tonConnectUI.sendTransaction(transaction);
-            
-            console.log('Transaction result:', result);
-            
-            if (result) {
-                // Транзакция отправлена успешно
+            // Имитация задержки транзакции
+            setTimeout(() => {
+                // Успешная транзакция
                 showTransactionStatus('success', 'Транзакция отправлена!');
                 
-                // В демо-версии сразу обновляем баланс
-                userData.balance += amount;
-                userData.totalVolume += amount;
-                updateBalanceDisplay();
-                saveUserData();
-                
-                showTransactionStatus('confirmed', `✅ Баланс пополнен на ${amount} TON!`);
-                
-                tg.showAlert(`✅ Баланс успешно пополнен на ${amount} TON!`);
-                tg.HapticFeedback.notificationOccurred('success');
-                
-                // Обновляем баланс кошелька
-                updateRealWalletBalance();
-                
-                // Закрываем модальное окно через 2 секунды
+                // В демо-версии обновляем баланс
                 setTimeout(() => {
-                    depositModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }, 2000);
+                    userData.balance += amount;
+                    userData.totalVolume += amount;
+                    updateBalanceDisplay();
+                    saveUserData();
+                    
+                    showTransactionStatus('confirmed', `✅ Баланс пополнен на ${amount} TON!`);
+                    
+                    tg.showAlert(`✅ Баланс успешно пополнен на ${amount} TON!`);
+                    tg.HapticFeedback.notificationOccurred('success');
+                    
+                    // Закрываем модальное окно через 2 секунды
+                    setTimeout(() => {
+                        depositModal.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                        transactionStatusElement.innerHTML = '';
+                    }, 2000);
+                    
+                }, 1000);
                 
-                return true;
-            }
+            }, 1500);
+            
+            return true;
             
         } catch (error) {
             console.error('Transaction error:', error);
@@ -953,26 +1041,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Показать статус транзакции
     function showTransactionStatus(status, message) {
         transactionStatusElement.innerHTML = `
-            <div class="transaction-status-${status}" style="
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                padding: 15px;
-                border-radius: 10px;
-                width: 100%;
-                background: ${status === 'success' ? 'rgba(6, 214, 160, 0.1)' : 
-                         status === 'pending' ? 'rgba(255, 193, 7, 0.1)' : 
-                         status === 'confirmed' ? 'rgba(123, 47, 247, 0.1)' : 
-                         'rgba(239, 71, 111, 0.1)'};
-                border: 1px solid ${status === 'success' ? 'rgba(6, 214, 160, 0.3)' : 
-                                 status === 'pending' ? 'rgba(255, 193, 7, 0.3)' : 
-                                 status === 'confirmed' ? 'rgba(123, 47, 247, 0.3)' : 
-                                 'rgba(239, 71, 111, 0.3)'};
-                color: ${status === 'success' ? '#06D6A0' : 
-                       status === 'pending' ? '#ffd166' : 
-                       status === 'confirmed' ? '#7b2ff7' : 
-                       '#EF476F'};
-            ">
+            <div class="transaction-status-${status}">
                 <i class="fas fa-${status === 'success' ? 'check-circle' : 
                                  status === 'pending' ? 'spinner fa-spin' : 
                                  status === 'confirmed' ? 'check-double' : 
@@ -998,6 +1067,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Вибрация
             if (navigator.vibrate) {
                 navigator.vibrate(20);
+            } else {
+                tg.HapticFeedback.impactOccurred('light');
             }
         });
     });
@@ -1011,9 +1082,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 150);
         
         // Вибрация
-        if (navigator.vibrate) {
-            navigator.vibrate(30);
-        }
+        tg.HapticFeedback.impactOccurred('medium');
         
         // Показать модальное окно
         balanceModal.classList.add('active');
@@ -1047,6 +1116,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Показываем окно пополнения
         depositAmountInput.value = '10';
         transactionStatusElement.innerHTML = '';
+        updateWalletStatus();
         depositModal.classList.add('active');
     });
     
@@ -1064,7 +1134,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         tg.showPopup({
             title: '💰 Вывод средств',
-            message: `Вы можете вывести до ${userData.balance} TON\n\nВаш кошелек: ${userData.walletAddress.slice(0, 8)}...${userData.walletAddress.slice(-8)}`,
+            message: `Вы можете вывести до ${userData.balance.toFixed(2)} TON\n\nВаш кошелек: ${userData.walletAddress.slice(0, 6)}...${userData.walletAddress.slice(-6)}`,
             buttons: [
                 {id: 'withdraw_all', type: 'default', text: 'Вывести всё'},
                 {id: 'custom', type: 'default', text: 'Указать сумму'},
@@ -1072,7 +1142,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ]
         }, function(buttonId) {
             if (buttonId === 'withdraw_all') {
-                tg.showAlert(`✅ Запрос на вывод ${userData.balance} TON отправлен!`);
+                tg.showAlert(`✅ Запрос на вывод ${userData.balance.toFixed(2)} TON отправлен!`);
                 tg.HapticFeedback.notificationOccurred('success');
             } else if (buttonId === 'custom') {
                 tg.showAlert('Функция в разработке');
@@ -1095,15 +1165,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 150);
         
         // Вибрация
-        if (navigator.vibrate) {
-            navigator.vibrate(30);
-        }
+        tg.HapticFeedback.impactOccurred('light');
     });
     
     // Закрытие модального окна пополнения
     closeDepositModal.addEventListener('click', function() {
         depositModal.classList.remove('active');
         document.body.style.overflow = 'auto';
+        transactionStatusElement.innerHTML = '';
     });
     
     // Клик вне модального окна пополнения
@@ -1111,6 +1180,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target === this) {
             depositModal.classList.remove('active');
             document.body.style.overflow = 'auto';
+            transactionStatusElement.innerHTML = '';
         }
     });
     
@@ -1128,6 +1198,45 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Закрытие модального окна игр
+    closeGamesModal.addEventListener('click', function() {
+        gamesModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+    
+    // Клик вне модального окна игр
+    gamesModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            gamesModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+    
+    // Закрытие игры "Треугольник"
+    closeTriangleGame.addEventListener('click', function() {
+        triangleGameModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+    
+    // Клик вне игры "Треугольник"
+    triangleGameModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            triangleGameModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+    
+    // Открытие игры "Треугольник"
+    triangleGameBtn.addEventListener('click', function() {
+        gamesModal.classList.remove('active');
+        triangleGameModal.classList.add('active');
+        
+        // Инициализируем игру
+        setTimeout(() => {
+            initTriangleGame();
+        }, 300);
+    });
+    
     // Пресеты суммы
     amountPresets.forEach(preset => {
         preset.addEventListener('click', function() {
@@ -1137,6 +1246,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Эффект нажатия
             amountPresets.forEach(p => p.classList.remove('active'));
             this.classList.add('active');
+            
+            // Вибрация
+            tg.HapticFeedback.impactOccurred('light');
         });
     });
     
@@ -1160,6 +1272,9 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transform = 'scale(1)';
         }, 150);
         
+        // Вибрация
+        tg.HapticFeedback.impactOccurred('medium');
+        
         // Отправляем транзакцию
         await sendDepositTransaction(amount);
     });
@@ -1172,9 +1287,11 @@ document.addEventListener('DOMContentLoaded', function() {
         initTonConnect().then(() => {
             console.log('TON Connect initialized');
             updateConnectInfo();
+            updateWalletStatus();
         }).catch(error => {
             console.error('Failed to init TON Connect:', error);
             updateConnectInfo();
+            updateWalletStatus();
         });
     }, 500);
     
@@ -1196,7 +1313,4 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('beforeunload', function() {
         saveUserData();
     });
-    
-    // Автоматическое обновление баланса кошелька
-    setInterval(updateRealWalletBalance, 30000);
 });
