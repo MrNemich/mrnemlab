@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container">
-        <!-- Верхний баланс -->
+        <!-- Верхнее меню с балансом -->
         <div class="top-menu">
             <div class="ton-balance-circle">
                 <div class="ton-circle-bg"></div>
@@ -30,59 +30,29 @@
         <div class="modal-overlay" id="balance-modal">
             <div class="modal-content wallet-modal">
                 <div class="modal-header">
-                    <h3 class="modal-title">Баланс</h3>
                     <button class="modal-close" id="close-balance-modal">&times;</button>
                 </div>
                 
-                <div class="wallet-content">
-                    <div class="balance-display">
-                        <div class="balance-amount-large">
-                            <span id="bot-balance">0</span>
-                            <span class="ton-text">TON</span>
-                        </div>
-                        <div class="balance-subtitle">Доступно для вывода</div>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <button class="action-btn primary-btn" id="deposit-btn">
-                            <i class="fas fa-plus-circle"></i>
-                            <span>Пополнить</span>
-                        </button>
-                        <button class="action-btn secondary-btn" id="withdraw-btn">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>Вывести</span>
-                        </button>
-                    </div>
-                    
-                    <div class="transaction-history">
-                        <div class="history-header">
-                            <h4>История операций</h4>
-                            <button class="view-all-btn">Все</button>
-                        </div>
-                        <div class="history-list" id="history-list">
-                            <div class="history-item">
-                                <div class="history-icon deposit">
-                                    <i class="fas fa-arrow-down"></i>
-                                </div>
-                                <div class="history-details">
-                                    <div class="history-title">Пополнение баланса</div>
-                                    <div class="history-date">Сегодня, 14:30</div>
-                                </div>
-                                <div class="history-amount positive">+50 TON</div>
-                            </div>
-                            <div class="history-item">
-                                <div class="history-icon purchase">
-                                    <i class="fas fa-shopping-cart"></i>
-                                </div>
-                                <div class="history-details">
-                                    <div class="history-title">Покупка NFT</div>
-                                    <div class="history-date">Вчера, 11:20</div>
-                                </div>
-                                <div class="history-amount negative">-25 TON</div>
-                            </div>
-                        </div>
+                <div class="wallet-top-circle">
+                    <div class="wallet-title">Баланс</div>
+                    <div class="wallet-balance">
+                        <span id="bot-balance">0</span>
+                        <span class="ton-text">TON</span>
                     </div>
                 </div>
+                
+                <div class="wallet-buttons">
+                    <button class="wallet-btn deposit-btn" id="deposit-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Пополнить</span>
+                    </button>
+                    <button class="wallet-btn withdraw-btn" id="withdraw-btn">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Вывести</span>
+                    </button>
+                </div>
+                
+                <!-- Убрана секция подключения кошелька -->
             </div>
         </div>
 
@@ -90,103 +60,47 @@
         <div class="modal-overlay" id="deposit-modal">
             <div class="modal-content deposit-modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Пополнение баланса</h3>
+                    <h3 class="modal-title">💰 Пополнение баланса</h3>
                     <button class="modal-close" id="close-deposit-modal">&times;</button>
                 </div>
                 
                 <div class="deposit-container">
-                    <div class="wallet-section" id="wallet-section">
-                        <div class="section-header">
-                            <h4>Кошелёк TON</h4>
-                            <div class="wallet-status-indicator" id="wallet-status-indicator">
-                                <div class="status-dot disconnected"></div>
-                                <span>Не подключен</span>
-                            </div>
+                    <!-- Секция подключения кошелька -->
+                    <div class="wallet-connect-section">
+                        <div class="wallet-status" id="wallet-status">
+                            <i class="fas fa-wallet"></i>
+                            <span id="wallet-status-text">Кошелёк не подключен</span>
                         </div>
-                        
-                        <div class="wallet-info" id="wallet-info">
-                            <div class="wallet-placeholder">
-                                <i class="fas fa-wallet"></i>
-                                <p>Подключите TON кошелёк для пополнения баланса</p>
-                            </div>
-                        </div>
-                        
-                        <div class="wallet-actions">
-                            <button class="connect-wallet-btn" id="connect-wallet-btn">
-                                <i class="fas fa-plug"></i>
-                                <span>Подключить кошелёк</span>
-                            </button>
-                            <button class="disconnect-wallet-btn" id="disconnect-wallet-btn" style="display: none;">
-                                <i class="fas fa-unlink"></i>
-                                <span>Отключить кошелёк</span>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="amount-section">
-                        <div class="section-header">
-                            <h4>Сумма пополнения</h4>
-                        </div>
-                        
-                        <div class="amount-input-container">
-                            <div class="amount-display">
-                                <input type="number" id="deposit-amount-input" min="1" max="10000" step="1" 
-                                       placeholder="0" value="10">
-                                <span class="ton-symbol">TON</span>
-                            </div>
-                            
-                            <div class="amount-presets-grid">
-                                <button class="amount-preset" data-amount="10">10</button>
-                                <button class="amount-preset" data-amount="50">50</button>
-                                <button class="amount-preset" data-amount="100">100</button>
-                                <button class="amount-preset" data-amount="500">500</button>
-                                <button class="amount-preset" data-amount="1000">1000</button>
-                                <button class="amount-preset" data-amount="5000">5000</button>
-                            </div>
-                        </div>
-                        
-                        <div class="amount-info">
-                            <div class="info-row">
-                                <span>Минимальная сумма:</span>
-                                <span class="info-value">1 TON</span>
-                            </div>
-                            <div class="info-row">
-                                <span>Комиссия сети:</span>
-                                <span class="info-value">~0.05 TON</span>
-                            </div>
-                            <div class="info-row">
-                                <span>Среднее время:</span>
-                                <span class="info-value">~15 секунд</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="deposit-actions">
-                        <button class="confirm-deposit-btn" id="confirm-deposit-btn">
-                            <i class="fas fa-paper-plane"></i>
-                            <span>Перейти к оплате</span>
+                        <button class="connect-wallet-btn" id="connect-wallet-btn">
+                            <i class="fas fa-plug"></i>
+                            <span>Подключить кошелёк</span>
                         </button>
-                        
-                        <div class="deposit-methods">
-                            <div class="methods-label">Другие способы:</div>
-                            <div class="methods-grid">
-                                <button class="method-btn">
-                                    <i class="fas fa-credit-card"></i>
-                                    <span>Карта</span>
-                                </button>
-                                <button class="method-btn">
-                                    <i class="fas fa-exchange-alt"></i>
-                                    <span>Обменник</span>
-                                </button>
-                                <button class="method-btn">
-                                    <i class="fas fa-qrcode"></i>
-                                    <span>QR-код</span>
-                                </button>
-                            </div>
+                        <div class="wallet-address" id="wallet-address-display">
+                            <!-- Адрес кошелька будет здесь -->
                         </div>
                     </div>
                     
-                    <div class="transaction-status" id="transaction-status"></div>
+                    <div class="deposit-amount">
+                        <label for="deposit-amount-input">Сумма пополнения (TON):</label>
+                        <div class="amount-input-group">
+                            <input type="number" id="deposit-amount-input" min="1" max="1000" step="0.01" placeholder="10" value="10">
+                            <span class="ton-symbol">TON</span>
+                        </div>
+                        <div class="amount-presets">
+                            <button class="amount-preset" data-amount="10">10 TON</button>
+                            <button class="amount-preset" data-amount="50">50 TON</button>
+                            <button class="amount-preset" data-amount="100">100 TON</button>
+                        </div>
+                    </div>
+                    
+                    <button class="confirm-deposit-btn" id="confirm-deposit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Пополнить</span>
+                    </button>
+                    
+                    <div class="transaction-status" id="transaction-status">
+                        <!-- Статус транзакции будет здесь -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -199,155 +113,61 @@
                     <button class="modal-close" id="close-filters-modal">&times;</button>
                 </div>
                 
-                <div class="filters-container">
-                    <div class="filter-section active" id="filter-sort">
+                <div class="filters-container" id="filters-container">
+                    <div class="filter-section" id="filter-sort">
                         <button class="filter-option" data-filter="sort">
-                            <div class="filter-title">
-                                <i class="fas fa-sort-amount-down"></i>
-                                <span>Сортировка</span>
-                            </div>
-                            <div class="filter-selected" id="sort-selected">Новые</div>
+                            <span>Сортировать по</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
                         <div class="filter-dropdown" id="sort-dropdown">
                             <div class="filter-option-item active" data-value="newest">
-                                <div class="option-icon"><i class="fas fa-clock"></i></div>
-                                <div class="option-content">
-                                    <div class="option-title">Сначала новые</div>
-                                    <div class="option-subtitle">По дате добавления</div>
-                                </div>
-                                <div class="option-check"><i class="fas fa-check"></i></div>
+                                <div class="radio-circle"></div>
+                                <span>Сначала новые</span>
                             </div>
                             <div class="filter-option-item" data-value="price-asc">
-                                <div class="option-icon"><i class="fas fa-sort-amount-up-alt"></i></div>
-                                <div class="option-content">
-                                    <div class="option-title">Цена: по возрастанию</div>
-                                    <div class="option-subtitle">От дешёвых к дорогим</div>
-                                </div>
-                                <div class="option-check"><i class="fas fa-check"></i></div>
+                                <div class="radio-circle"></div>
+                                <span>Цена: по возрастанию</span>
                             </div>
                             <div class="filter-option-item" data-value="price-desc">
-                                <div class="option-icon"><i class="fas fa-sort-amount-down-alt"></i></div>
-                                <div class="option-content">
-                                    <div class="option-title">Цена: по убыванию</div>
-                                    <div class="option-subtitle">От дорогих к дешёвым</div>
-                                </div>
-                                <div class="option-check"><i class="fas fa-check"></i></div>
-                            </div>
-                            <div class="filter-option-item" data-value="popular">
-                                <div class="option-icon"><i class="fas fa-fire"></i></div>
-                                <div class="option-content">
-                                    <div class="option-title">По популярности</div>
-                                    <div class="option-subtitle">Самые просматриваемые</div>
-                                </div>
-                                <div class="option-check"><i class="fas fa-check"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-section" id="filter-price">
-                        <button class="filter-option" data-filter="price">
-                            <div class="filter-title">
-                                <i class="fas fa-tag"></i>
-                                <span>Цена</span>
-                            </div>
-                            <div class="filter-selected" id="price-selected">Любая</div>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="filter-dropdown" id="price-dropdown">
-                            <div class="price-range-container">
-                                <div class="price-range-display">
-                                    <div class="price-range-min" id="price-range-min">0 TON</div>
-                                    <div class="price-range-divider">—</div>
-                                    <div class="price-range-max" id="price-range-max">10000 TON</div>
-                                </div>
-                                <div class="price-slider-container">
-                                    <div class="price-slider-track" id="price-slider-track">
-                                        <div class="price-slider-range" id="price-slider-range"></div>
-                                        <div class="price-slider-handle" id="price-slider-handle-min"></div>
-                                        <div class="price-slider-handle" id="price-slider-handle-max"></div>
-                                    </div>
-                                </div>
-                                <div class="price-inputs">
-                                    <div class="price-input-group">
-                                        <label>От</label>
-                                        <input type="number" class="price-input" id="price-min" min="0" max="10000" value="0">
-                                        <span class="price-input-suffix">TON</span>
-                                    </div>
-                                    <div class="price-input-group">
-                                        <label>До</label>
-                                        <input type="number" class="price-input" id="price-max" min="0" max="10000" value="10000">
-                                        <span class="price-input-suffix">TON</span>
-                                    </div>
-                                </div>
+                                <div class="radio-circle"></div>
+                                <span>Цена: по убыванию</span>
                             </div>
                         </div>
                     </div>
                     
                     <div class="filter-section" id="filter-collection">
                         <button class="filter-option" data-filter="collection">
-                            <div class="filter-title">
-                                <i class="fas fa-layer-group"></i>
-                                <span>Коллекции</span>
-                            </div>
-                            <div class="filter-selected" id="collection-selected">Все</div>
+                            <span>Коллекция</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
                         <div class="filter-dropdown" id="collection-dropdown">
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" placeholder="Поиск коллекций..." id="collection-search">
-                            </div>
-                            <div class="collections-list">
-                                <!-- Коллекции будут добавлены через JS -->
-                            </div>
+                            <!-- Коллекции будут заполнены через JS -->
                         </div>
                     </div>
                     
-                    <div class="filter-section" id="filter-traits">
-                        <button class="filter-option" data-filter="traits">
-                            <div class="filter-title">
-                                <i class="fas fa-star"></i>
-                                <span>Редкость</span>
-                            </div>
-                            <div class="filter-selected" id="traits-selected">Любая</div>
+                    <div class="filter-section" id="filter-price">
+                        <button class="filter-option" data-filter="price">
+                            <span>Цена</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
-                        <div class="filter-dropdown" id="traits-dropdown">
-                            <div class="traits-grid">
-                                <button class="trait-btn" data-trait="common">
-                                    <div class="trait-icon common"><i class="fas fa-circle"></i></div>
-                                    <span>Обычная</span>
-                                </button>
-                                <button class="trait-btn" data-trait="rare">
-                                    <div class="trait-icon rare"><i class="fas fa-gem"></i></div>
-                                    <span>Редкая</span>
-                                </button>
-                                <button class="trait-btn" data-trait="epic">
-                                    <div class="trait-icon epic"><i class="fas fa-crown"></i></div>
-                                    <span>Эпическая</span>
-                                </button>
-                                <button class="trait-btn" data-trait="legendary">
-                                    <div class="trait-icon legendary"><i class="fas fa-fire"></i></div>
-                                    <span>Легендарная</span>
-                                </button>
-                                <button class="trait-btn" data-trait="mythical">
-                                    <div class="trait-icon mythical"><i class="fas fa-bolt"></i></div>
-                                    <span>Мифическая</span>
-                                </button>
+                        <div class="filter-dropdown" id="price-dropdown">
+                            <div class="price-slider-container">
+                                <div class="price-slider-track" id="price-slider-track">
+                                    <div class="price-slider-range" id="price-slider-range"></div>
+                                    <div class="price-slider-handle" id="price-slider-handle-min"></div>
+                                    <div class="price-slider-handle" id="price-slider-handle-max"></div>
+                                </div>
+                                <div class="price-inputs">
+                                    <input type="number" class="price-input" id="price-min" min="0" max="100000" value="0">
+                                    <input type="number" class="price-input" id="price-max" min="0" max="100000" value="100000">
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="filter-actions">
-                        <button class="filter-action-btn reset-btn" id="reset-filters-btn">
-                            <i class="fas fa-redo"></i>
-                            <span>Сбросить всё</span>
-                        </button>
-                        <button class="filter-action-btn apply-btn" id="apply-filters-btn">
-                            <i class="fas fa-check"></i>
-                            <span>Применить фильтры</span>
-                        </button>
+                    <div class="filter-buttons">
+                        <button class="filter-btn reset-btn" id="reset-filters-btn">Сбросить</button>
+                        <button class="filter-btn search-btn" id="search-filters-btn">Поиск</button>
                     </div>
                 </div>
             </div>
@@ -363,36 +183,21 @@
             <div class="nav-container">
                 <button class="nav-button active" data-page="market">
                     <div class="button-content">
-                        <div class="nav-icon">
-                            <i class="fas fa-store"></i>
-                        </div>
+                        <div class="nav-emoji">🛒</div>
                         <span class="nav-text">Маркет</span>
-                    </div>
-                </button>
-                
-                <button class="nav-button" data-page="gifts">
-                    <div class="button-content">
-                        <div class="nav-icon">
-                            <i class="fas fa-gift"></i>
-                        </div>
-                        <span class="nav-text">Подарки</span>
                     </div>
                 </button>
                 
                 <button class="nav-button" data-page="season">
                     <div class="button-content">
-                        <div class="nav-icon">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
+                        <div class="nav-emoji">📅</div>
                         <span class="nav-text">Сезон</span>
                     </div>
                 </button>
                 
                 <button class="nav-button" data-page="profile">
                     <div class="button-content">
-                        <div class="nav-icon">
-                            <i class="fas fa-user"></i>
-                        </div>
+                        <div class="nav-emoji">👤</div>
                         <span class="nav-text">Профиль</span>
                     </div>
                 </button>
@@ -400,6 +205,10 @@
         </nav>
     </div>
 
+    <!-- Контейнер для TON Connect -->
+    <div id="ton-connect-modal" style="display: none;"></div>
+
+    <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
