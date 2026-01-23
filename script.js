@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализируем приложение
     tg.expand();
     tg.enableClosingConfirmation();
-    tg.setHeaderColor('#0a0a0f');
-    tg.setBackgroundColor('#0a0a0f');
+    tg.setHeaderColor('#000');
+    tg.setBackgroundColor('#000');
     
     // Получаем элементы
     const navButtons = document.querySelectorAll('.nav-button');
@@ -18,17 +18,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeBalanceModal = document.getElementById('close-balance-modal');
     const depositBtn = document.getElementById('deposit-btn');
     const withdrawBtn = document.getElementById('withdraw-btn');
+    const connectWalletBtn = document.getElementById('connect-wallet-btn');
     const botBalanceElement = document.getElementById('bot-balance');
-    const walletStatusElement = document.getElementById('wallet-status');
     const walletStatusText = document.getElementById('wallet-status-text');
-    const walletConnectBtn = document.getElementById('connect-wallet-btn');
-    const walletInfo = document.getElementById('wallet-info');
-    
-    // Элементы для модалки пополнения
-    const depositModal = document.getElementById('deposit-modal');
-    const closeDepositModal = document.getElementById('close-deposit-modal');
     const depositAmountInput = document.getElementById('deposit-amount-input');
-    const amountPresets = document.querySelectorAll('.amount-preset');
+    const amountPresetBtns = document.querySelectorAll('.amount-preset-btn');
     const confirmDepositBtn = document.getElementById('confirm-deposit-btn');
     const transactionStatusElement = document.getElementById('transaction-status');
     
@@ -38,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const filterSections = document.querySelectorAll('.filter-section');
     const filterOptions = document.querySelectorAll('.filter-option');
     const resetFiltersBtn = document.getElementById('reset-filters-btn');
-    const searchFiltersBtn = document.getElementById('search-filters-btn');
+    const applyFiltersBtn = document.getElementById('apply-filters-btn');
     const priceSliderTrack = document.getElementById('price-slider-track');
     const priceSliderRange = document.getElementById('price-slider-range');
     const priceSliderHandleMin = document.getElementById('price-slider-handle-min');
@@ -52,15 +46,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Текущий пользователь
     let userData = {
         id: null,
-        balance: 100, // Начальный баланс для демо
+        balance: 100,
         username: 'Гость',
         avatarUrl: null,
         walletConnected: false,
         walletAddress: null,
         walletBalance: 0,
-        bought: 0,
-        sold: 0,
-        totalVolume: 0,
+        bought: 5,
+        sold: 3,
+        totalVolume: 2450,
         inventory: []
     };
     
@@ -70,42 +64,37 @@ document.addEventListener('DOMContentLoaded', function() {
         { id: 2, name: "Crystal Ball", type: "magic", value: 89 },
         { id: 3, name: "Diamond Ring", type: "ring", value: 250 },
         { id: 4, name: "Genie Lamp", type: "magic", value: 120 },
-        { id: 5, name: "Heroic Helmet", type: "armor", value: 75 },
-        { id: 6, name: "Moon Pendant", type: "jewelry", value: 95 }
+        { id: 5, name: "Heroic Helmet", type: "armor", value: 75 }
     ];
     
     // Данные для фильтров
     const collections = [
-        "Bodded Ring", "Candle Lamp", "Boots", "Candy Cane", "Case", "Christmas Tree",
-        "Clover Pin", "Crystal Ball", "Diamond Ring", "Durov's Coat", "Coconut",
-        "Crystal Eagle", "Dove of Peace", "Durov's Figurine", "Coffin", "Cupid Charm"
+        "Bodded Ring", "Crystal Ball", "Diamond Ring", "Genie Lamp", "Heroic Helmet",
+        "Moon Pendant", "Golden Cup", "Magic Wand", "Silver Sword", "Dragon Scale"
     ];
     
     // Текущие фильтры
     let currentFilters = {
         sort: 'newest',
         collections: [],
-        priceRange: { min: 0, max: 100000 }
+        priceRange: { min: 0, max: 100000 },
+        backgrounds: []
     };
     
     // Загрузка данных пользователя
     function loadUserData() {
-        // Проверяем, есть ли сохраненные данные
         const savedData = localStorage.getItem('beatclub_user_data');
         if (savedData) {
             const parsed = JSON.parse(savedData);
-            // Проверяем совпадение ID пользователя
             if (tg.initDataUnsafe?.user && parsed.id === tg.initDataUnsafe.user.id) {
                 userData = { ...userData, ...parsed };
             }
         }
         
-        // Загружаем данные из Telegram
         if (tg.initDataUnsafe?.user) {
             const user = tg.initDataUnsafe.user;
             userData.id = user.id;
             
-            // Формируем имя пользователя
             let name = 'Гость';
             if (user.username) {
                 name = '@' + user.username;
@@ -118,30 +107,20 @@ document.addEventListener('DOMContentLoaded', function() {
             
             userData.username = name;
             
-            // Загружаем аватарку
-            loadUserAvatar(user);
+            if (user.photo_url) {
+                userData.avatarUrl = user.photo_url;
+            }
             
-            // Загружаем инвентарь
             userData.inventory = demoInventory;
-            
-            console.log('User data loaded:', userData);
         }
         
-        // Обновляем отображение
         updateBalanceDisplay();
-        updateWalletInfo();
+        updateWalletStatus();
     }
     
     // Сохранение данных пользователя
     function saveUserData() {
         localStorage.setItem('beatclub_user_data', JSON.stringify(userData));
-    }
-    
-    // Загрузка аватарки пользователя
-    function loadUserAvatar(user) {
-        if (user.photo_url) {
-            userData.avatarUrl = user.photo_url;
-        }
     }
     
     // Обновление отображения баланса
@@ -155,104 +134,63 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             console.log('Initializing TON Connect...');
             
-            // Инициализируем TON Connect UI
             tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
                 manifestUrl: window.location.origin + '/tonconnect-manifest.json',
                 buttonRootId: 'ton-connect-modal'
             });
             
-            // Подписываемся на изменения статуса
             tonConnectUI.onStatusChange((wallet) => {
                 console.log('TON Connect status changed:', wallet);
                 
                 if (wallet) {
-                    // Кошелек подключен
                     userData.walletConnected = true;
                     userData.walletAddress = wallet.account.address;
                     console.log('Wallet connected:', userData.walletAddress);
                     
-                    // Обновляем UI
                     updateWalletStatus();
-                    updateWalletInfo();
-                    
-                    // Сохраняем
                     saveUserData();
                     
-                    // Уведомление
                     tg.showAlert('✅ Кошелек подключен!');
                     tg.HapticFeedback.notificationOccurred('success');
                 } else {
-                    // Кошелек отключен
                     userData.walletConnected = false;
                     userData.walletAddress = null;
                     userData.walletBalance = 0;
                     console.log('Wallet disconnected');
                     
-                    // Обновляем UI
                     updateWalletStatus();
-                    updateWalletInfo();
-                    
-                    // Сохраняем
                     saveUserData();
                 }
             });
             
-            // Восстанавливаем соединение если было
             const currentWallet = tonConnectUI.connected;
             if (currentWallet) {
                 console.log('Found existing connection:', currentWallet);
                 userData.walletConnected = true;
                 userData.walletAddress = currentWallet.account.address;
                 updateWalletStatus();
-                updateWalletInfo();
             }
             
             console.log('TON Connect initialized successfully');
             
         } catch (error) {
             console.error('Error initializing TON Connect:', error);
+            tg.showAlert('⚠️ Ошибка TON Connect: ' + error.message);
             updateWalletStatus();
-            updateWalletInfo();
         }
     }
     
     // Обновление статуса кошелька
     function updateWalletStatus() {
         if (userData.walletConnected && userData.walletAddress) {
-            walletStatusElement.classList.add('connected');
-            walletStatusElement.innerHTML = `
-                <i class="fas fa-check-circle"></i>
-                <span>Кошелёк подключен</span>
-            `;
+            const shortAddress = userData.walletAddress.slice(0, 6) + '...' + userData.walletAddress.slice(-6);
+            walletStatusText.textContent = shortAddress;
+            connectWalletBtn.textContent = 'Отключить';
+            connectWalletBtn.style.background = 'linear-gradient(135deg, #ff375f, #d43a5e)';
         } else {
-            walletStatusElement.classList.remove('connected');
-            walletStatusElement.innerHTML = `
-                <i class="fas fa-wallet"></i>
-                <span>Кошелёк не подключен</span>
-            `;
-        }
-    }
-    
-    // Обновление информации о кошельке
-    function updateWalletInfo() {
-        if (userData.walletConnected && userData.walletAddress) {
-            const shortAddress = userData.walletAddress.slice(0, 6) + '...' + userData.walletAddress.slice(-4);
-            walletInfo.innerHTML = `
-                <div style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; margin-bottom: 8px;">
-                    Кошелёк подключен
-                </div>
-                <div style="color: rgba(255, 255, 255, 0.6); font-size: 0.8rem; font-family: monospace;">
-                    ${shortAddress}
-                </div>
-            `;
-            walletConnectBtn.innerHTML = '<i class="fas fa-unlink"></i><span>Отключить кошелёк</span>';
-        } else {
-            walletInfo.innerHTML = `
-                <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; text-align: center;">
-                    Для пополнения баланса подключите TON кошелёк
-                </div>
-            `;
-            walletConnectBtn.innerHTML = '<i class="fas fa-plug"></i><span>Подключить кошелёк</span>';
+            walletStatusText.textContent = 'Не подключен';
+            connectWalletBtn.textContent = 'Подключить';
+            connectWalletBtn.style.background = 'linear-gradient(135deg, #7b2ff7, #5a1bd6)';
         }
     }
     
@@ -260,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function initFilters() {
         // Заполняем коллекции
         const collectionDropdown = document.getElementById('collection-dropdown');
-        collections.slice(0, 8).forEach(collection => {
+        collections.forEach(collection => {
             const item = document.createElement('div');
             item.className = 'filter-option-item';
             item.dataset.value = collection;
@@ -278,54 +216,52 @@ document.addEventListener('DOMContentLoaded', function() {
         filterOptions.forEach(option => {
             option.addEventListener('click', function() {
                 const filterSection = this.closest('.filter-section');
-                const isActive = filterSection.classList.contains('active');
+                const filterType = this.dataset.filter;
                 
-                // Закрываем все секции
+                // Закрываем все остальные секции
                 filterSections.forEach(section => {
-                    section.classList.remove('active');
+                    if (section !== filterSection) {
+                        section.classList.remove('active');
+                    }
                 });
                 
-                // Открываем выбранную секцию
-                if (!isActive) {
-                    filterSection.classList.add('active');
-                    // Прокручиваем к секции
-                    setTimeout(() => {
-                        filterSection.scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'start' 
-                        });
-                    }, 100);
+                // Переключаем текущую секцию
+                filterSection.classList.toggle('active');
+                
+                // Если секция открыта, перемещаем её в начало
+                if (filterSection.classList.contains('active')) {
+                    filterSections.forEach((section, index) => {
+                        if (section !== filterSection && section.classList.contains('active')) {
+                            section.style.order = index;
+                        }
+                    });
+                    filterSection.style.order = '-1';
+                } else {
+                    filterSection.style.order = '';
                 }
             });
         });
         
         // Обработчики для выбора опций
-        const sortOptions = document.querySelectorAll('#sort-dropdown .filter-option-item');
-        const collectionOptions = document.querySelectorAll('#collection-dropdown .filter-option-item');
-        
-        // Сортировка
-        sortOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                sortOptions.forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-                currentFilters.sort = this.dataset.value;
-            });
-        });
-        
-        // Коллекции
-        collectionOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                this.classList.toggle('active');
-                const collection = this.dataset.value;
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.filter-option-item')) {
+                const item = e.target.closest('.filter-option-item');
+                const filterSection = item.closest('.filter-section');
+                const filterType = filterSection.id.replace('filter-', '');
                 
-                if (this.classList.contains('active')) {
-                    if (!currentFilters.collections.includes(collection)) {
-                        currentFilters.collections.push(collection);
-                    }
-                } else {
-                    currentFilters.collections = currentFilters.collections.filter(c => c !== collection);
+                if (filterType === 'sort') {
+                    // Для сортировки - один активный элемент
+                    filterSection.querySelectorAll('.filter-option-item').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    item.classList.add('active');
+                    currentFilters.sort = item.dataset.value;
+                } else if (filterType === 'collection') {
+                    // Для коллекций - множественный выбор
+                    item.classList.toggle('active');
+                    updateCollectionsFilter();
                 }
-            });
+            }
         });
         
         // Сброс фильтров
@@ -335,12 +271,12 @@ document.addEventListener('DOMContentLoaded', function() {
             tg.HapticFeedback.notificationOccurred('success');
         });
         
-        // Поиск по фильтрам
-        searchFiltersBtn.addEventListener('click', function() {
+        // Применение фильтров
+        applyFiltersBtn.addEventListener('click', function() {
             performSearch();
             filtersModal.classList.remove('active');
             document.body.style.overflow = 'auto';
-            tg.showAlert('Поиск выполнен по заданным фильтрам');
+            tg.showAlert('Фильтры применены');
             tg.HapticFeedback.notificationOccurred('success');
         });
     }
@@ -348,21 +284,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация слайдера цены
     function initPriceSlider() {
         const trackWidth = priceSliderTrack.offsetWidth;
+        const minHandle = priceSliderHandleMin;
+        const maxHandle = priceSliderHandleMax;
+        const range = priceSliderRange;
+        
+        let isDraggingMin = false;
+        let isDraggingMax = false;
         
         function updateSlider() {
             const minPercent = (currentFilters.priceRange.min / 100000) * 100;
             const maxPercent = (currentFilters.priceRange.max / 100000) * 100;
             
-            priceSliderHandleMin.style.left = `${minPercent}%`;
-            priceSliderHandleMax.style.left = `${maxPercent}%`;
-            priceSliderRange.style.left = `${minPercent}%`;
-            priceSliderRange.style.width = `${maxPercent - minPercent}%`;
+            minHandle.style.left = `${minPercent}%`;
+            maxHandle.style.left = `${maxPercent}%`;
+            range.style.left = `${minPercent}%`;
+            range.style.width = `${maxPercent - minPercent}%`;
             
             priceMinInput.value = currentFilters.priceRange.min;
             priceMaxInput.value = currentFilters.priceRange.max;
         }
         
-        // Обработчики для ползунков
         function startDragMin(e) {
             isDraggingMin = true;
             document.body.style.userSelect = 'none';
@@ -391,11 +332,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const value = Math.round((percent / 100) * 100000);
             
             if (isDraggingMin) {
-                if (value < currentFilters.priceRange.max - 5000) {
+                if (value < currentFilters.priceRange.max - 1000) {
                     currentFilters.priceRange.min = value;
                 }
             } else if (isDraggingMax) {
-                if (value > currentFilters.priceRange.min + 5000) {
+                if (value > currentFilters.priceRange.min + 1000) {
                     currentFilters.priceRange.max = value;
                 }
             }
@@ -403,11 +344,10 @@ document.addEventListener('DOMContentLoaded', function() {
             updateSlider();
         }
         
-        // Обработчики для инпутов
         priceMinInput.addEventListener('input', function() {
             let value = parseInt(this.value) || 0;
             value = Math.max(0, Math.min(95000, value));
-            if (value < currentFilters.priceRange.max - 5000) {
+            if (value < currentFilters.priceRange.max - 1000) {
                 currentFilters.priceRange.min = value;
                 updateSlider();
             }
@@ -415,30 +355,30 @@ document.addEventListener('DOMContentLoaded', function() {
         
         priceMaxInput.addEventListener('input', function() {
             let value = parseInt(this.value) || 100000;
-            value = Math.max(5000, Math.min(100000, value));
-            if (value > currentFilters.priceRange.min + 5000) {
+            value = Math.max(1000, Math.min(100000, value));
+            if (value > currentFilters.priceRange.min + 1000) {
                 currentFilters.priceRange.max = value;
                 updateSlider();
             }
         });
         
-        // Добавляем обработчики событий
-        let isDraggingMin = false;
-        let isDraggingMax = false;
-        
-        priceSliderHandleMin.addEventListener('mousedown', startDragMin);
-        priceSliderHandleMax.addEventListener('mousedown', startDragMax);
+        minHandle.addEventListener('mousedown', startDragMin);
+        maxHandle.addEventListener('mousedown', startDragMax);
         document.addEventListener('mouseup', stopDrag);
         document.addEventListener('mousemove', handleDrag);
         
-        // Для touch устройств
-        priceSliderHandleMin.addEventListener('touchstart', startDragMin);
-        priceSliderHandleMax.addEventListener('touchstart', startDragMax);
+        minHandle.addEventListener('touchstart', startDragMin);
+        maxHandle.addEventListener('touchstart', startDragMax);
         document.addEventListener('touchend', stopDrag);
         document.addEventListener('touchmove', handleDrag);
         
-        // Инициализация
         updateSlider();
+    }
+    
+    // Обновление фильтра коллекций
+    function updateCollectionsFilter() {
+        const activeItems = document.querySelectorAll('#collection-dropdown .filter-option-item.active');
+        currentFilters.collections = Array.from(activeItems).map(item => item.dataset.value);
     }
     
     // Сброс всех фильтров
@@ -446,23 +386,21 @@ document.addEventListener('DOMContentLoaded', function() {
         currentFilters = {
             sort: 'newest',
             collections: [],
-            priceRange: { min: 0, max: 100000 }
+            priceRange: { min: 0, max: 100000 },
+            backgrounds: []
         };
         
-        // Сброс UI
         document.querySelectorAll('.filter-option-item').forEach(item => {
             item.classList.remove('active');
         });
         
-        // Активируем первую опцию в сортировке
         document.querySelector('#sort-dropdown .filter-option-item[data-value="newest"]').classList.add('active');
         
-        // Сбрасываем все активные секции
         filterSections.forEach(section => {
             section.classList.remove('active');
+            section.style.order = '';
         });
         
-        // Обновляем слайдер
         initPriceSlider();
     }
     
@@ -479,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="market-container">
                     <div class="market-header">
                         <div class="search-filter-bar">
-                            <div class="search-filter-text">Поиск по фильтрам</div>
+                            <div class="search-filter-text">Используйте фильтры для поиска</div>
                             <button class="filter-icon-btn" id="open-filters-btn">
                                 <i class="fas fa-filter"></i>
                             </button>
@@ -495,7 +433,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function generateDemoNFTs() {
-        const nfts = [];
         const demoNFTs = [
             { name: "Bodded Ring", price: 150 },
             { name: "Crystal Ball", price: 89 },
@@ -505,25 +442,20 @@ document.addEventListener('DOMContentLoaded', function() {
             { name: "Moon Pendant", price: 95 }
         ];
         
-        for (let i = 0; i < 6; i++) {
-            const nft = demoNFTs[i];
-            nfts.push(`
-                <div class="nft-item" data-nft-id="${i}">
-                    <div class="nft-image">
-                        <i class="fas fa-gem"></i>
-                    </div>
-                    <div class="nft-info">
-                        <div class="nft-name">${nft.name}</div>
-                        <div class="nft-price">
-                            <i class="fas fa-coins"></i>
-                            <span>${nft.price} TON</span>
-                        </div>
+        return demoNFTs.map((nft, i) => `
+            <div class="nft-item" data-nft-id="${i}">
+                <div class="nft-image">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div class="nft-info">
+                    <div class="nft-name">${nft.name}</div>
+                    <div class="nft-price">
+                        <i class="fas fa-coins"></i>
+                        <span>${nft.price} TON</span>
                     </div>
                 </div>
-            `);
-        }
-        
-        return nfts.join('');
+            </div>
+        `).join('');
     }
     
     function createGiftsContent() {
@@ -531,8 +463,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="page-content">
                 <div class="gifts-container">
                     <div class="inventory-header">
-                        <h2>🎁 Мои подарки</h2>
-                        <div class="inventory-count">${userData.inventory.length} NFT</div>
+                        <h2>Мои подарки</h2>
+                        <div class="inventory-subtitle">${userData.inventory.length} NFT в коллекции</div>
                     </div>
                     
                     <div class="inventory-grid" id="inventory-grid">
@@ -571,7 +503,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <i class="fas fa-wallet"></i>
                                 <span class="profile-wallet-address">
                                     ${userData.walletConnected ? 
-                                        `${userData.walletAddress.slice(0, 6)}...${userData.walletAddress.slice(-4)}` : 
+                                        `${userData.walletAddress.slice(0, 6)}...${userData.walletAddress.slice(-6)}` : 
                                         'Кошелёк не подключен'}
                                 </span>
                             </div>
@@ -604,9 +536,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Обновление контента страницы
     function updateContent(page) {
-        // Анимация исчезновения
         mainContent.style.opacity = '0';
-        mainContent.style.transform = 'translateY(20px) scale(0.98)';
         
         setTimeout(() => {
             let content = '';
@@ -625,10 +555,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             mainContent.innerHTML = content;
             
-            // Инициализация элементов после создания контента
             if (page === 'market') {
                 const openFiltersBtn = document.getElementById('open-filters-btn');
-                
                 if (openFiltersBtn) {
                     openFiltersBtn.addEventListener('click', function() {
                         filtersModal.classList.add('active');
@@ -637,10 +565,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            // Анимация появления
             setTimeout(() => {
                 mainContent.style.opacity = '1';
-                mainContent.style.transform = 'translateY(0) scale(1)';
             }, 50);
             
         }, 200);
@@ -679,18 +605,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         try {
-            // Показываем статус
             showTransactionStatus('pending', 'Подтвердите транзакцию в кошельке...');
             
-            // Создаем демо-транзакцию
             console.log('Simulating transaction for:', amount, 'TON');
             
-            // Имитация задержки транзакции
             setTimeout(() => {
-                // Успешная транзакция
                 showTransactionStatus('success', 'Транзакция отправлена!');
                 
-                // В демо-версии обновляем баланс
                 setTimeout(() => {
                     userData.balance += amount;
                     userData.totalVolume += amount;
@@ -702,9 +623,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     tg.showAlert(`✅ Баланс успешно пополнен на ${amount} TON!`);
                     tg.HapticFeedback.notificationOccurred('success');
                     
-                    // Закрываем модальное окно через 2 секунды
                     setTimeout(() => {
-                        depositModal.classList.remove('active');
+                        document.getElementById('deposit-modal').classList.remove('active');
                         document.body.style.overflow = 'auto';
                         transactionStatusElement.innerHTML = '';
                     }, 2000);
@@ -718,7 +638,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Transaction error:', error);
             showTransactionStatus('error', '❌ Ошибка транзакции');
-            tg.showAlert('❌ Ошибка при отправке транзакции');
+            tg.showAlert('❌ Ошибка при отправке транзакции: ' + error.message);
             return false;
         }
     }
@@ -726,11 +646,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Показать статус транзакции
     function showTransactionStatus(status, message) {
         transactionStatusElement.innerHTML = `
-            <div class="transaction-status-${status}">
-                <i class="fas fa-${status === 'success' ? 'check-circle' : 
-                                 status === 'pending' ? 'spinner fa-spin' : 
-                                 status === 'confirmed' ? 'check-double' : 
-                                 'exclamation-circle'}"></i>
+            <div class="transaction-status ${status}">
+                ${status === 'pending' ? '<i class="fas fa-spinner fa-spin"></i>' : ''}
+                ${status === 'success' ? '<i class="fas fa-check-circle"></i>' : ''}
+                ${status === 'error' ? '<i class="fas fa-exclamation-circle"></i>' : ''}
                 <span>${message}</span>
             </div>
         `;
@@ -743,29 +662,24 @@ document.addEventListener('DOMContentLoaded', function() {
             setActiveButton(this);
             updateContent(page);
             
-            // Эффект нажатия
             this.style.transform = 'scale(0.95)';
             setTimeout(() => {
                 this.style.transform = 'scale(1)';
             }, 150);
             
-            // Вибрация
-            tg.HapticFeedback.impactOccurred('light');
+            if (navigator.vibrate) {
+                navigator.vibrate(20);
+            }
         });
     });
     
     // Обработчик кнопки пополнения баланса
     addBalanceBtn.addEventListener('click', function() {
-        // Эффект нажатия
-        this.style.transform = 'scale(0.85)';
+        this.style.transform = 'scale(0.9)';
         setTimeout(() => {
             this.style.transform = 'scale(1)';
         }, 150);
         
-        // Вибрация
-        tg.HapticFeedback.impactOccurred('medium');
-        
-        // Показать модальное окно
         balanceModal.classList.add('active');
         document.body.style.overflow = 'hidden';
     });
@@ -776,7 +690,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'auto';
     });
     
-    // Клик вне модального окна баланса
     balanceModal.addEventListener('click', function(e) {
         if (e.target === this) {
             balanceModal.classList.remove('active');
@@ -791,14 +704,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Закрываем окно баланса
         balanceModal.classList.remove('active');
         
-        // Показываем окно пополнения
         depositAmountInput.value = '10';
         transactionStatusElement.innerHTML = '';
         updateWalletStatus();
-        depositModal.classList.add('active');
+        document.getElementById('deposit-modal').classList.add('active');
     });
     
     // Кнопка вывода
@@ -815,7 +726,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         tg.showPopup({
             title: '💰 Вывод средств',
-            message: `Вы можете вывести до ${userData.balance.toFixed(2)} TON\n\nВаш кошелек: ${userData.walletAddress.slice(0, 6)}...${userData.walletAddress.slice(-4)}`,
+            message: `Вы можете вывести до ${userData.balance.toFixed(2)} TON`,
             buttons: [
                 {id: 'withdraw_all', type: 'default', text: 'Вывести всё'},
                 {id: 'custom', type: 'default', text: 'Указать сумму'},
@@ -831,35 +742,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Кнопка подключения кошелька
-    walletConnectBtn.addEventListener('click', function() {
+    // Кнопка подключения/отключения кошелька
+    connectWalletBtn.addEventListener('click', function() {
         if (userData.walletConnected) {
             disconnectWallet();
         } else {
             connectWallet();
         }
         
-        // Эффект нажатия
         this.style.transform = 'scale(0.95)';
         setTimeout(() => {
             this.style.transform = 'scale(1)';
         }, 150);
-        
-        // Вибрация
-        tg.HapticFeedback.impactOccurred('light');
     });
     
     // Закрытие модального окна пополнения
-    closeDepositModal.addEventListener('click', function() {
-        depositModal.classList.remove('active');
+    document.getElementById('close-deposit-modal').addEventListener('click', function() {
+        document.getElementById('deposit-modal').classList.remove('active');
         document.body.style.overflow = 'auto';
         transactionStatusElement.innerHTML = '';
     });
     
-    // Клик вне модального окна пополнения
-    depositModal.addEventListener('click', function(e) {
+    document.getElementById('deposit-modal').addEventListener('click', function(e) {
         if (e.target === this) {
-            depositModal.classList.remove('active');
+            this.classList.remove('active');
             document.body.style.overflow = 'auto';
             transactionStatusElement.innerHTML = '';
         }
@@ -871,7 +777,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'auto';
     });
     
-    // Клик вне модального окна фильтров
     filtersModal.addEventListener('click', function(e) {
         if (e.target === this) {
             filtersModal.classList.remove('active');
@@ -880,17 +785,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Пресеты суммы
-    amountPresets.forEach(preset => {
+    amountPresetBtns.forEach(preset => {
         preset.addEventListener('click', function() {
             const amount = this.getAttribute('data-amount');
             depositAmountInput.value = amount;
             
-            // Эффект нажатия
-            amountPresets.forEach(p => p.classList.remove('active'));
+            amountPresetBtns.forEach(p => p.classList.remove('active'));
             this.classList.add('active');
-            
-            // Вибрация
-            tg.HapticFeedback.impactOccurred('light');
         });
     });
     
@@ -908,42 +809,30 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Эффект нажатия
         this.style.transform = 'scale(0.95)';
         setTimeout(() => {
             this.style.transform = 'scale(1)';
         }, 150);
         
-        // Вибрация
-        tg.HapticFeedback.impactOccurred('medium');
-        
-        // Отправляем транзакцию
         await sendDepositTransaction(amount);
     });
     
     // Инициализация
     loadUserData();
     
-    // Инициализируем TON Connect
     setTimeout(() => {
         initTonConnect().then(() => {
             console.log('TON Connect initialized');
             updateWalletStatus();
-            updateWalletInfo();
         }).catch(error => {
             console.error('Failed to init TON Connect:', error);
             updateWalletStatus();
-            updateWalletInfo();
         });
     }, 500);
     
-    // Инициализируем фильтры
     initFilters();
-    
-    // Устанавливаем начальную страницу
     updateContent('market');
     
-    // Плавное появление
     setTimeout(() => {
         document.body.style.opacity = '1';
     }, 100);
@@ -951,7 +840,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.style.opacity = '0';
     document.body.style.transition = 'opacity 0.3s ease';
     
-    // Сохранение данных при закрытии
     window.addEventListener('beforeunload', function() {
         saveUserData();
     });
