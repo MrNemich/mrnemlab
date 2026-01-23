@@ -1,58 +1,19 @@
-/* ===== RESET & BASE ===== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Pro Display', sans-serif;
-    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    background: #000000;
+    background: linear-gradient(135deg, #0a0a0f 0%, #12121a 50%, #0a0a0f 100%);
     color: white;
     min-height: 100vh;
     overflow: hidden;
     position: relative;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* ===== АНИМАЦИОННЫЙ ФОН ===== */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 30%, rgba(123, 47, 247, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(0, 122, 255, 0.05) 0%, transparent 50%);
-    z-index: -2;
-}
-
-body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        linear-gradient(45deg, 
-            transparent 0%, 
-            rgba(123, 47, 247, 0.02) 25%, 
-            transparent 50%,
-            rgba(0, 122, 255, 0.02) 75%,
-            transparent 100%);
-    z-index: -1;
-    animation: gradientMove 20s linear infinite;
-}
-
-@keyframes gradientMove {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 200% 200%; }
-}
-
-/* ===== КОНТЕЙНЕР ===== */
 .container {
     height: 100vh;
     display: flex;
@@ -64,51 +25,56 @@ body::after {
     overflow: hidden;
 }
 
-/* ===== ВЕРХНЕЕ МЕНЮ С БАЛАНСОМ ===== */
+/* Верхнее меню с балансом */
 .top-menu {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 8px 0 16px 0;
+    padding: 8px 0;
+    margin-bottom: 12px;
     flex-shrink: 0;
     height: 60px;
+    position: relative;
+    z-index: 100;
 }
 
 .ton-balance-circle {
     position: relative;
-    width: 240px;
-    height: 56px;
+    width: 220px;
+    height: 52px;
     background: rgba(30, 30, 40, 0.95);
-    border-radius: 28px;
+    border-radius: 26px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 4px 0 8px;
+    padding: 0 16px 0 8px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
     box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 4px 20px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    backdrop-filter: blur(20px);
 }
 
 .ton-circle-bg {
     position: absolute;
     left: 4px;
     top: 4px;
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, rgba(123, 47, 247, 0.3), rgba(90, 27, 214, 0.3));
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, rgba(123, 47, 247, 0.2), rgba(90, 27, 214, 0.2));
     border-radius: 50%;
     z-index: 1;
 }
 
 .ton-icon-circle {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     object-fit: contain;
     z-index: 2;
     position: relative;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .balance-info {
@@ -117,31 +83,33 @@ body::after {
     align-items: center;
     flex: 1;
     z-index: 2;
-    gap: 2px;
 }
 
 .balance-amount {
     font-weight: 800;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
     letter-spacing: -0.5px;
     background: linear-gradient(135deg, #fff, rgba(255, 255, 255, 0.9));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    font-feature-settings: "tnum";
 }
 
 .ton-label {
     font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.6);
+    margin-top: -2px;
+    letter-spacing: 0.5px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 .add-balance-btn-circle {
-    width: 48px;
-    height: 48px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
     border: none;
@@ -152,20 +120,18 @@ body::after {
     justify-content: center;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 
-        0 4px 16px rgba(123, 47, 247, 0.4),
+        0 4px 12px rgba(123, 47, 247, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     z-index: 2;
     position: relative;
     overflow: hidden;
-    flex-shrink: 0;
-    margin-left: auto;
 }
 
 .add-balance-btn-circle:hover {
     transform: scale(1.05);
     box-shadow: 
-        0 8px 24px rgba(123, 47, 247, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        0 6px 16px rgba(123, 47, 247, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .add-balance-btn-circle:active {
@@ -173,11 +139,12 @@ body::after {
 }
 
 .add-balance-btn-circle i {
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1rem;
+    position: relative;
+    z-index: 1;
 }
 
-/* ===== МОДАЛЬНЫЕ ОКНА ===== */
+/* Модальные окна */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -186,45 +153,41 @@ body::after {
     bottom: 0;
     background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(10px);
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    visibility: hidden;
+    transition: all 0.3s ease;
     padding: 20px;
 }
 
 .modal-overlay.active {
-    display: flex;
     opacity: 1;
+    visibility: visible;
 }
 
 .modal-content {
-    background: rgba(18, 18, 24, 0.98);
-    border-radius: 24px;
+    background: #1a1a22;
+    border-radius: 20px;
     padding: 24px;
     width: 100%;
-    max-width: 400px;
+    max-width: 380px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 
-        0 25px 50px -12px rgba(0, 0, 0, 0.7),
+        0 20px 40px rgba(0, 0, 0, 0.5),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
     position: relative;
-    animation: modalSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    max-height: 90vh;
+    transform: translateY(40px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 85vh;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
-@keyframes modalSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(40px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+.modal-overlay.active .modal-content {
+    transform: translateY(0) scale(1);
 }
 
 .modal-header {
@@ -232,6 +195,7 @@ body::after {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
+    position: relative;
 }
 
 .modal-title {
@@ -242,8 +206,8 @@ body::after {
 }
 
 .modal-close {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.7);
     font-size: 1.8rem;
     cursor: pointer;
@@ -252,138 +216,104 @@ body::after {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
-    transition: all 0.3s ease;
+    border-radius: 10px;
+    transition: all 0.2s ease;
     line-height: 1;
+    padding: 0;
 }
 
 .modal-close:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.1);
     color: white;
 }
 
-/* ===== МОДАЛЬНОЕ ОКНО БАЛАНСА ===== */
-.wallet-top-circle {
-    text-align: center;
-    margin-bottom: 32px;
+/* Модальное окно баланса */
+.wallet-modal {
+    max-width: 340px;
 }
 
-.wallet-title {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.wallet-top-circle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
 .wallet-balance {
     font-size: 3rem;
     font-weight: 800;
     color: white;
-    background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -1px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
 }
 
-.ton-text {
-    font-size: 1rem;
+.wallet-balance .ton-text {
+    font-size: 1.4rem;
     color: rgba(255, 255, 255, 0.6);
-    margin-left: 4px;
     font-weight: 600;
 }
 
 .wallet-buttons {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
 }
 
 .wallet-btn {
-    flex: 1;
-    padding: 20px;
-    border: none;
-    border-radius: 0;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    position: relative;
-    overflow: hidden;
-    min-height: 60px;
-}
-
-.wallet-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.wallet-btn:hover::before {
-    opacity: 1;
-}
-
-.deposit-btn {
-    background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
+    gap: 8px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
     color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 80px;
 }
 
-.deposit-btn:hover {
+.wallet-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(123, 47, 247, 0.4);
 }
 
-.withdraw-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+.wallet-btn i {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
 }
 
-.withdraw-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.1);
+.deposit-btn i {
+    color: #7b2ff7;
 }
 
-/* ===== МОДАЛЬНОЕ ОКНО ПОПОЛНЕНИЯ ===== */
+.withdraw-btn i {
+    color: #06D6A0;
+}
+
+/* Модальное окно пополнения */
 .deposit-modal-content {
-    max-width: 380px;
+    max-width: 360px;
 }
 
 .deposit-container {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-}
-
-/* Секция подключения кошелька */
-.wallet-connect-section {
-    background: rgba(30, 30, 40, 0.8);
-    border-radius: 16px;
-    padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    margin-bottom: 8px;
+    gap: 20px;
 }
 
 .wallet-status {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 16px;
+    background: rgba(255, 255, 255, 0.03);
     padding: 16px;
-    background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -404,88 +334,67 @@ body::after {
     font-weight: 500;
 }
 
-.connect-wallet-btn {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, #007aff, #0056cc);
-    border: none;
-    border-radius: 0;
-    color: white;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
+.wallet-connect-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.wallet-connect-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-bottom: 16px;
-    position: relative;
-    overflow: hidden;
-}
-
-.connect-wallet-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(0, 122, 255, 0.4);
-}
-
-.connect-wallet-btn.disconnected {
-    background: linear-gradient(135deg, #ff375f, #d43a5e);
-}
-
-.connect-wallet-btn.disconnected:hover {
-    box-shadow: 0 12px 32px rgba(255, 55, 95, 0.4);
-}
-
-.wallet-address {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    display: none;
-}
-
-.wallet-address.visible {
-    display: block;
-    animation: fadeIn 0.3s ease;
-}
-
-.wallet-address-text {
-    font-family: monospace;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
-    word-break: break-all;
-}
-
-.wallet-address-balance {
-    font-size: 1.3rem;
-    font-weight: 800;
-    color: #06D6A0;
-    margin-top: 8px;
-    text-align: center;
-}
-
-/* Секция суммы пополнения */
-.deposit-amount {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    padding: 24px;
-}
-
-.deposit-amount label {
-    display: block;
+    padding: 18px;
+    background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
+    border: none;
+    border-radius: 0;
     color: white;
     font-size: 1rem;
     font-weight: 600;
-    margin-bottom: 20px;
-    letter-spacing: -0.3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.wallet-connect-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(123, 47, 247, 0.3);
+}
+
+.wallet-connect-btn:active {
+    transform: translateY(0);
+}
+
+.wallet-info {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+}
+
+.deposit-amount {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.deposit-amount label {
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: block;
 }
 
 .amount-input-group {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .amount-input-group input {
@@ -493,53 +402,47 @@ body::after {
     background: rgba(0, 0, 0, 0.3);
     border: 2px solid rgba(123, 47, 247, 0.5);
     border-radius: 0;
-    padding: 20px;
+    padding: 18px 20px;
     color: white;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 800;
     outline: none;
-    transition: all 0.3s ease;
-    font-feature-settings: "tnum";
-    font-variant-numeric: tabular-nums;
-    text-align: center;
+    transition: all 0.2s ease;
 }
 
 .amount-input-group input:focus {
     border-color: #7b2ff7;
-    box-shadow: 0 0 0 3px rgba(123, 47, 247, 0.2);
     background: rgba(123, 47, 247, 0.05);
 }
 
 .ton-symbol {
     color: #7b2ff7;
     font-weight: 800;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     min-width: 40px;
 }
 
 .amount-presets {
     display: flex;
-    gap: 12px;
+    gap: 10px;
 }
 
 .amount-preset {
     flex: 1;
-    background: rgba(123, 47, 247, 0.1);
-    border: 1px solid rgba(123, 47, 247, 0.3);
-    color: #7b2ff7;
-    padding: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    padding: 12px;
     border-radius: 0;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-weight: 700;
-    font-size: 1rem;
-    position: relative;
-    overflow: hidden;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    font-size: 0.95rem;
 }
 
 .amount-preset:hover {
-    background: rgba(123, 47, 247, 0.2);
-    transform: translateY(-2px);
+    background: rgba(123, 47, 247, 0.1);
+    border-color: rgba(123, 47, 247, 0.3);
 }
 
 .amount-preset.active {
@@ -549,38 +452,36 @@ body::after {
 }
 
 .confirm-deposit-btn {
-    width: 100%;
-    padding: 22px;
     background: linear-gradient(135deg, #06D6A0, #04A97F);
     color: white;
     border: none;
+    padding: 20px;
     border-radius: 0;
-    font-size: 1.2rem;
-    font-weight: 800;
+    font-size: 1.1rem;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-top: 8px;
-    position: relative;
-    overflow: hidden;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+    width: 100%;
 }
 
 .confirm-deposit-btn:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 16px 40px rgba(6, 214, 160, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(6, 214, 160, 0.3);
+}
+
+.confirm-deposit-btn:active:not(:disabled) {
+    transform: translateY(0);
 }
 
 .confirm-deposit-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none !important;
-}
-
-.confirm-deposit-btn:active:not(:disabled) {
-    transform: translateY(-1px);
 }
 
 .transaction-status {
@@ -592,41 +493,19 @@ body::after {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.transaction-status-pending {
-    color: #007aff;
-    text-align: center;
-    padding: 16px;
-    background: rgba(0, 122, 255, 0.1);
-    border-radius: 12px;
-    border: 1px solid rgba(0, 122, 255, 0.2);
-}
-
-.transaction-status-success {
-    color: #06D6A0;
-    text-align: center;
-    padding: 16px;
-    background: rgba(6, 214, 160, 0.1);
-    border-radius: 12px;
-    border: 1px solid rgba(6, 214, 160, 0.2);
-}
-
-.transaction-status-error {
-    color: #ff375f;
-    text-align: center;
-    padding: 16px;
-    background: rgba(255, 55, 95, 0.1);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 55, 95, 0.2);
-}
-
-/* ===== МОДАЛЬНОЕ ОКНО ФИЛЬТРОВ ===== */
+/* Модальное окно фильтров */
 .filters-modal-content {
     max-width: 380px;
-    padding: 20px;
 }
 
 .filters-container {
@@ -636,22 +515,20 @@ body::after {
 }
 
 .filter-section {
-    background: rgba(30, 30, 40, 0.8);
-    border-radius: 0;
+    background: rgba(40, 40, 50, 0.8);
+    border-radius: 12px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    min-height: 60px;
+    transition: all 0.3s ease;
     max-height: 60px;
 }
 
 .filter-section.active {
-    max-height: 300px;
-    background: rgba(40, 40, 50, 0.9);
+    max-height: 400px;
+    background: rgba(50, 50, 60, 0.9);
     border-color: rgba(123, 47, 247, 0.3);
-    z-index: 10;
     order: -1;
+    margin-bottom: 8px;
 }
 
 .filter-option {
@@ -664,16 +541,15 @@ body::after {
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     position: relative;
     z-index: 2;
-    min-height: 60px;
 }
 
 .filter-option i {
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s ease;
     color: rgba(255, 255, 255, 0.6);
 }
 
@@ -685,26 +561,25 @@ body::after {
 .filter-dropdown {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    background: rgba(20, 20, 30, 0.9);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    transition: max-height 0.3s ease;
+    background: rgba(30, 30, 40, 0.95);
 }
 
 .filter-section.active .filter-dropdown {
-    max-height: 240px;
+    max-height: 300px;
     overflow-y: auto;
+    padding: 16px;
 }
 
 .filter-option-item {
-    padding: 16px 20px;
+    padding: 14px 0;
     display: flex;
     align-items: center;
     gap: 14px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     position: relative;
-    overflow: hidden;
 }
 
 .filter-option-item:last-child {
@@ -712,11 +587,11 @@ body::after {
 }
 
 .filter-option-item:hover {
-    background: rgba(255, 255, 255, 0.03);
+    color: white;
 }
 
 .filter-option-item.active {
-    background: linear-gradient(90deg, rgba(123, 47, 247, 0.15), transparent);
+    color: #7b2ff7;
 }
 
 .filter-option-item.active .radio-circle {
@@ -730,8 +605,8 @@ body::after {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     background: white;
     border-radius: 50%;
 }
@@ -743,21 +618,19 @@ body::after {
     border-radius: 50%;
     flex-shrink: 0;
     position: relative;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
-/* Слайдер цены */
 .price-slider-container {
-    padding: 24px 20px;
+    padding: 16px 0;
 }
 
 .price-slider-track {
     width: 100%;
     height: 4px;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
     position: relative;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     cursor: pointer;
 }
 
@@ -765,7 +638,6 @@ body::after {
     position: absolute;
     height: 100%;
     background: linear-gradient(90deg, #7b2ff7, #5a1bd6);
-    border-radius: 2px;
 }
 
 .price-slider-handle {
@@ -780,13 +652,13 @@ body::after {
     box-shadow: 
         0 2px 8px rgba(0, 0, 0, 0.4),
         0 0 0 2px #7b2ff7;
-    border: none;
+    border: 2px solid #7b2ff7;
     transition: all 0.2s ease;
     z-index: 2;
 }
 
 .price-slider-handle:hover {
-    transform: translateY(-50%) scale(1.2);
+    transform: translateY(-50%) scale(1.1);
 }
 
 .price-inputs {
@@ -798,14 +670,14 @@ body::after {
 .price-input {
     flex: 1;
     background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 0;
-    padding: 12px 16px;
+    padding: 12px;
     color: white;
     font-size: 1rem;
     font-weight: 600;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .price-input:focus {
@@ -814,7 +686,6 @@ body::after {
     background: rgba(123, 47, 247, 0.05);
 }
 
-/* Кнопки фильтров */
 .filter-buttons {
     display: flex;
     gap: 12px;
@@ -824,135 +695,107 @@ body::after {
 .filter-btn {
     flex: 1;
     padding: 18px;
-    border: none;
     border-radius: 0;
-    font-size: 1.1rem;
+    border: none;
+    font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
+    transition: all 0.2s ease;
 }
 
 .reset-btn {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .reset-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.1);
 }
 
 .search-btn {
     background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
     color: white;
+    border: none;
 }
 
 .search-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(123, 47, 247, 0.4);
+    box-shadow: 0 8px 20px rgba(123, 47, 247, 0.3);
 }
 
-/* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+/* Основной контент */
 .main-content {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 4px 0;
+    padding: 8px 4px;
     margin: 4px 0;
     position: relative;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: #7b2ff7 rgba(255, 255, 255, 0.05);
-}
-
-.main-content::-webkit-scrollbar {
-    width: 4px;
-}
-
-.main-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 2px;
-}
-
-.main-content::-webkit-scrollbar-thumb {
-    background: #7b2ff7;
-    border-radius: 2px;
 }
 
 .page-content {
-    background: rgba(18, 18, 24, 0.95);
-    backdrop-filter: blur(40px);
+    background: #1a1a22;
     border-radius: 20px;
     padding: 20px;
     box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.6),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.08);
     min-height: calc(100vh - 180px);
     display: flex;
     flex-direction: column;
-    animation: contentSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes contentSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ===== СТРАНИЦА МАРКЕТА ===== */
+/* Контент маркета */
 .market-container {
     width: 100%;
 }
 
 .market-header {
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 24px;
+    gap: 12px;
 }
 
 .search-filter-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(30, 30, 40, 0.8);
-    padding: 16px 20px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(40, 40, 50, 0.8);
+    padding: 14px 18px;
+    border-radius: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    flex: 1;
 }
 
 .search-filter-text {
     color: rgba(255, 255, 255, 0.9);
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 500;
 }
 
 .filter-icon-btn {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, rgba(123, 47, 247, 0.2), rgba(90, 27, 214, 0.2));
+    width: 42px;
+    height: 42px;
+    border-radius: 0;
+    background: rgba(123, 47, 247, 0.1);
     border: 1px solid rgba(123, 47, 247, 0.3);
     color: #7b2ff7;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 0;
+    transition: all 0.2s ease;
 }
 
 .filter-icon-btn:hover {
+    background: rgba(123, 47, 247, 0.2);
     transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(123, 47, 247, 0.3);
 }
 
 .nft-grid {
@@ -963,18 +806,19 @@ body::after {
 }
 
 .nft-item {
-    background: rgba(30, 30, 40, 0.8);
-    border-radius: 16px;
+    background: rgba(40, 40, 50, 0.8);
+    border-radius: 12px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
+    position: relative;
     cursor: pointer;
 }
 
 .nft-item:hover {
     transform: translateY(-4px);
     border-color: rgba(123, 47, 247, 0.3);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .nft-image {
@@ -989,12 +833,13 @@ body::after {
 }
 
 .nft-image i {
-    font-size: 3rem;
+    font-size: 3.2rem;
     color: rgba(255, 255, 255, 0.9);
 }
 
 .nft-info {
     padding: 16px;
+    position: relative;
 }
 
 .nft-name {
@@ -1016,38 +861,83 @@ body::after {
     font-size: 1.1rem;
 }
 
-/* ===== СТРАНИЦА СЕЗОНА ===== */
-.season-container {
+.nft-price i {
+    font-size: 1rem;
+}
+
+/* Контент подарков */
+.gifts-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.inventory-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.inventory-header h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white;
+}
+
+.inventory-count {
+    background: rgba(123, 47, 247, 0.15);
+    color: #7b2ff7;
+    padding: 6px 12px;
+    border-radius: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid rgba(123, 47, 247, 0.3);
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.inventory-item {
+    background: rgba(40, 40, 50, 0.6);
+    border-radius: 0;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100%;
-    text-align: center;
-    padding: 40px 20px;
+    gap: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 140px;
 }
 
-.season-icon {
-    font-size: 4rem;
-    margin-bottom: 24px;
+.inventory-item:hover {
+    background: rgba(50, 50, 60, 0.8);
+    border-color: rgba(123, 47, 247, 0.3);
+}
+
+.inventory-item i {
+    font-size: 2rem;
     color: rgba(255, 255, 255, 0.9);
 }
 
-.season-container h2 {
-    font-size: 1.8rem;
-    font-weight: 800;
+.inventory-item-name {
+    font-size: 0.9rem;
+    font-weight: 600;
     color: white;
-    margin-bottom: 16px;
+    text-align: center;
 }
 
-.season-message {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.7);
-    line-height: 1.6;
-    max-width: 300px;
-}
-
-/* ===== СТРАНИЦА ПРОФИЛЯ ===== */
+/* Контент профиля */
 .profile-container {
     display: flex;
     flex-direction: column;
@@ -1064,11 +954,9 @@ body::after {
 .profile-avatar {
     width: 80px;
     height: 80px;
-    border-radius: 20px;
+    border-radius: 0;
     overflow: hidden;
-    border: 2px solid rgba(123, 47, 247, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    background: linear-gradient(135deg, #2a2a35, #1a1a25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .profile-avatar img {
@@ -1077,12 +965,16 @@ body::after {
     object-fit: cover;
 }
 
-.avatar-placeholder {
+.profile-avatar .avatar-placeholder {
     width: 100%;
     height: 100%;
+    background: linear-gradient(135deg, #2a2a35, #1a1a25);
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.profile-avatar .avatar-placeholder span {
     font-size: 2rem;
     font-weight: bold;
     color: rgba(255, 255, 255, 0.9);
@@ -1097,15 +989,14 @@ body::after {
     font-weight: 800;
     color: white;
     margin-bottom: 8px;
-    letter-spacing: -0.5px;
 }
 
 .profile-wallet {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(30, 30, 40, 0.8);
-    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 12px;
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -1130,32 +1021,31 @@ body::after {
 }
 
 .stat-item {
-    background: rgba(30, 30, 40, 0.8);
-    padding: 20px;
-    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s ease;
+    padding: 16px;
+    text-align: center;
+    transition: all 0.2s ease;
 }
 
 .stat-item:hover {
-    border-color: rgba(123, 47, 247, 0.3);
+    background: rgba(255, 255, 255, 0.08);
     transform: translateY(-2px);
 }
 
 .stat-icon {
     font-size: 1.4rem;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     display: block;
     color: rgba(255, 255, 255, 0.9);
 }
 
 .stat-value {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: white;
     margin-bottom: 4px;
     display: block;
-    font-feature-settings: "tnum";
 }
 
 .stat-label {
@@ -1163,18 +1053,17 @@ body::after {
     color: rgba(255, 255, 255, 0.6);
     text-transform: uppercase;
     letter-spacing: 1px;
+    display: block;
     font-weight: 600;
 }
 
-/* ===== НИЖНЯЯ НАВИГАЦИЯ ===== */
+/* Нижняя навигация */
 .bottom-nav {
-    background: rgba(12, 12, 18, 0.95);
-    backdrop-filter: blur(40px);
+    background: #1a1a22;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     padding: 12px 0 20px 0;
     flex-shrink: 0;
     margin-top: 8px;
-    height: 80px;
 }
 
 .nav-container {
@@ -1182,7 +1071,8 @@ body::after {
     justify-content: space-around;
     max-width: 480px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 16px;
+    gap: 4px;
     height: 100%;
 }
 
@@ -1192,18 +1082,19 @@ body::after {
     color: rgba(255, 255, 255, 0.6);
     padding: 0;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    width: 80px;
+    transition: all 0.3s ease;
     outline: none;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
+    overflow: hidden;
     height: 100%;
+    flex: 1;
 }
 
-.button-content {
+.nav-button .button-content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1211,28 +1102,33 @@ body::after {
     position: relative;
     z-index: 1;
     width: 100%;
-    padding: 8px 0;
+    padding: 12px 0;
 }
 
 .nav-emoji {
     font-size: 1.6rem;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
     filter: brightness(0.8);
 }
 
 .nav-text {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
     transition: all 0.3s ease;
-    letter-spacing: 0.3px;
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
+/* Активное состояние кнопки */
 .nav-button.active {
     color: white;
 }
 
 .nav-button.active .nav-emoji {
-    transform: translateY(-6px) scale(1.15);
+    transform: translateY(-4px);
     filter: brightness(1);
 }
 
@@ -1241,54 +1137,40 @@ body::after {
     transform: translateY(-2px);
 }
 
+/* Эффект наведения */
 .nav-button:hover:not(.active) .nav-emoji {
-    transform: translateY(-3px) scale(1.05);
+    transform: translateY(-2px);
     filter: brightness(0.9);
 }
 
-/* ===== АДАПТИВНОСТЬ ===== */
+.nav-button:hover:not(.active) .nav-text {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Стили для скроллбара */
+.main-content::-webkit-scrollbar,
+.filter-dropdown::-webkit-scrollbar,
+.modal-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.main-content::-webkit-scrollbar-track,
+.filter-dropdown::-webkit-scrollbar-track,
+.modal-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.main-content::-webkit-scrollbar-thumb,
+.filter-dropdown::-webkit-scrollbar-thumb,
+.modal-content::-webkit-scrollbar-thumb {
+    background: rgba(123, 47, 247, 0.5);
+}
+
+/* Адаптивность */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
         max-width: 100%;
-    }
-    
-    .ton-balance-circle {
-        width: 220px;
-        height: 52px;
-    }
-    
-    .balance-amount {
-        font-size: 1.3rem;
-    }
-    
-    .page-content {
-        padding: 16px;
-        min-height: calc(100vh - 170px);
-    }
-    
-    .nft-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
-    
-    .nft-image {
-        height: 140px;
-    }
-    
-    .bottom-nav {
-        padding: 10px 0 18px 0;
-        height: 76px;
-    }
-    
-    .nav-button {
-        width: 72px;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 8px;
     }
     
     .ton-balance-circle {
@@ -1300,82 +1182,40 @@ body::after {
         font-size: 1.2rem;
     }
     
-    .ton-label {
-        font-size: 0.65rem;
+    .modal-content {
+        padding: 20px;
+        margin: 10px;
     }
     
-    .page-content {
-        padding: 14px;
+    .nft-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .inventory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 8px;
+    }
+    
+    .ton-balance-circle {
+        width: 180px;
+        height: 44px;
+    }
+    
+    .balance-amount {
+        font-size: 1.1rem;
     }
     
     .nft-grid {
         grid-template-columns: 1fr;
-        gap: 12px;
-    }
-    
-    .nft-image {
-        height: 180px;
-    }
-    
-    .profile-stats {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-    }
-    
-    .stat-item {
-        padding: 16px;
-    }
-    
-    .stat-value {
-        font-size: 1.4rem;
-    }
-    
-    .bottom-nav {
-        padding: 8px 0 16px 0;
-        height: 72px;
-    }
-    
-    .nav-container {
-        padding: 0 12px;
-    }
-    
-    .nav-button {
-        width: 68px;
-    }
-    
-    .nav-emoji {
-        font-size: 1.5rem;
     }
     
     .nav-text {
-        font-size: 0.7rem;
-    }
-    
-    .modal-content {
-        margin: 8px;
-        padding: 20px;
-    }
-}
-
-/* ===== ЭФФЕКТЫ НАЖАТИЯ ===== */
-.nav-button:active,
-.wallet-btn:active,
-.filter-btn:active,
-.filter-option:active,
-.amount-preset:active,
-.confirm-deposit-btn:active,
-.connect-wallet-btn:active {
-    transform: scale(0.95);
-    transition: transform 0.1s ease;
-}
-
-/* ===== УЛУЧШЕНИЕ ПРОИЗВОДИТЕЛЬНОСТИ ===== */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+        font-size: 0.65rem;
     }
 }
