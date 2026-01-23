@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body>
     <div class="container">
@@ -30,11 +31,11 @@
         <div class="modal-overlay" id="balance-modal">
             <div class="modal-content wallet-modal">
                 <div class="modal-header">
+                    <h3 class="modal-title">💰 Баланс</h3>
                     <button class="modal-close" id="close-balance-modal">&times;</button>
                 </div>
                 
                 <div class="wallet-top-circle">
-                    <div class="wallet-title">Баланс</div>
                     <div class="wallet-balance">
                         <span id="bot-balance">0</span>
                         <span class="ton-text">TON</span>
@@ -51,8 +52,6 @@
                         <span>Вывести</span>
                     </button>
                 </div>
-                
-                <!-- Убрана секция подключения кошелька -->
             </div>
         </div>
 
@@ -60,23 +59,23 @@
         <div class="modal-overlay" id="deposit-modal">
             <div class="modal-content deposit-modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">💰 Пополнение баланса</h3>
+                    <h3 class="modal-title">💰 Пополнение</h3>
                     <button class="modal-close" id="close-deposit-modal">&times;</button>
                 </div>
                 
                 <div class="deposit-container">
-                    <!-- Секция подключения кошелька -->
+                    <div class="wallet-status" id="wallet-status">
+                        <i class="fas fa-wallet"></i>
+                        <span id="wallet-status-text">Кошелёк не подключен</span>
+                    </div>
+                    
                     <div class="wallet-connect-section">
-                        <div class="wallet-status" id="wallet-status">
-                            <i class="fas fa-wallet"></i>
-                            <span id="wallet-status-text">Кошелёк не подключен</span>
-                        </div>
-                        <button class="connect-wallet-btn" id="connect-wallet-btn">
+                        <button class="wallet-connect-btn" id="connect-wallet-btn">
                             <i class="fas fa-plug"></i>
-                            <span>Подключить кошелёк</span>
+                            <span>Подключить кошелек</span>
                         </button>
-                        <div class="wallet-address" id="wallet-address-display">
-                            <!-- Адрес кошелька будет здесь -->
+                        <div class="wallet-info" id="wallet-info">
+                            <!-- Информация о подключенном кошельке будет здесь -->
                         </div>
                     </div>
                     
@@ -113,7 +112,7 @@
                     <button class="modal-close" id="close-filters-modal">&times;</button>
                 </div>
                 
-                <div class="filters-container" id="filters-container">
+                <div class="filters-container">
                     <div class="filter-section" id="filter-sort">
                         <button class="filter-option" data-filter="sort">
                             <span>Сортировать по</span>
@@ -188,10 +187,10 @@
                     </div>
                 </button>
                 
-                <button class="nav-button" data-page="season">
+                <button class="nav-button" data-page="gifts">
                     <div class="button-content">
-                        <div class="nav-emoji">📅</div>
-                        <span class="nav-text">Сезон</span>
+                        <div class="nav-emoji">🎁</div>
+                        <span class="nav-text">Мои подарки</span>
                     </div>
                 </button>
                 
