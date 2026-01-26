@@ -66,21 +66,9 @@ body::before {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-.ton-circle-bg {
-    position: absolute;
-    left: 8px;
-    top: 8px;
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
-    border-radius: 50%;
-    z-index: 1;
-    opacity: 0.2;
-}
-
 .ton-icon-circle {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     object-fit: contain;
     z-index: 2;
@@ -299,12 +287,18 @@ body::before {
 }
 
 .wallet-status-item {
+    width: 100%;
     padding: 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
     transition: background 0.3s ease;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    text-align: left;
 }
 
 .wallet-status-item:hover {
@@ -488,14 +482,14 @@ body::before {
 .filters-container {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 8px;
 }
 
 .filter-section {
-    margin-bottom: 1px;
+    margin-bottom: 0;
 }
 
-.filter-option {
+.rounded-filter-option {
     width: 100%;
     background: rgba(255, 255, 255, 0.05);
     border: none;
@@ -507,6 +501,8 @@ body::before {
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
+    border-radius: 16px !important;
+    margin-bottom: 4px;
 }
 
 .filter-option-content {
@@ -516,7 +512,7 @@ body::before {
     width: 100%;
 }
 
-.filter-option span {
+.filter-text {
     font-size: 1rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.9);
@@ -528,18 +524,12 @@ body::before {
 }
 
 .filter-section.active .filter-option i {
-    transform: rotate(180deg);
     color: #7b2ff7;
 }
 
-.filter-section.active {
-    order: -1;
-    margin-bottom: 8px;
-}
-
-.filter-section.active .filter-option {
+.filter-section.active .rounded-filter-option {
     background: rgba(123, 47, 247, 0.1);
-    border-left: 3px solid #7b2ff7;
+    border: 1px solid rgba(123, 47, 247, 0.3);
 }
 
 .filter-dropdown {
@@ -547,7 +537,10 @@ body::before {
     overflow: hidden;
     transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     background: rgba(30, 30, 30, 0.5);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0 0 12px 12px;
+    margin-top: -4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: none;
 }
 
 .filter-section.active .filter-dropdown {
@@ -616,6 +609,7 @@ body::before {
     position: relative;
     margin-bottom: 20px;
     cursor: pointer;
+    touch-action: none;
 }
 
 .price-slider-range {
@@ -623,6 +617,8 @@ body::before {
     height: 100%;
     background: linear-gradient(90deg, #7b2ff7, #5a1bd6);
     border-radius: 2px;
+    left: 0%;
+    width: 100%;
 }
 
 .price-slider-handle {
@@ -638,6 +634,7 @@ body::before {
     border: 2px solid #7b2ff7;
     transition: all 0.2s ease;
     z-index: 2;
+    touch-action: none;
 }
 
 .price-inputs {
@@ -726,6 +723,12 @@ body::before {
     margin: 4px 0 12px 0;
     position: relative;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.main-content::-webkit-scrollbar {
+    display: none;
 }
 
 .page-content {
@@ -752,7 +755,7 @@ body::before {
 }
 
 .market-header {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
 .search-filter-bar {
@@ -793,6 +796,7 @@ body::before {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+    padding-bottom: 20px;
 }
 
 .nft-item {
@@ -802,6 +806,9 @@ body::before {
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    min-height: 220px;
 }
 
 .nft-item:active {
@@ -810,11 +817,12 @@ body::before {
 
 .nft-image {
     width: 100%;
-    height: 160px;
+    height: 140px;
     background: linear-gradient(135deg, rgba(123, 47, 247, 0.1), rgba(90, 27, 214, 0.1));
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .nft-image i {
@@ -824,16 +832,26 @@ body::before {
 
 .nft-info {
     padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .nft-name {
     font-size: 1rem;
     font-weight: 600;
     color: white;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.nft-category {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 8px;
 }
 
 .nft-price {
@@ -843,6 +861,7 @@ body::before {
     color: #7b2ff7;
     font-weight: 700;
     font-size: 1rem;
+    margin-top: auto;
 }
 
 .nft-price i {
@@ -875,11 +894,12 @@ body::before {
 
 .inventory-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
     flex: 1;
     overflow-y: auto;
     padding: 4px;
+    padding-bottom: 80px;
 }
 
 .inventory-item {
@@ -893,6 +913,8 @@ body::before {
     border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: pointer;
     transition: all 0.3s ease;
+    min-height: 140px;
+    justify-content: center;
 }
 
 .inventory-item:active {
@@ -940,6 +962,7 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .profile-avatar .avatar-placeholder {
@@ -948,6 +971,7 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
+    background: linear-gradient(135deg, #7b2ff7, #5a1bd6);
 }
 
 .profile-avatar .avatar-placeholder span {
@@ -956,16 +980,27 @@ body::before {
     color: white;
 }
 
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
 .profile-info {
     flex: 1;
+    min-width: 0;
 }
 
 .profile-username {
     font-size: 1.5rem;
     font-weight: 700;
     color: white;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
     letter-spacing: -0.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .profile-wallet {
@@ -976,11 +1011,14 @@ body::before {
     padding: 8px 12px;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    width: fit-content;
+    max-width: 100%;
 }
 
 .profile-wallet i {
     color: #7b2ff7;
     font-size: 0.9rem;
+    flex-shrink: 0;
 }
 
 .profile-wallet-address {
@@ -989,6 +1027,7 @@ body::before {
     color: rgba(255, 255, 255, 0.8);
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .profile-stats {
@@ -1118,31 +1157,55 @@ body::before {
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.7);
     padding: 10px;
+    border-radius: 8px;
+}
+
+.transaction-status.pending {
+    background: rgba(255, 193, 7, 0.1);
+    color: #FFC107;
 }
 
 .transaction-status.success {
-    color: #06D6A0;
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.transaction-status.confirmed {
+    background: rgba(76, 175, 80, 0.15);
+    color: #4CAF50;
+    border: 1px solid rgba(76, 175, 80, 0.3);
 }
 
 .transaction-status.error {
-    color: #ff375f;
+    background: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+}
+
+.transaction-status i {
+    margin-right: 8px;
+}
+
+.transaction-status .fa-spin {
+    animation: fa-spin 2s infinite linear;
+}
+
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Скроллбар */
-.main-content::-webkit-scrollbar,
 .modal-content::-webkit-scrollbar,
 .filter-dropdown::-webkit-scrollbar {
     width: 4px;
 }
 
-.main-content::-webkit-scrollbar-track,
 .modal-content::-webkit-scrollbar-track,
 .filter-dropdown::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 2px;
 }
 
-.main-content::-webkit-scrollbar-thumb,
 .modal-content::-webkit-scrollbar-thumb,
 .filter-dropdown::-webkit-scrollbar-thumb {
     background: #7b2ff7;
@@ -1169,7 +1232,7 @@ body::before {
     }
     
     .inventory-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
     
     .nav-button {
@@ -1202,11 +1265,13 @@ body::before {
     }
     
     .nft-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
     
     .inventory-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
     
     .nav-button {
@@ -1220,6 +1285,15 @@ body::before {
     .modal-content {
         padding: 20px;
         margin: 8px;
+    }
+    
+    .profile-avatar {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .profile-username {
+        font-size: 1.3rem;
     }
 }
 
