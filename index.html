@@ -15,7 +15,6 @@
         <!-- Верхнее меню с балансом -->
         <div class="top-menu">
             <div class="ton-balance-circle">
-                <div class="ton-circle-bg"></div>
                 <img src="nft/ton.png" alt="TON" class="ton-icon-circle">
                 <div class="balance-info">
                     <span class="balance-amount" id="balance-amount">0</span>
@@ -35,7 +34,7 @@
                     <button class="modal-close" id="close-balance-modal">&times;</button>
                 </div>
                 
-                <div class="wallet-top">
+                <div class="wallet-top" id="wallet-top">
                     <div class="wallet-balance-display">
                         <div class="balance-amount-large" id="bot-balance">0</div>
                         <div class="ton-text-large">TON</div>
@@ -55,11 +54,11 @@
                 </div>
                 
                 <div class="wallet-info">
-                    <div class="wallet-status-item">
+                    <button class="wallet-status-item" id="history-btn">
                         <i class="fas fa-history"></i>
                         <span>История транзакций</span>
                         <i class="fas fa-chevron-right"></i>
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>
@@ -119,9 +118,9 @@
                 
                 <div class="filters-container">
                     <div class="filter-section" id="filter-sort">
-                        <button class="filter-option" data-filter="sort">
+                        <button class="filter-option rounded-filter-option" data-filter="sort">
                             <div class="filter-option-content">
-                                <span>Сортировка</span>
+                                <span class="filter-text">Сортировка</span>
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                         </button>
@@ -141,20 +140,10 @@
                         </div>
                     </div>
                     
-                    <div class="filter-section" id="filter-collection">
-                        <button class="filter-option" data-filter="collection">
-                            <div class="filter-option-content">
-                                <span>Коллекция</span>
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                        </button>
-                        <div class="filter-dropdown" id="collection-dropdown"></div>
-                    </div>
-                    
                     <div class="filter-section" id="filter-price">
-                        <button class="filter-option" data-filter="price">
+                        <button class="filter-option rounded-filter-option" data-filter="price">
                             <div class="filter-option-content">
-                                <span>Цена</span>
+                                <span class="filter-text">Цена</span>
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                         </button>
@@ -179,6 +168,16 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="filter-section" id="filter-collection">
+                        <button class="filter-option rounded-filter-option" data-filter="collection">
+                            <div class="filter-option-content">
+                                <span class="filter-text">Коллекция</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </button>
+                        <div class="filter-dropdown" id="collection-dropdown"></div>
                     </div>
                     
                     <div class="filter-buttons">
