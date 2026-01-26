@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const amountPresetBtns = document.querySelectorAll('.amount-preset-btn');
     const confirmDepositBtn = document.getElementById('confirm-deposit-btn');
     const transactionStatusElement = document.getElementById('transaction-status');
+    const historyBtn = document.getElementById('history-btn');
+    const walletTop = document.getElementById('wallet-top');
     
     // Элементы для фильтров
     const filtersModal = document.getElementById('filters-modal');
@@ -46,39 +48,45 @@ document.addEventListener('DOMContentLoaded', function() {
     // Текущий пользователь
     let userData = {
         id: null,
-        balance: 100,
+        balance: 0, // НАЧИНАЕМ С 0
         username: 'Гость',
         avatarUrl: null,
         walletConnected: false,
         walletAddress: null,
         walletBalance: 0,
-        bought: 5,
-        sold: 3,
-        totalVolume: 2450,
+        bought: 0, // НАЧИНАЕМ С 0
+        sold: 0, // НАЧИНАЕМ С 0
+        totalVolume: 0, // НАЧИНАЕМ С 0
+        transactions: [],
         inventory: []
     };
     
-    // Демо инвентарь NFT
-    const demoInventory = [
-        { id: 1, name: "Bodded Ring", type: "ring", value: 150 },
-        { id: 2, name: "Crystal Ball", type: "magic", value: 89 },
-        { id: 3, name: "Diamond Ring", type: "ring", value: 250 },
-        { id: 4, name: "Genie Lamp", type: "magic", value: 120 },
-        { id: 5, name: "Heroic Helmet", type: "armor", value: 75 }
+    // Демо инвентарь NFT (12 элементов для 2 колонок x 4 ряда)
+    const demoNFTs = [
+        { id: 1, name: "Bodded Ring", type: "ring", price: 150, category: "Кольца" },
+        { id: 2, name: "Crystal Ball", type: "magic", price: 89, category: "Магия" },
+        { id: 3, name: "Diamond Ring", type: "ring", price: 250, category: "Кольца" },
+        { id: 4, name: "Genie Lamp", type: "magic", price: 120, category: "Магия" },
+        { id: 5, name: "Heroic Helmet", type: "armor", price: 75, category: "Доспехи" },
+        { id: 6, name: "Moon Pendant", type: "jewelry", price: 95, category: "Украшения" },
+        { id: 7, name: "Golden Cup", type: "artifact", price: 200, category: "Артефакты" },
+        { id: 8, name: "Magic Wand", type: "magic", price: 150, category: "Магия" },
+        { id: 9, name: "Silver Sword", type: "weapon", price: 110, category: "Оружие" },
+        { id: 10, name: "Dragon Scale", type: "armor", price: 180, category: "Доспехи" },
+        { id: 11, name: "Phoenix Feather", type: "artifact", price: 300, category: "Артефакты" },
+        { id: 12, name: "Wizard Hat", type: "armor", price: 80, category: "Доспехи" }
     ];
     
     // Данные для фильтров
     const collections = [
-        "Bodded Ring", "Crystal Ball", "Diamond Ring", "Genie Lamp", "Heroic Helmet",
-        "Moon Pendant", "Golden Cup", "Magic Wand", "Silver Sword", "Dragon Scale"
+        "Кольца", "Магия", "Доспехи", "Украшения", "Артефакты", "Оружие"
     ];
     
     // Текущие фильтры
     let currentFilters = {
         sort: 'newest',
         collections: [],
-        priceRange: { min: 0, max: 100000 },
-        backgrounds: []
+        priceRange: { min: 0, max: 100000 }
     };
     
     // Загрузка данных пользователя
@@ -110,12 +118,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (user.photo_url) {
                 userData.avatarUrl = user.photo_url;
             }
-            
-            userData.inventory = demoInventory;
         }
         
         updateBalanceDisplay();
         updateWalletStatus();
+        updateProfileStats();
     }
     
     // Сохранение данных пользователя
@@ -127,6 +134,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateBalanceDisplay() {
         balanceAmount.textContent = userData.balance.toLocaleString('ru-RU');
         botBalanceElement.textContent = userData.balance.toLocaleString('ru-RU');
+    }
+    
+    // Обновление статистики профиля
+    function updateProfileStats() {
+        // Здесь будет обновление статистики при реальных транзакциях
+        // Пока используем сохраненные значения
     }
     
     // Инициализация TON Connect
@@ -187,10 +200,20 @@ document.addEventListener('DOMContentLoaded', function() {
             walletStatusText.textContent = shortAddress;
             connectWalletBtn.textContent = 'Отключить';
             connectWalletBtn.style.background = 'linear-gradient(135deg, #ff375f, #d43a5e)';
+            
+            // Показываем кнопки в модальном окне баланса
+            depositBtn.style.display = 'flex';
+            withdrawBtn.style.display = 'flex';
+            walletTop.style.display = 'block';
         } else {
             walletStatusText.textContent = 'Не подключен';
             connectWalletBtn.textContent = 'Подключить';
             connectWalletBtn.style.background = 'linear-gradient(135deg, #7b2ff7, #5a1bd6)';
+            
+            // Скрываем кнопки пополнения/вывода если кошелек не подключен
+            depositBtn.style.display = 'none';
+            withdrawBtn.style.display = 'none';
+            walletTop.style.display = 'none';
         }
     }
     
@@ -216,28 +239,33 @@ document.addEventListener('DOMContentLoaded', function() {
         filterOptions.forEach(option => {
             option.addEventListener('click', function() {
                 const filterSection = this.closest('.filter-section');
-                const filterType = this.dataset.filter;
+                const dropdown = filterSection.querySelector('.filter-dropdown');
+                const icon = this.querySelector('i');
+                
+                // Переключаем иконку
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
                 
                 // Закрываем все остальные секции
                 filterSections.forEach(section => {
                     if (section !== filterSection) {
                         section.classList.remove('active');
+                        const otherIcon = section.querySelector('i');
+                        if (otherIcon) {
+                            otherIcon.classList.remove('fa-chevron-up');
+                            otherIcon.classList.add('fa-chevron-down');
+                        }
                     }
                 });
                 
                 // Переключаем текущую секцию
                 filterSection.classList.toggle('active');
                 
-                // Если секция открыта, перемещаем её в начало
+                // Анимация открытия/закрытия
                 if (filterSection.classList.contains('active')) {
-                    filterSections.forEach((section, index) => {
-                        if (section !== filterSection && section.classList.contains('active')) {
-                            section.style.order = index;
-                        }
-                    });
-                    filterSection.style.order = '-1';
+                    dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
                 } else {
-                    filterSection.style.order = '';
+                    dropdown.style.maxHeight = '0';
                 }
             });
         });
@@ -273,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Применение фильтров
         applyFiltersBtn.addEventListener('click', function() {
-            performSearch();
+            applyFilters();
             filtersModal.classList.remove('active');
             document.body.style.overflow = 'auto';
             tg.showAlert('Фильтры применены');
@@ -283,13 +311,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Инициализация слайдера цены
     function initPriceSlider() {
-        const trackWidth = priceSliderTrack.offsetWidth;
         const minHandle = priceSliderHandleMin;
         const maxHandle = priceSliderHandleMax;
         const range = priceSliderRange;
         
         let isDraggingMin = false;
         let isDraggingMax = false;
+        let trackRect = priceSliderTrack.getBoundingClientRect();
         
         function updateSlider() {
             const minPercent = (currentFilters.priceRange.min / 100000) * 100;
@@ -304,44 +332,88 @@ document.addEventListener('DOMContentLoaded', function() {
             priceMaxInput.value = currentFilters.priceRange.max;
         }
         
+        function getPercentFromMouse(e) {
+            trackRect = priceSliderTrack.getBoundingClientRect();
+            let clientX;
+            
+            if (e.type.includes('mouse')) {
+                clientX = e.clientX;
+            } else if (e.touches && e.touches[0]) {
+                clientX = e.touches[0].clientX;
+            } else {
+                return 0;
+            }
+            
+            let percent = ((clientX - trackRect.left) / trackRect.width) * 100;
+            return Math.max(0, Math.min(100, percent));
+        }
+        
         function startDragMin(e) {
             isDraggingMin = true;
             document.body.style.userSelect = 'none';
             e.preventDefault();
+            
+            if (e.type === 'touchstart') {
+                document.addEventListener('touchmove', handleDragMin);
+                document.addEventListener('touchend', stopDragMin);
+            } else {
+                document.addEventListener('mousemove', handleDragMin);
+                document.addEventListener('mouseup', stopDragMin);
+            }
         }
         
         function startDragMax(e) {
             isDraggingMax = true;
             document.body.style.userSelect = 'none';
             e.preventDefault();
-        }
-        
-        function stopDrag() {
-            isDraggingMin = false;
-            isDraggingMax = false;
-            document.body.style.userSelect = '';
-        }
-        
-        function handleDrag(e) {
-            if (!isDraggingMin && !isDraggingMax) return;
             
-            const rect = priceSliderTrack.getBoundingClientRect();
-            const x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-            let percent = ((x - rect.left) / rect.width) * 100;
-            percent = Math.max(0, Math.min(100, percent));
+            if (e.type === 'touchstart') {
+                document.addEventListener('touchmove', handleDragMax);
+                document.addEventListener('touchend', stopDragMax);
+            } else {
+                document.addEventListener('mousemove', handleDragMax);
+                document.addEventListener('mouseup', stopDragMax);
+            }
+        }
+        
+        function handleDragMin(e) {
+            if (!isDraggingMin) return;
+            
+            const percent = getPercentFromMouse(e);
             const value = Math.round((percent / 100) * 100000);
             
-            if (isDraggingMin) {
-                if (value < currentFilters.priceRange.max - 1000) {
-                    currentFilters.priceRange.min = value;
-                }
-            } else if (isDraggingMax) {
-                if (value > currentFilters.priceRange.min + 1000) {
-                    currentFilters.priceRange.max = value;
-                }
+            if (value < currentFilters.priceRange.max - 1000) {
+                currentFilters.priceRange.min = value;
+                updateSlider();
             }
+        }
+        
+        function handleDragMax(e) {
+            if (!isDraggingMax) return;
             
-            updateSlider();
+            const percent = getPercentFromMouse(e);
+            const value = Math.round((percent / 100) * 100000);
+            
+            if (value > currentFilters.priceRange.min + 1000) {
+                currentFilters.priceRange.max = value;
+                updateSlider();
+            }
+        }
+        
+        function stopDragMin() {
+            isDraggingMin = false;
+            document.body.style.userSelect = '';
+            document.removeEventListener('mousemove', handleDragMin);
+            document.removeEventListener('touchmove', handleDragMin);
+            saveUserData();
+        }
+        
+        function stopDragMax() {
+            isDraggingMax = false;
+            document.body.style.userSelect = '';
+            document.removeEventListener('mousemove', handleDragMax);
+            document.removeEventListener('touchmove', handleDragMax);
+            saveUserData();
         }
         
         priceMinInput.addEventListener('input', function() {
@@ -350,6 +422,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (value < currentFilters.priceRange.max - 1000) {
                 currentFilters.priceRange.min = value;
                 updateSlider();
+                saveUserData();
             }
         });
         
@@ -359,18 +432,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (value > currentFilters.priceRange.min + 1000) {
                 currentFilters.priceRange.max = value;
                 updateSlider();
+                saveUserData();
             }
         });
         
         minHandle.addEventListener('mousedown', startDragMin);
         maxHandle.addEventListener('mousedown', startDragMax);
-        document.addEventListener('mouseup', stopDrag);
-        document.addEventListener('mousemove', handleDrag);
         
         minHandle.addEventListener('touchstart', startDragMin);
         maxHandle.addEventListener('touchstart', startDragMax);
-        document.addEventListener('touchend', stopDrag);
-        document.addEventListener('touchmove', handleDrag);
         
         updateSlider();
     }
@@ -386,8 +456,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentFilters = {
             sort: 'newest',
             collections: [],
-            priceRange: { min: 0, max: 100000 },
-            backgrounds: []
+            priceRange: { min: 0, max: 100000 }
         };
         
         document.querySelectorAll('.filter-option-item').forEach(item => {
@@ -398,16 +467,143 @@ document.addEventListener('DOMContentLoaded', function() {
         
         filterSections.forEach(section => {
             section.classList.remove('active');
-            section.style.order = '';
+            const icon = section.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+            const dropdown = section.querySelector('.filter-dropdown');
+            if (dropdown) {
+                dropdown.style.maxHeight = '0';
+            }
         });
         
         initPriceSlider();
     }
     
-    // Поиск по фильтрам
-    function performSearch() {
-        console.log('Searching with filters:', currentFilters);
-        // Здесь будет логика поиска NFT по фильтрам
+    // Применение фильтров
+    function applyFilters() {
+        console.log('Applying filters:', currentFilters);
+        
+        let filteredNFTs = [...demoNFTs];
+        
+        // Фильтрация по цене
+        filteredNFTs = filteredNFTs.filter(nft => {
+            return nft.price >= currentFilters.priceRange.min && 
+                   nft.price <= currentFilters.priceRange.max;
+        });
+        
+        // Фильтрация по коллекциям
+        if (currentFilters.collections.length > 0) {
+            filteredNFTs = filteredNFTs.filter(nft => {
+                return currentFilters.collections.includes(nft.category);
+            });
+        }
+        
+        // Сортировка
+        switch(currentFilters.sort) {
+            case 'price-asc':
+                filteredNFTs.sort((a, b) => a.price - b.price);
+                break;
+            case 'price-desc':
+                filteredNFTs.sort((a, b) => b.price - a.price);
+                break;
+            case 'newest':
+            default:
+                // По умолчанию в порядке ID
+                filteredNFTs.sort((a, b) => b.id - a.id);
+                break;
+        }
+        
+        updateMarketContent(filteredNFTs);
+    }
+    
+    // Обновление контента маркета с фильтрами
+    function updateMarketContent(nfts) {
+        const nftGrid = document.querySelector('#nft-grid');
+        if (!nftGrid) return;
+        
+        nftGrid.innerHTML = nfts.map((nft, i) => `
+            <div class="nft-item" data-nft-id="${nft.id}">
+                <div class="nft-image">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div class="nft-info">
+                    <div class="nft-name">${nft.name}</div>
+                    <div class="nft-category">${nft.category}</div>
+                    <div class="nft-price">
+                        <i class="fas fa-coins"></i>
+                        <span>${nft.price} TON</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        // Добавляем обработчики для покупки
+        document.querySelectorAll('.nft-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const nftId = this.getAttribute('data-nft-id');
+                const nft = nfts.find(n => n.id == nftId);
+                
+                if (nft) {
+                    tg.showPopup({
+                        title: '🛒 Покупка NFT',
+                        message: `Купить "${nft.name}" за ${nft.price} TON?`,
+                        buttons: [
+                            {id: 'buy', type: 'default', text: 'Купить'},
+                            {type: 'cancel', text: '❌ Отмена'}
+                        ]
+                    }, function(buttonId) {
+                        if (buttonId === 'buy') {
+                            buyNFT(nft);
+                        }
+                    });
+                }
+            });
+        });
+    }
+    
+    // Покупка NFT
+    function buyNFT(nft) {
+        if (userData.balance < nft.price) {
+            tg.showAlert('❌ Недостаточно средств на балансе');
+            return;
+        }
+        
+        userData.balance -= nft.price;
+        userData.bought += 1;
+        userData.totalVolume += nft.price;
+        
+        // Добавляем NFT в инвентарь
+        const inventoryNFT = {
+            id: userData.inventory.length + 1,
+            name: nft.name,
+            type: nft.type,
+            value: nft.price,
+            category: nft.category,
+            purchaseDate: new Date().toISOString()
+        };
+        
+        userData.inventory.push(inventoryNFT);
+        
+        // Добавляем транзакцию
+        userData.transactions.push({
+            type: 'buy',
+            amount: nft.price,
+            item: nft.name,
+            timestamp: new Date().toISOString()
+        });
+        
+        updateBalanceDisplay();
+        saveUserData();
+        
+        tg.showAlert(`✅ NFT "${nft.name}" куплено за ${nft.price} TON!`);
+        tg.HapticFeedback.notificationOccurred('success');
+        
+        // Обновляем маркет если он открыт
+        if (document.querySelector('.nft-grid')) {
+            applyFilters();
+        }
     }
     
     // Создание содержимого для разных страниц
@@ -433,22 +629,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function generateDemoNFTs() {
-        const demoNFTs = [
-            { name: "Bodded Ring", price: 150 },
-            { name: "Crystal Ball", price: 89 },
-            { name: "Diamond Ring", price: 250 },
-            { name: "Genie Lamp", price: 120 },
-            { name: "Heroic Helmet", price: 75 },
-            { name: "Moon Pendant", price: 95 }
-        ];
-        
         return demoNFTs.map((nft, i) => `
-            <div class="nft-item" data-nft-id="${i}">
+            <div class="nft-item" data-nft-id="${nft.id}">
                 <div class="nft-image">
                     <i class="fas fa-gem"></i>
                 </div>
                 <div class="nft-info">
                     <div class="nft-name">${nft.name}</div>
+                    <div class="nft-category">${nft.category}</div>
                     <div class="nft-price">
                         <i class="fas fa-coins"></i>
                         <span>${nft.price} TON</span>
@@ -491,7 +679,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="profile-header">
                         <div class="profile-avatar">
                             ${userData.avatarUrl ? 
-                                `<img src="${userData.avatarUrl}" alt="${userData.username}">` : 
+                                `<img src="${userData.avatarUrl}" alt="${userData.username}" class="avatar-image">` : 
                                 `<div class="avatar-placeholder">
                                     <span>${userData.username.charAt(0).toUpperCase()}</span>
                                 </div>`
@@ -513,19 +701,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="profile-stats">
                         <div class="stat-item">
                             <div class="stat-icon">💰</div>
-                            <div class="stat-value">${userData.totalVolume}</div>
+                            <div class="stat-value" id="stat-volume">${userData.totalVolume}</div>
                             <div class="stat-label">Объём</div>
                         </div>
                         
                         <div class="stat-item">
                             <div class="stat-icon">🎁</div>
-                            <div class="stat-value">${userData.bought}</div>
+                            <div class="stat-value" id="stat-bought">${userData.bought}</div>
                             <div class="stat-label">Куплено</div>
                         </div>
                         
                         <div class="stat-item">
                             <div class="stat-icon">💎</div>
-                            <div class="stat-value">${userData.sold}</div>
+                            <div class="stat-value" id="stat-sold">${userData.sold}</div>
                             <div class="stat-label">Продано</div>
                         </div>
                     </div>
@@ -561,8 +749,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     openFiltersBtn.addEventListener('click', function() {
                         filtersModal.classList.add('active');
                         document.body.style.overflow = 'hidden';
+                        
+                        // Обновляем позиции слайдера
+                        setTimeout(() => {
+                            initPriceSlider();
+                        }, 100);
                     });
                 }
+                
+                // Инициализируем обработчики покупки
+                document.querySelectorAll('.nft-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        const nftId = this.getAttribute('data-nft-id');
+                        const nft = demoNFTs.find(n => n.id == nftId);
+                        
+                        if (nft) {
+                            tg.showPopup({
+                                title: '🛒 Покупка NFT',
+                                message: `Купить "${nft.name}" за ${nft.price} TON?`,
+                                buttons: [
+                                    {id: 'buy', type: 'default', text: 'Купить'},
+                                    {type: 'cancel', text: '❌ Отмена'}
+                                ]
+                            }, function(buttonId) {
+                                if (buttonId === 'buy') {
+                                    buyNFT(nft);
+                                }
+                            });
+                        }
+                    });
+                });
             }
             
             setTimeout(() => {
@@ -609,31 +825,41 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('Simulating transaction for:', amount, 'TON');
             
-            setTimeout(() => {
-                showTransactionStatus('success', 'Транзакция отправлена!');
-                
+            // Симуляция транзакции
+            return new Promise((resolve) => {
                 setTimeout(() => {
-                    userData.balance += amount;
-                    userData.totalVolume += amount;
-                    updateBalanceDisplay();
-                    saveUserData();
-                    
-                    showTransactionStatus('confirmed', `✅ Баланс пополнен на ${amount} TON!`);
-                    
-                    tg.showAlert(`✅ Баланс успешно пополнен на ${amount} TON!`);
-                    tg.HapticFeedback.notificationOccurred('success');
+                    showTransactionStatus('success', 'Транзакция отправлена!');
                     
                     setTimeout(() => {
-                        document.getElementById('deposit-modal').classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                        transactionStatusElement.innerHTML = '';
-                    }, 2000);
+                        userData.balance += amount;
+                        userData.totalVolume += amount;
+                        
+                        // Добавляем транзакцию в историю
+                        userData.transactions.push({
+                            type: 'deposit',
+                            amount: amount,
+                            timestamp: new Date().toISOString()
+                        });
+                        
+                        updateBalanceDisplay();
+                        saveUserData();
+                        
+                        showTransactionStatus('confirmed', `✅ Баланс пополнен на ${amount} TON!`);
+                        
+                        tg.showAlert(`✅ Баланс успешно пополнен на ${amount} TON!`);
+                        tg.HapticFeedback.notificationOccurred('success');
+                        
+                        setTimeout(() => {
+                            document.getElementById('deposit-modal').classList.remove('active');
+                            document.body.style.overflow = 'auto';
+                            transactionStatusElement.innerHTML = '';
+                            resolve(true);
+                        }, 2000);
+                        
+                    }, 1000);
                     
-                }, 1000);
-                
-            }, 1500);
-            
-            return true;
+                }, 1500);
+            });
             
         } catch (error) {
             console.error('Transaction error:', error);
@@ -653,6 +879,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span>${message}</span>
             </div>
         `;
+    }
+    
+    // Показать историю транзакций
+    function showTransactionHistory() {
+        if (userData.transactions.length === 0) {
+            tg.showAlert('📭 История транзакций пуста');
+            return;
+        }
+        
+        let historyMessage = '📜 История транзакций:\n\n';
+        
+        userData.transactions.slice(-10).reverse().forEach((tx, index) => {
+            const date = new Date(tx.timestamp).toLocaleString('ru-RU');
+            const type = tx.type === 'deposit' ? 'Пополнение' : 
+                        tx.type === 'buy' ? 'Покупка NFT' : 
+                        tx.type === 'withdraw' ? 'Вывод' : 'Транзакция';
+            
+            historyMessage += `${index + 1}. ${type}\n`;
+            historyMessage += `   Сумма: ${tx.amount} TON\n`;
+            if (tx.item) {
+                historyMessage += `   Товар: ${tx.item}\n`;
+            }
+            historyMessage += `   Дата: ${date}\n\n`;
+        });
+        
+        tg.showAlert(historyMessage);
     }
     
     // Обработчики событий
@@ -679,6 +931,18 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             this.style.transform = 'scale(1)';
         }, 150);
+        
+        // Проверяем подключен ли кошелек
+        if (!userData.walletConnected) {
+            tg.showAlert('⚠️ Пожалуйста, подключите TON кошелек для управления балансом');
+            
+            // Открываем окно пополнения чтобы пользователь подключил кошелек
+            depositAmountInput.value = '10';
+            transactionStatusElement.innerHTML = '';
+            updateWalletStatus();
+            document.getElementById('deposit-modal').classList.add('active');
+            return;
+        }
         
         balanceModal.classList.add('active');
         document.body.style.overflow = 'hidden';
@@ -734,12 +998,31 @@ document.addEventListener('DOMContentLoaded', function() {
             ]
         }, function(buttonId) {
             if (buttonId === 'withdraw_all') {
+                // Симуляция вывода
+                userData.balance = 0;
+                userData.sold += 1;
+                
+                // Добавляем транзакцию
+                userData.transactions.push({
+                    type: 'withdraw',
+                    amount: userData.balance,
+                    timestamp: new Date().toISOString()
+                });
+                
+                updateBalanceDisplay();
+                saveUserData();
+                
                 tg.showAlert(`✅ Запрос на вывод ${userData.balance.toFixed(2)} TON отправлен!`);
                 tg.HapticFeedback.notificationOccurred('success');
             } else if (buttonId === 'custom') {
                 tg.showAlert('Функция в разработке');
             }
         });
+    });
+    
+    // Кнопка истории транзакций
+    historyBtn.addEventListener('click', function() {
+        showTransactionHistory();
     });
     
     // Кнопка подключения/отключения кошелька
