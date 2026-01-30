@@ -35,57 +35,181 @@ document.addEventListener('DOMContentLoaded', function() {
     const filterOptions = document.querySelectorAll('.filter-option');
     const resetFiltersBtn = document.getElementById('reset-filters-btn');
     const applyFiltersBtn = document.getElementById('apply-filters-btn');
-    const priceSliderTrack = document.getElementById('price-slider-track');
-    const priceSliderRange = document.getElementById('price-slider-range');
-    const priceSliderHandleMin = document.getElementById('price-slider-handle-min');
-    const priceSliderHandleMax = document.getElementById('price-slider-handle-max');
-    const priceMinInput = document.getElementById('price-min');
-    const priceMaxInput = document.getElementById('price-max');
     
     // Инициализация TON Connect
     let tonConnectUI = null;
     
-    // Текущий пользователь
+    // Текущий пользователь (все значения обнулены)
     let userData = {
         id: null,
-        balance: 0, // НАЧИНАЕМ С 0
+        balance: 0,
         username: 'Гость',
         avatarUrl: null,
         walletConnected: false,
         walletAddress: null,
         walletBalance: 0,
-        bought: 0, // НАЧИНАЕМ С 0
-        sold: 0, // НАЧИНАЕМ С 0
-        totalVolume: 0, // НАЧИНАЕМ С 0
+        bought: 0,
+        sold: 0,
+        totalVolume: 0,
         transactions: [],
         inventory: []
     };
     
-    // Демо инвентарь NFT (12 элементов для 2 колонок x 4 ряда)
+    // Демо инвентарь NFT (все коллекции)
     const demoNFTs = [
-        { id: 1, name: "Bodded Ring", type: "ring", price: 150, category: "Кольца" },
-        { id: 2, name: "Crystal Ball", type: "magic", price: 89, category: "Магия" },
-        { id: 3, name: "Diamond Ring", type: "ring", price: 250, category: "Кольца" },
-        { id: 4, name: "Genie Lamp", type: "magic", price: 120, category: "Магия" },
-        { id: 5, name: "Heroic Helmet", type: "armor", price: 75, category: "Доспехи" },
-        { id: 6, name: "Moon Pendant", type: "jewelry", price: 95, category: "Украшения" },
-        { id: 7, name: "Golden Cup", type: "artifact", price: 200, category: "Артефакты" },
-        { id: 8, name: "Magic Wand", type: "magic", price: 150, category: "Магия" },
-        { id: 9, name: "Silver Sword", type: "weapon", price: 110, category: "Оружие" },
-        { id: 10, name: "Dragon Scale", type: "armor", price: 180, category: "Доспехи" },
-        { id: 11, name: "Phoenix Feather", type: "artifact", price: 300, category: "Артефакты" },
-        { id: 12, name: "Wizard Hat", type: "armor", price: 80, category: "Доспехи" }
+        // Кольца
+        { id: 1, name: "Bodded Ring", type: "ring", price: 150, category: "Bodded Ring", background: "Black" },
+        { id: 2, name: "Diamond Ring", type: "ring", price: 250, category: "Diamond Ring", background: "Emerald" },
+        
+        // Магия
+        { id: 3, name: "Crystal Ball", type: "magic", price: 89, category: "Crystal Ball", background: "Navy Blue" },
+        { id: 4, name: "Genie Lamp", type: "magic", price: 120, category: "Genie Lamp", background: "Old Gold" },
+        { id: 5, name: "Magic Wand", type: "magic", price: 150, category: "Magic Wand", background: "Electric Purple" },
+        { id: 6, name: "Love Potion", type: "magic", price: 95, category: "Love Potion", background: "Fandango" },
+        { id: 7, name: "Voodoo Doll", type: "magic", price: 110, category: "Voodoo Doll", background: "Burgundy" },
+        { id: 8, name: "Evil Eye", type: "magic", price: 75, category: "Evil Eye", background: "Azure Blue" },
+        { id: 9, name: "Faith Amulet", type: "magic", price: 130, category: "Faith Amulet", background: "Emerald" },
+        
+        // Доспехи
+        { id: 10, name: "Heroic Helmet", type: "armor", price: 75, category: "Heroic Helmet", background: "Battleship Grey" },
+        { id: 11, name: "Dragon Scale", type: "armor", price: 180, category: "Dragon Scale", background: "Pine Green" },
+        { id: 12, name: "Wizard Hat", type: "armor", price: 80, category: "Wizard Hat", background: "Onyx Black" },
+        { id: 13, name: "Neko Helmet", type: "armor", price: 120, category: "Neko Helmet", background: "Orange" },
+        { id: 14, name: "Boots", type: "armor", price: 60, category: "Boots", background: "Desert Sand" },
+        { id: 15, name: "Durov's Coat", type: "armor", price: 300, category: "Durov's Coat", background: "Navy Blue" },
+        { id: 16, name: "Durov's Boots", type: "armor", price: 200, category: "Durov's Boots", background: "Black" },
+        { id: 17, name: "Durov's Sunglasses", type: "armor", price: 150, category: "Durov's Sunglasses", background: "Electric Indigo" },
+        { id: 18, name: "Durov's Cap", type: "armor", price: 100, category: "Durov's Cap", background: "Red" },
+        { id: 19, name: "Santa Hat", type: "armor", price: 50, category: "Santa Hat", background: "Red" },
+        { id: 20, name: "Witch Hat", type: "armor", price: 70, category: "Witch Hat", background: "Black" },
+        { id: 21, name: "Top Hat", type: "armor", price: 90, category: "Top Hat", background: "Onyx Black" },
+        { id: 22, name: "UFC Strike", type: "armor", price: 120, category: "UFC Strike", background: "Electric Purple" },
+        
+        // Украшения
+        { id: 23, name: "Moon Pendant", type: "jewelry", price: 95, category: "Moon Pendant", background: "Silver" },
+        { id: 24, name: "Clover Pin", type: "jewelry", price: 45, category: "Clover Pin", background: "Emerald" },
+        { id: 25, name: "Heart Locket", type: "jewelry", price: 85, category: "Heart Locket", background: "Rose Gold" },
+        { id: 26, name: "Gem Signet", type: "jewelry", price: 140, category: "Gem Signet", background: "Emerald" },
+        { id: 27, name: "Medal", type: "jewelry", price: 110, category: "Medal", background: "Old Gold" },
+        { id: 28, name: "Swiss Watch", type: "jewelry", price: 250, category: "Swiss Watch", background: "Silver" },
+        { id: 29, name: "Telegram Pin", type: "jewelry", price: 65, category: "Telegram Pin", background: "Azure Blue" },
+        { id: 30, name: "Red Star", type: "jewelry", price: 40, category: "Red Star", background: "Red" },
+        
+        // Артефакты
+        { id: 31, name: "Golden Cup", type: "artifact", price: 200, category: "Golden Cup", background: "Old Gold" },
+        { id: 32, name: "Phoenix Feather", type: "artifact", price: 300, category: "Phoenix Feather", background: "Orange" },
+        { id: 33, name: "Candle Lamp", type: "artifact", price: 60, category: "Candle Lamp", background: "Amber" },
+        { id: 34, name: "Candy Cane", type: "artifact", price: 25, category: "Candy Cane", background: "Red" },
+        { id: 35, name: "Christmas Tree", type: "artifact", price: 120, category: "Christmas Tree", background: "Pine Green" },
+        { id: 36, name: "Coconut", type: "artifact", price: 40, category: "Coconut", background: "Desert Sand" },
+        { id: 37, name: "Crystal Eagle", type: "artifact", price: 180, category: "Crystal Eagle", background: "Azure Blue" },
+        { id: 38, name: "Dove of Peace", type: "artifact", price: 95, category: "Dove of Peace", background: "White" },
+        { id: 39, name: "Durov's Figurine", type: "artifact", price: 400, category: "Durov's Figurine", background: "Gold" },
+        { id: 40, name: "Coffin", type: "artifact", price: 150, category: "Coffin", background: "Black" },
+        { id: 41, name: "Cupid Charm", type: "artifact", price: 85, category: "Cupid Charm", background: "Rose" },
+        { id: 42, name: "Easter Cake", type: "artifact", price: 70, category: "Easter Cake", background: "White" },
+        { id: 43, name: "Flying Broom", type: "artifact", price: 110, category: "Flying Broom", background: "Brown" },
+        { id: 44, name: "Ginger Cookie", type: "artifact", price: 30, category: "Ginger Cookie", background: "Amber" },
+        { id: 45, name: "Hanging Star", type: "artifact", price: 65, category: "Hanging Star", background: "Gold" },
+        { id: 46, name: "Happy Brownie", type: "artifact", price: 45, category: "Happy Brownie", background: "Brown" },
+        { id: 47, name: "Holiday Drink", type: "artifact", price: 55, category: "Holiday Drink", background: "Red" },
+        { id: 48, name: "Homemade Cake", type: "artifact", price: 65, category: "Homemade Cake", background: "Beige" },
+        { id: 49, name: "Ice Cream Cone", type: "artifact", price: 35, category: "Ice Cream Cone", background: "Pink" },
+        { id: 50, name: "Ice Cream Scoops", type: "artifact", price: 50, category: "Ice Cream Scoops", background: "Multi" },
+        { id: 51, name: "Input Key", type: "artifact", price: 120, category: "Input Key", background: "Silver" },
+        { id: 52, name: "lon Gem", type: "artifact", price: 220, category: "lon Gem", background: "Purple" },
+        { id: 53, name: "lonic Dryer", type: "artifact", price: 90, category: "lonic Dryer", background: "White" },
+        { id: 54, name: "Jack in the Box", type: "artifact", price: 75, category: "Jack in the Box", background: "Red" },
+        { id: 55, name: "Kissed Frog", type: "artifact", price: 65, category: "Kissed Frog", background: "Green" },
+        { id: 56, name: "Kitty Medallion", type: "artifact", price: 85, category: "Kitty Medallion", background: "Silver" },
+        { id: 57, name: "Lol Pop", type: "artifact", price: 25, category: "Lol Pop", background: "Rainbow" },
+        { id: 58, name: "Loot Bag", type: "artifact", price: 95, category: "Loot Bag", background: "Brown" },
+        { id: 59, name: "Love Candle", type: "artifact", price: 45, category: "Love Candle", background: "Red" },
+        { id: 60, name: "Low Rider", type: "artifact", price: 180, category: "Low Rider", background: "Blue" },
+        { id: 61, name: "Lunar Snake", type: "artifact", price: 130, category: "Lunar Snake", background: "Silver" },
+        { id: 62, name: "Lush Bouquet", type: "artifact", price: 85, category: "Lush Bouquet", background: "Multi" },
+        { id: 63, name: "Mask", type: "artifact", price: 70, category: "Mask", background: "Black" },
+        { id: 64, name: "Mighty Arm", type: "artifact", price: 150, category: "Mighty Arm", background: "Steel" },
+        { id: 65, name: "Mouse Cake", type: "artifact", price: 55, category: "Mouse Cake", background: "Brown" },
+        { id: 66, name: "Party Sparkler", type: "artifact", price: 40, category: "Party Sparkler", background: "Gold" },
+        { id: 67, name: "Pink Flamingo", type: "artifact", price: 75, category: "Pink Flamingo", background: "Pink" },
+        { id: 68, name: "Mini Oscar", type: "artifact", price: 200, category: "Mini Oscar", background: "Gold" },
+        { id: 69, name: "Money Pot", type: "artifact", price: 120, category: "Money Pot", background: "Green" },
+        { id: 70, name: "Perfume Bottle", type: "artifact", price: 95, category: "Perfume Bottle", background: "Violet" },
+        { id: 71, name: "Priccious Peach", type: "artifact", price: 65, category: "Priccious Peach", background: "Orange" },
+        { id: 72, name: "Pretty Posy", type: "artifact", price: 50, category: "Pretty Posy", background: "Pink" },
+        { id: 73, name: "Record Player", type: "artifact", price: 160, category: "Record Player", background: "Black" },
+        { id: 74, name: "Resistance Dog", type: "artifact", price: 110, category: "Resistance Dog", background: "Brown" },
+        { id: 75, name: "Restless Jar", type: "artifact", price: 85, category: "Restless Jar", background: "Glass" },
+        { id: 76, name: "Roses", type: "artifact", price: 95, category: "Roses", background: "Red" },
+        { id: 77, name: "Sakura Flower", type: "artifact", price: 70, category: "Sakura Flower", background: "Pink" },
+        { id: 78, name: "Sandcastle", type: "artifact", price: 45, category: "Sandcastle", background: "Beige" },
+        { id: 79, name: "Sky Stilettos", type: "artifact", price: 130, category: "Sky Stilettos", background: "Silver" },
+        { id: 80, name: "Sleigh Bell", type: "artifact", price: 35, category: "Sleigh Bell", background: "Gold" },
+        { id: 81, name: "Snake Box", type: "artifact", price: 95, category: "Snake Box", background: "Green" },
+        { id: 82, name: "Snoop Cigar", type: "artifact", price: 75, category: "Snoop Cigar", background: "Brown" },
+        { id: 83, name: "Snoop Dogg", type: "artifact", price: 250, category: "Snoop Dogg", background: "Black" },
+        { id: 84, name: "Snow Globe", type: "artifact", price: 85, category: "Snow Globe", background: "White" },
+        { id: 85, name: "Snow Mittens", type: "artifact", price: 40, category: "Snow Mittens", background: "Blue" },
+        { id: 86, name: "Spiced Wine", type: "artifact", price: 65, category: "Spiced Wine", background: "Burgundy" },
+        { id: 87, name: "Statue of Liberty", type: "artifact", price: 180, category: "Statue of Liberty", background: "Green" },
+        { id: 88, name: "Stellar Rocket", type: "artifact", price: 220, category: "Stellar Rocket", background: "Silver" },
+        { id: 89, name: "Surfboard", type: "artifact", price: 110, category: "Surfboard", background: "Blue" },
+        { id: 90, name: "Star Notepad", type: "artifact", price: 30, category: "Star Notepad", background: "White" },
+        { id: 91, name: "Swag Bag", type: "artifact", price: 95, category: "Swag Bag", background: "Black" },
+        { id: 92, name: "Tornh of Freedom", type: "artifact", price: 140, category: "Tornh of Freedom", background: "Gold" },
+        { id: 93, name: "Total Horse", type: "artifact", price: 175, category: "Total Horse", background: "Brown" },
+        { id: 94, name: "Valentine Box", type: "artifact", price: 55, category: "Valentine Box", background: "Red" },
+        { id: 95, name: "Vintage Cigar", type: "artifact", price: 85, category: "Vintage Cigar", background: "Brown" },
+        { id: 96, name: "Wrestide Sign", type: "artifact", price: 65, category: "Wrestide Sign", background: "White" },
+        { id: 97, name: "Whip Cupcake", type: "artifact", price: 45, category: "Whip Cupcake", background: "Pink" },
+        { id: 98, name: "Winter Wreath", type: "artifact", price: 75, category: "Winter Wreath", background: "Green" },
+        { id: 99, name: "Xmas Stocking", type: "artifact", price: 35, category: "Xmas Stocking", background: "Red" },
+        { id: 100, name: "Cookie Heart", type: "artifact", price: 40, category: "Cookie Heart", background: "Pink" },
+        { id: 101, name: "Desk Calendar", type: "artifact", price: 55, category: "Desk Calendar", background: "White" },
+        { id: 102, name: "Case", type: "artifact", price: 95, category: "Case", background: "Black" }
     ];
     
     // Данные для фильтров
+    const sortOptions = [
+        { value: 'newest', label: 'Новые' },
+        { value: 'price-asc', label: 'Цена: по возрастанию' },
+        { value: 'price-desc', label: 'Цена: по убыванию' },
+        { value: 'name-asc', label: 'По названию (А-Я)' },
+        { value: 'name-desc', label: 'По названию (Я-А)' }
+    ];
+    
     const collections = [
-        "Кольца", "Магия", "Доспехи", "Украшения", "Артефакты", "Оружие"
+        "Bodded Ring", "Candle Lamp", "Boots", "Candy Cane", "Case", "Christmas Tree", "Clover Pin", 
+        "Crystal Ball", "Diamond Ring", "Durov's Coat", "Coconut", "Crystal Eagle", "Dove of Peace", 
+        "Durov's Figurine", "Coffin", "Cupid Charm", "Durov's Boots", "Durov's Sunglasses", "Cookie Heart", 
+        "Desk Calendar", "Durov's Cap", "Easter Cake", "Evil Eye", "Faith Amulet", "Flying Broom", 
+        "Gem Signet", "Genie Lamp", "Ginger Cookie", "Hanging Star", "Happy Brownie", "Heart Locket", 
+        "Heroic Helmet", "Holiday Drink", "Homemade Cake", "Ice Cream Cone", "Ice Cream Scoops", 
+        "Input Key", "lon Gem", "lonic Dryer", "Jack in the Box", "Kissed Frog", "Kitty Medallion", 
+        "Lol Pop", "Loot Bag", "Love Candle", "Love Potion", "Low Rider", "Lunar Snake", "Lush Bouquet", 
+        "Mask", "Medal", "Mighty Arm", "Mouse Cake", "Party Sparkler", "Pink Flamingo", "Mini Oscar", 
+        "Money Pot", "Neko Helmet", "Perfume Bottle", "Priccious Peach", "Pretty Posy", "Moon Pendant", 
+        "Record Player", "Red Star", "Resistance Dog", "Restless Jar", "Roses", "Sakura Flower", 
+        "Sandcastle", "Santa Hat", "Sky Stilettos", "Sleigh Bell", "Snake Box", "Snoop Cigar", 
+        "Snoop Dogg", "Snow Globe", "Snow Mittens", "Spiced Wine", "Statue of Liberty", "Stellar Rocket", 
+        "Surfboard", "Star Notepad", "Swag Bag", "Swiss Watch", "Tornh of Freedom", "Telegram Pin", 
+        "Top Hat", "Total Horse", "UFC Strike", "Valentine Box", "Vintage Cigar", "Voodoo Doll", 
+        "Wrestide Sign", "Whip Cupcake", "Winter Wreath", "Witch Hat", "Xmas Stocking"
+    ];
+    
+    const backgrounds = [
+        "Amber", "Aquamarine", "Azure Blue", "Battleship Grey", "Black", "Burgundy", 
+        "Deep Cyan", "Desert Sand", "Electric Indigo", "Electric Purple", "Emerald", 
+        "English Violet", "Fandango", "Navy Blue", "Neon Blue", "Onyx Black", "Old Gold", 
+        "Orange", "Pacific Cyan", "Pacific Green", "Persimmon", "Pine Green"
     ];
     
     // Текущие фильтры
     let currentFilters = {
         sort: 'newest',
         collections: [],
+        backgrounds: [],
         priceRange: { min: 0, max: 100000 }
     };
     
@@ -219,21 +343,89 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Инициализация фильтров
     function initFilters() {
-        // Заполняем коллекции
-        const collectionDropdown = document.getElementById('collection-dropdown');
-        collections.forEach(collection => {
+        // Заполняем сортировку
+        const sortDropdown = document.getElementById('sort-dropdown');
+        sortOptions.forEach(option => {
             const item = document.createElement('div');
             item.className = 'filter-option-item';
+            item.dataset.value = option.value;
+            item.innerHTML = `
+                <div class="radio-circle"></div>
+                <span>${option.label}</span>
+            `;
+            sortDropdown.appendChild(item);
+            
+            if (option.value === 'newest') {
+                item.classList.add('active');
+            }
+        });
+        
+        // Заполняем коллекции с поиском
+        const collectionDropdown = document.getElementById('collection-dropdown');
+        
+        // Добавляем поиск для коллекций
+        const collectionSearch = document.createElement('div');
+        collectionSearch.className = 'filter-search-container';
+        collectionSearch.innerHTML = `
+            <div class="filter-search-input">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Поиск коллекций..." id="collection-search">
+            </div>
+        `;
+        collectionDropdown.appendChild(collectionSearch);
+        
+        // Добавляем контейнер для элементов коллекции
+        const collectionItemsContainer = document.createElement('div');
+        collectionItemsContainer.className = 'collection-items-container';
+        collectionDropdown.appendChild(collectionItemsContainer);
+        
+        // Заполняем коллекции
+        collections.forEach(collection => {
+            const item = document.createElement('div');
+            item.className = 'filter-option-item collection-item';
             item.dataset.value = collection;
             item.innerHTML = `
                 <div class="radio-circle"></div>
                 <span>${collection}</span>
             `;
-            collectionDropdown.appendChild(item);
+            collectionItemsContainer.appendChild(item);
+        });
+        
+        // Добавляем поиск для background
+        const backgroundDropdown = document.getElementById('background-dropdown');
+        
+        const backgroundSearch = document.createElement('div');
+        backgroundSearch.className = 'filter-search-container';
+        backgroundSearch.innerHTML = `
+            <div class="filter-search-input">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Поиск background..." id="background-search">
+            </div>
+        `;
+        backgroundDropdown.appendChild(backgroundSearch);
+        
+        // Добавляем контейнер для элементов background
+        const backgroundItemsContainer = document.createElement('div');
+        backgroundItemsContainer.className = 'collection-items-container';
+        backgroundDropdown.appendChild(backgroundItemsContainer);
+        
+        // Заполняем backgrounds
+        backgrounds.forEach(background => {
+            const item = document.createElement('div');
+            item.className = 'filter-option-item background-item';
+            item.dataset.value = background;
+            item.innerHTML = `
+                <div class="radio-circle"></div>
+                <span>${background}</span>
+            `;
+            backgroundItemsContainer.appendChild(item);
         });
         
         // Инициализация слайдера цены
         initPriceSlider();
+        
+        // Инициализация поиска
+        initFilterSearch();
         
         // Обработчики для фильтров
         filterOptions.forEach(option => {
@@ -263,9 +455,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Анимация открытия/закрытия
                 if (filterSection.classList.contains('active')) {
-                    dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
+                    dropdown.style.maxHeight = '400px';
+                    dropdown.style.overflowY = 'auto';
                 } else {
                     dropdown.style.maxHeight = '0';
+                    dropdown.style.overflowY = 'hidden';
                 }
             });
         });
@@ -288,6 +482,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Для коллекций - множественный выбор
                     item.classList.toggle('active');
                     updateCollectionsFilter();
+                } else if (filterType === 'background') {
+                    // Для background - множественный выбор
+                    item.classList.toggle('active');
+                    updateBackgroundsFilter();
                 }
             }
         });
@@ -309,15 +507,56 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Инициализация поиска в фильтрах
+    function initFilterSearch() {
+        const collectionSearchInput = document.getElementById('collection-search');
+        const backgroundSearchInput = document.getElementById('background-search');
+        
+        if (collectionSearchInput) {
+            collectionSearchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const items = document.querySelectorAll('#collection-dropdown .collection-item');
+                
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+        
+        if (backgroundSearchInput) {
+            backgroundSearchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const items = document.querySelectorAll('#background-dropdown .background-item');
+                
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+    }
+    
     // Инициализация слайдера цены
     function initPriceSlider() {
-        const minHandle = priceSliderHandleMin;
-        const maxHandle = priceSliderHandleMax;
-        const range = priceSliderRange;
+        const minHandle = document.getElementById('price-slider-handle-min');
+        const maxHandle = document.getElementById('price-slider-handle-max');
+        const range = document.getElementById('price-slider-range');
+        const priceMinInput = document.getElementById('price-min');
+        const priceMaxInput = document.getElementById('price-max');
+        
+        if (!minHandle || !maxHandle || !range || !priceMinInput || !priceMaxInput) return;
         
         let isDraggingMin = false;
         let isDraggingMax = false;
-        let trackRect = priceSliderTrack.getBoundingClientRect();
         
         function updateSlider() {
             const minPercent = (currentFilters.priceRange.min / 100000) * 100;
@@ -333,7 +572,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         function getPercentFromMouse(e) {
-            trackRect = priceSliderTrack.getBoundingClientRect();
+            const trackRect = document.getElementById('price-slider-track').getBoundingClientRect();
             let clientX;
             
             if (e.type.includes('mouse')) {
@@ -451,11 +690,18 @@ document.addEventListener('DOMContentLoaded', function() {
         currentFilters.collections = Array.from(activeItems).map(item => item.dataset.value);
     }
     
+    // Обновление фильтра backgrounds
+    function updateBackgroundsFilter() {
+        const activeItems = document.querySelectorAll('#background-dropdown .filter-option-item.active');
+        currentFilters.backgrounds = Array.from(activeItems).map(item => item.dataset.value);
+    }
+    
     // Сброс всех фильтров
     function resetAllFilters() {
         currentFilters = {
             sort: 'newest',
             collections: [],
+            backgrounds: [],
             priceRange: { min: 0, max: 100000 }
         };
         
@@ -475,7 +721,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const dropdown = section.querySelector('.filter-dropdown');
             if (dropdown) {
                 dropdown.style.maxHeight = '0';
+                dropdown.style.overflowY = 'hidden';
             }
+        });
+        
+        // Сброс поиска
+        const collectionSearch = document.getElementById('collection-search');
+        const backgroundSearch = document.getElementById('background-search');
+        if (collectionSearch) collectionSearch.value = '';
+        if (backgroundSearch) backgroundSearch.value = '';
+        
+        // Показать все элементы
+        document.querySelectorAll('.collection-item, .background-item').forEach(item => {
+            item.style.display = 'flex';
         });
         
         initPriceSlider();
@@ -500,6 +758,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
+        // Фильтрация по backgrounds
+        if (currentFilters.backgrounds.length > 0) {
+            filteredNFTs = filteredNFTs.filter(nft => {
+                return currentFilters.backgrounds.includes(nft.background);
+            });
+        }
+        
         // Сортировка
         switch(currentFilters.sort) {
             case 'price-asc':
@@ -508,9 +773,15 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'price-desc':
                 filteredNFTs.sort((a, b) => b.price - a.price);
                 break;
+            case 'name-asc':
+                filteredNFTs.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+                break;
+            case 'name-desc':
+                filteredNFTs.sort((a, b) => b.name.localeCompare(a.name, 'ru'));
+                break;
             case 'newest':
             default:
-                // По умолчанию в порядке ID
+                // По умолчанию в порядке ID (новые в начале)
                 filteredNFTs.sort((a, b) => b.id - a.id);
                 break;
         }
@@ -525,7 +796,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         nftGrid.innerHTML = nfts.map((nft, i) => `
             <div class="nft-item" data-nft-id="${nft.id}">
-                <div class="nft-image">
+                <div class="nft-image" style="background: linear-gradient(135deg, var(--bg-color-1), var(--bg-color-2))">
                     <i class="fas fa-gem"></i>
                 </div>
                 <div class="nft-info">
@@ -543,7 +814,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.nft-item').forEach(item => {
             item.addEventListener('click', function() {
                 const nftId = this.getAttribute('data-nft-id');
-                const nft = nfts.find(n => n.id == nftId);
+                const nft = demoNFTs.find(n => n.id == nftId);
                 
                 if (nft) {
                     tg.showPopup({
@@ -581,6 +852,7 @@ document.addEventListener('DOMContentLoaded', function() {
             type: nft.type,
             value: nft.price,
             category: nft.category,
+            background: nft.background,
             purchaseDate: new Date().toISOString()
         };
         
@@ -603,6 +875,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Обновляем маркет если он открыт
         if (document.querySelector('.nft-grid')) {
             applyFilters();
+        }
+        
+        // Обновляем подарки если они открыты
+        if (document.querySelector('#inventory-grid')) {
+            updateGiftsContent();
         }
     }
     
@@ -629,9 +906,49 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function generateDemoNFTs() {
-        return demoNFTs.map((nft, i) => `
+        let filteredNFTs = [...demoNFTs];
+        
+        // Применяем текущие фильтры
+        filteredNFTs = filteredNFTs.filter(nft => {
+            return nft.price >= currentFilters.priceRange.min && 
+                   nft.price <= currentFilters.priceRange.max;
+        });
+        
+        if (currentFilters.collections.length > 0) {
+            filteredNFTs = filteredNFTs.filter(nft => {
+                return currentFilters.collections.includes(nft.category);
+            });
+        }
+        
+        if (currentFilters.backgrounds.length > 0) {
+            filteredNFTs = filteredNFTs.filter(nft => {
+                return currentFilters.backgrounds.includes(nft.background);
+            });
+        }
+        
+        // Сортировка
+        switch(currentFilters.sort) {
+            case 'price-asc':
+                filteredNFTs.sort((a, b) => a.price - b.price);
+                break;
+            case 'price-desc':
+                filteredNFTs.sort((a, b) => b.price - a.price);
+                break;
+            case 'name-asc':
+                filteredNFTs.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+                break;
+            case 'name-desc':
+                filteredNFTs.sort((a, b) => b.name.localeCompare(a.name, 'ru'));
+                break;
+            case 'newest':
+            default:
+                filteredNFTs.sort((a, b) => b.id - a.id);
+                break;
+        }
+        
+        return filteredNFTs.map((nft, i) => `
             <div class="nft-item" data-nft-id="${nft.id}">
-                <div class="nft-image">
+                <div class="nft-image" style="background: linear-gradient(135deg, var(--bg-color-1), var(--bg-color-2))">
                     <i class="fas fa-gem"></i>
                 </div>
                 <div class="nft-info">
@@ -668,8 +985,16 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="inventory-item" data-nft-id="${nft.id}">
                 <i class="fas fa-gem"></i>
                 <div class="inventory-item-name">${nft.name}</div>
+                <div class="inventory-item-category">${nft.category}</div>
             </div>
         `).join('');
+    }
+    
+    function updateGiftsContent() {
+        const inventoryGrid = document.querySelector('#inventory-grid');
+        if (inventoryGrid) {
+            inventoryGrid.innerHTML = generateInventoryItems();
+        }
     }
     
     function createProfileContent() {
@@ -677,23 +1002,27 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="page-content">
                 <div class="profile-container">
                     <div class="profile-header">
-                        <div class="profile-avatar">
-                            ${userData.avatarUrl ? 
-                                `<img src="${userData.avatarUrl}" alt="${userData.username}" class="avatar-image">` : 
-                                `<div class="avatar-placeholder">
-                                    <span>${userData.username.charAt(0).toUpperCase()}</span>
-                                </div>`
-                            }
-                        </div>
                         <div class="profile-info">
-                            <h2 class="profile-username">${userData.username}</h2>
-                            <div class="profile-wallet">
-                                <i class="fas fa-wallet"></i>
-                                <span class="profile-wallet-address">
-                                    ${userData.walletConnected ? 
-                                        `${userData.walletAddress.slice(0, 6)}...${userData.walletAddress.slice(-6)}` : 
-                                        'Кошелёк не подключен'}
-                                </span>
+                            <div class="profile-avatar-wrapper">
+                                <div class="profile-avatar">
+                                    ${userData.avatarUrl ? 
+                                        `<img src="${userData.avatarUrl}" alt="${userData.username}" class="avatar-image">` : 
+                                        `<div class="avatar-placeholder">
+                                            <span>${userData.username.charAt(0).toUpperCase()}</span>
+                                        </div>`
+                                    }
+                                </div>
+                                <div class="profile-info-content">
+                                    <h2 class="profile-username">${userData.username}</h2>
+                                    <div class="profile-wallet">
+                                        <i class="fas fa-wallet"></i>
+                                        <span class="profile-wallet-address">
+                                            ${userData.walletConnected ? 
+                                                `${userData.walletAddress.slice(0, 6)}...${userData.walletAddress.slice(-6)}` : 
+                                                'Кошелёк не подключен'}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -999,20 +1328,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }, function(buttonId) {
             if (buttonId === 'withdraw_all') {
                 // Симуляция вывода
+                const withdrawAmount = userData.balance;
                 userData.balance = 0;
                 userData.sold += 1;
                 
                 // Добавляем транзакцию
                 userData.transactions.push({
                     type: 'withdraw',
-                    amount: userData.balance,
+                    amount: withdrawAmount,
                     timestamp: new Date().toISOString()
                 });
                 
                 updateBalanceDisplay();
                 saveUserData();
                 
-                tg.showAlert(`✅ Запрос на вывод ${userData.balance.toFixed(2)} TON отправлен!`);
+                tg.showAlert(`✅ Запрос на вывод ${withdrawAmount.toFixed(2)} TON отправлен!`);
                 tg.HapticFeedback.notificationOccurred('success');
             } else if (buttonId === 'custom') {
                 tg.showAlert('Функция в разработке');
