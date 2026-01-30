@@ -120,24 +120,21 @@
                     <div class="filter-section" id="filter-sort">
                         <button class="filter-option rounded-filter-option" data-filter="sort">
                             <div class="filter-option-content">
-                                <span class="filter-text">Сортировка</span>
+                                <span class="filter-text">Сортировать по</span>
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                         </button>
-                        <div class="filter-dropdown" id="sort-dropdown">
-                            <div class="filter-option-item active" data-value="newest">
-                                <div class="radio-circle"></div>
-                                <span>Новые</span>
+                        <div class="filter-dropdown" id="sort-dropdown"></div>
+                    </div>
+                    
+                    <div class="filter-section" id="filter-collection">
+                        <button class="filter-option rounded-filter-option" data-filter="collection">
+                            <div class="filter-option-content">
+                                <span class="filter-text">Коллекция</span>
+                                <i class="fas fa-chevron-down"></i>
                             </div>
-                            <div class="filter-option-item" data-value="price-asc">
-                                <div class="radio-circle"></div>
-                                <span>Цена: по возрастанию</span>
-                            </div>
-                            <div class="filter-option-item" data-value="price-desc">
-                                <div class="radio-circle"></div>
-                                <span>Цена: по убыванию</span>
-                            </div>
-                        </div>
+                        </button>
+                        <div class="filter-dropdown" id="collection-dropdown"></div>
                     </div>
                     
                     <div class="filter-section" id="filter-price">
@@ -148,11 +145,13 @@
                             </div>
                         </button>
                         <div class="filter-dropdown" id="price-dropdown">
-                            <div class="price-slider-container">
-                                <div class="price-slider-track" id="price-slider-track">
-                                    <div class="price-slider-range" id="price-slider-range"></div>
-                                    <div class="price-slider-handle" id="price-slider-handle-min"></div>
-                                    <div class="price-slider-handle" id="price-slider-handle-max"></div>
+                            <div class="price-filter-content">
+                                <div class="price-slider-container">
+                                    <div class="price-slider-track" id="price-slider-track">
+                                        <div class="price-slider-range" id="price-slider-range"></div>
+                                        <div class="price-slider-handle" id="price-slider-handle-min"></div>
+                                        <div class="price-slider-handle" id="price-slider-handle-max"></div>
+                                    </div>
                                 </div>
                                 <div class="price-inputs">
                                     <div class="price-input-group">
@@ -170,14 +169,14 @@
                         </div>
                     </div>
                     
-                    <div class="filter-section" id="filter-collection">
-                        <button class="filter-option rounded-filter-option" data-filter="collection">
+                    <div class="filter-section" id="filter-background">
+                        <button class="filter-option rounded-filter-option" data-filter="background">
                             <div class="filter-option-content">
-                                <span class="filter-text">Коллекция</span>
+                                <span class="filter-text">Background</span>
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                         </button>
-                        <div class="filter-dropdown" id="collection-dropdown"></div>
+                        <div class="filter-dropdown" id="background-dropdown"></div>
                     </div>
                     
                     <div class="filter-buttons">
